@@ -1,0 +1,93 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>喵步星球</title>
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+
+<body>
+    <!-- 导航条 -->
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example"
+                    aria-expanded="false">
+                    <span>导航栏</span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example">
+                <ul class="nav navbar-nav" style="width:100%;">
+                    <li class="active nav-top">
+                        <a href="{% url 'home' %}">猫窝首页</a>
+                    </li>
+
+                    <li class="dropdown nav-top">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            漫步地图</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'mapApp:city' %}">城市探险</a></li>
+                            <li><a href="{% url 'mapApp:forest' %}">森林探险</a></li>
+                            <li><a href="{% url 'mapApp:alley' %}">巷弄巡逻</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown nav-top">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            喵眼世界</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'newsApp:news' %}">今日鱼干</a></li>
+                            <li><a href="{% url 'newsApp:diary' %}">追光日记</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown nav-top">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            铲屎官笔记</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'noteApp:guide' %}">踩点指南</a></li>
+                            <li><a href="{% url 'noteApp:food' %}">干粮补给</a></li>
+                            <li><a href="{% url 'noteApp:stay' %}">躲雨小窝</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown nav-top">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            肉垫体验</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'shopApp:activity' %}">逗猫棒</a></li>
+                            <li><a href="{% url 'shopApp:store' %}">藏宝阁</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown nav-top">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            关于喵喵</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'aboutApp:origin' %}">星球起源</a></li>
+                            <li><a href="{% url 'aboutApp:team' %}">喵喵团队</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li class="dropdown nav-top">
+                        <a href="#" class="dropdown-toggle on" data-toggle="dropdown">
+                            呼叫我们</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'contactApp:cooperate' %}">蹭蹭求抱</a></li>
+                            <li><a href="{% url 'contactApp:feedback' %}">喵喵信箱</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</body>
+
+</html>
