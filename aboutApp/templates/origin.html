@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}星球起源{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 容器：手账纸张质感 */
+    .journal-container {
+        max-width: 1000px;
+        margin: 40px auto;
+        background: #ffffff;
+        padding: 60px 40px;
+        border-radius: 30px;
+        box-shadow: 0 12px 40px rgba(167, 196, 188, 0.15);
+        position: relative;
+        border: 2px dashed #A7C4BC; /* 薄荷绿虚线，像手工裁剪边 */
+        overflow: hidden;
+    }
+
+    /* 装饰性胶带 */
+    .tape {
+        position: absolute;
+        width: 120px;
+        height: 35px;
+        background: rgba(167, 196, 188, 0.3); /* 半透明薄荷绿 */
+        transform: rotate(-15deg);
+        top: 20px;
+        left: -30px;
+        z-index: 10;
+    }
+
+    /* 拍立得照片外框 */
+    .polaroid-frame {
+        background: #fff;
+        padding: 15px 15px 60px 15px; /* 底部留白更多，模仿拍立得 */
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        border: 1px solid #eee;
+        transform: rotate(-3deg); /* 灵动倾斜 */
+        transition: transform 0.3s ease;
+        position: relative;
+    }
+    
+    .polaroid-frame:hover {
+        transform: rotate(0deg) scale(1.02);
+    }
+
+    .story-img {
+        width: 100%;
+        height: auto;
+        border-radius: 4px; /* 照片本身圆角小一点 */
+    }
+
+    /* 标题装饰：猫爪横线 */
+    .section-title {
+        color: #4A4E69;
+        font-weight: bold;
+        position: relative;
+        display: inline-block;
+        margin-bottom: 30px;
+    }
+
+    .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background: #FF9F89; /* 肉垫粉色底线 */
+        opacity: 0.4;
+        border-radius: 10px;
+    }
+
+    /* 数据高亮卡片 */
+    .data-badge {
+        background: #FDFBF7;
+        border-radius: 20px;
+        padding: 20px 10px;
+        border: 1px solid rgba(167, 196, 188, 0.3);
+        transition: all 0.3s;
+    }
+
+    .data-badge:hover {
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(255, 159, 137, 0.15);
+    }
+
+    .highlight-num {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #FF9F89;
+        font-family: "Noto Sans SC", sans-serif;
+    }
+
+    /* 时间轴升级：猫爪印风格 */
+    .timeline-item {
+        display: flex;
+        margin-bottom: 40px;
+        position: relative;
+    }
+
+    .timeline-dot {
+        width: 24px;
+        height: 24px;
+        background: #A7C4BC;
+        border-radius: 50%;
+        margin-right: 25px;
+        flex-shrink: 0;
+        border: 4px solid #fff;
+        box-shadow: 0 0 0 2px #A7C4BC;
+    }
+    
+    .timeline-content {
+        background: #FDFBF7;
+        padding: 15px 25px;
+        border-radius: 16px;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="journal-container">
+        <div class="tape"></div>
+        
+        <div class="text-center mb-5">
+            <h2 class="section-title">🌍 星球起源</h2>
+            <p class="lead" style="color: #7F8C8D; font-weight: 300;">让旅行像猫一样自由探索 · Since 2020</p>
+        </div>
+
+        <div class="row align-items-center">
+            <div class="col-md-5 mb-4 mb-md-0">
+                <div class="polaroid-frame">
+                    <img src="{% static 'img/founder.jpg' %}" alt="创始人猫咪" class="story-img">
+                    <p style="text-align: center; margin-top: 15px; font-family: cursive; color: #7F8C8D;">Founders at Ancient Town</p>
+                </div>
+            </div>
+            
+            <div class="col-md-7">
+                <h4 style="color: #A7C4BC; letter-spacing: 2px; font-weight: bold;">CHAPTER 01</h4>
+                <h3 style="color: #4A4E69; font-weight: bold; margin-bottom: 25px;">始于古镇的一场“不期而遇”</h3>
+                
+                <div style="font-size: 16px; color: #555; line-height: 2;">
+                    <p>喵步星球的故事，始于2020年一个慵懒的午后。我们的创始人带着一只叫“团团”的猫咪去旅行，却在古镇错落的巷弄里意外“迷路”了。</p>
+                    <p>但也正是这次迷路，让我们发现了一家藏在深巷里的绝美猫咖。那一刻我们意识到：<strong>最好的旅行，不应该只是打卡，而应该像猫一样，用好奇心去流浪。</strong></p>
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-4">
+                        <div class="data-badge text-center">
+                            <div class="highlight-num">300+</div>
+                            <div style="color:#7F8C8D; font-size: 13px;">脚印城市</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="data-badge text-center">
+                            <div class="highlight-num">50w+</div>
+                            <div style="color:#7F8C8D; font-size: 13px;">喵友社区</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="data-badge text-center">
+                            <div class="highlight-num">98%</div>
+                            <div style="color:#7F8C8D; font-size: 13px;">治愈指数</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-5">
+            <h4 style="color: #4A4E69; font-weight: bold; margin-bottom: 30px; display: flex; align-items: center;">
+                <span style="background:#FF9F89; width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:10px;"></span>
+                成长足迹 · Footprints
+            </h4>
+            
+            <div class="timeline-box">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <strong style="color:#4A4E69; font-size: 16px;">2020年 · 萌芽</strong>
+                        <p class="text-muted small mb-0 mt-1">第一篇《避开人群去漫步》系列游记在全网获得了10万+猫友的喜爱。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot" style="background: #FF9F89; box-shadow: 0 0 0 2px #FF9F89;"></div>
+                    <div class="timeline-content" style="border-left: 4px solid #FF9F89;">
+                        <strong style="color:#4A4E69; font-size: 16px;">2022年 · 出发</strong>
+                        <p class="text-muted small mb-0 mt-1">喵步星球APP正式上线，我们开始为全国的“人类猫咪”提供躲雨小窝和干粮补给指南。</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <strong style="color:#4A4E69; font-size: 16px;">2026年 · 远航</strong>
+                        <p class="text-muted small mb-0 mt-1">用户突破50万，我们坚守初心：无论世界多快，在这里总能找到慢下来的节奏。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

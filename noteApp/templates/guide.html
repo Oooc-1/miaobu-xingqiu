@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}旅行踩点指南 | 铲屎官笔记{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    body { background-color: #FDFBF7 !important; } /* 统一奶油米白背景 */
+    
+    .notes-wrapper { padding-top: 30px; padding-bottom: 60px; }
+    
+    /* 模块专属手账 Banner 栏 */
+    .guide-banner {
+        background: linear-gradient(135deg, #E2ECE9 0%, #FFF5F2 100%) !important;
+        border-radius: 20px !important; 
+        padding: 40px !important; 
+        margin-bottom: 35px !important;
+        box-shadow: 0 8px 24px rgba(167, 196, 188, 0.1);
+    }
+    
+    /* 萌系二级横向模块切换导航 */
+    .note-nav { display: flex; gap: 15px; margin-bottom: 35px; padding-left: 0; list-style: none; }
+    .note-nav a {
+        padding: 12px 24px; border-radius: 16px; color: #4A4E69; font-weight: 600; text-decoration: none !important;
+        background: #FFFFFF; box-shadow: 0 4px 12px rgba(167,196,188,0.08); transition: all 0.25s ease-in-out;
+    }
+    .note-nav .active-guide { background: #A7C4BC !important; color: white !important; }
+    .note-nav a:hover:not(.active-guide) { background: #FFF5F2; color: #FF9F89; transform: translateY(-2px); }
+    
+    /* 网格双列卡片，严格遵循去棱角超级大圆角 */
+    .meow-card {
+        border: none !important; border-radius: 20px !important; background-color: #FFFFFF !important;
+        box-shadow: 0 8px 24px rgba(167, 196, 188, 0.12) !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+        overflow: hidden; margin-bottom: 30px;
+    }
+    .meow-card:hover {
+        transform: translateY(-6px) !important;
+        box-shadow: 0 12px 30px rgba(167, 196, 188, 0.22) !important;
+    }
+    .img-wrap { height: 210px; overflow: hidden; position: relative; border-top-left-radius: 20px; border-top-right-radius: 20px; }
+    .img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+    .meow-card:hover .img-wrap img { transform: scale(1.05); }
+    .badge-guide { position: absolute; top: 15px; left: 15px; background: #A7C4BC; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+    
+    .btn-read { background: #A7C4BC; color: white !important; padding: 8px 18px; border-radius: 14px; text-decoration: none !important; font-size: 13px; font-weight: 600; transition: all 0.2s; display: inline-block; }
+    .btn-read:hover { background: #FF9F89; box-shadow: 0 4px 12px rgba(255, 159, 137, 0.3); }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container notes-wrapper">
+    <div class="guide-banner">
+        <span style="background:#A7C4BC; color:white; border-radius:12px; padding:6px 14px; font-size:12px; font-weight:600;"><i class="fa-solid fa-compass"></i> 踩线考察成果</span>
+        <h1 style="color: #4A4E69; font-weight: bold; margin-top: 15px; margin-bottom: 12px; font-size: 26px;">远方那些未被惊扰的猫咪走廊 🐾</h1>
+        <p style="color: #7F8C8D; font-size: 14px; margin-bottom: 0; line-height: 1.5;">这里记录了我们用双脚（和肉垫）踩出的宝藏旅行路线。避开拥挤人群，去捕捉最野生的自然风光。</p>
+    </div>
+
+    <ul class="note-nav">
+        <li><a href="{% url 'noteApp:guide' %}" class="active-guide"><i class="fa-solid fa-map-location-dot"></i> 旅行踩点指南</a></li>
+        <li><a href="{% url 'noteApp:food' %}"><i class="fa-solid fa-fish"></i> 出行干粮补给</a></li>
+        <li><a href="{% url 'noteApp:stay' %}"><i class="fa-solid fa-house-chimney-window"></i> 躲雨小窝推荐</a></li>
+    </ul>
+
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <div class="card meow-card">
+                <div class="img-wrap">
+                    <span class="badge-guide"><i class="fa-solid fa-shoe-prints"></i> 徒步深度线</span>
+                    <img src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&q=80&w=800" alt="云南游记">
+                </div>
+                <div class="card-body" style="padding: 25px;">
+                    <div style="font-size:12px; color:#7F8C8D; margin-bottom:10px;"><i class="fa-solid fa-paw" style="color: #FF9F89;"></i> 探索难度：🐾🐾🐾 | 推荐指数：⭐⭐⭐⭐⭐</div>
+                    <h3 style="color:#4A4E69; font-weight:bold; margin-top:5px; margin-bottom:12px; font-size:18px;">雨崩村神瀑漫步：在神山下踩青苔的一天</h3>
+                    <p style="color:#7F8C8D; font-size:14px; line-height:1.6; margin-bottom:15px;">进入雨崩深处，踩着松软的泥土与林间落叶。清晨的雾气像猫咪吐出的呼吸，顺着这条线走，能看到极为壮丽的冰川融水与林海……</p>
+                    <div style="border-top:1px dashed rgba(167, 196, 188, 0.3); padding-top:15px;" class="text-right">
+                        <a href="#" class="btn-read">翻开整本笔记 →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12">
+            <div class="card meow-card">
+                <div class="img-wrap">
+                    <span class="badge-guide"><i class="fa-solid fa-camera"></i> 小众摄影线</span>
+                    <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=800" alt="莫干山竹海">
+                </div>
+                <div class="card-body" style="padding: 25px;">
+                    <div style="font-size:12px; color:#7F8C8D; margin-bottom:10px;"><i class="fa-solid fa-paw" style="color: #FF9F89;"></i> 探索难度：🐾 | 推荐指数：⭐⭐⭐⭐</div>
+                    <h3 style="color:#4A4E69; font-weight:bold; margin-top:5px; margin-bottom:12px; font-size:18px;">莫干山隐秘竹海：竹梢上的风语慢行线</h3>
+                    <p style="color:#7F8C8D; font-size:14px; line-height:1.6; margin-bottom:15px;">避开度假村的主干道，这条后山小路两旁全是遮天蔽日的翠竹。空气中带有竹叶的清甜，午后阳光落下来碎成一片片亮闪闪的金币……</p>
+                    <div style="border-top:1px dashed rgba(167, 196, 188, 0.3); padding-top:15px;" class="text-right">
+                        <a href="#" class="btn-read">翻开整本笔记 →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

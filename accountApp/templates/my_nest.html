@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}我的猫巢基地 🐾{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 基础容器与去棱角化 */
+    .nest-container {
+        margin-top: 100px;
+        margin-bottom: 60px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+
+    .nest-card {
+        background: #ffffff;
+        border-radius: 24px;
+        /* 超级大圆角，模仿肉垫触感 */
+        box-shadow: 0 8px 24px rgba(167, 196, 188, 0.15);
+        /* 带有主色调的弥散阴影 */
+        border: 2px solid #EBF3F0;
+        padding: 40px;
+    }
+
+    /* 顶部铲屎官卡片 */
+    .profile-section {
+        text-align: center;
+        background: linear-gradient(to bottom, #F7FAFC, #FDFBF7);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 35px;
+        border: 1px solid rgba(167, 196, 188, 0.2);
+    }
+
+    /* 互动头像 */
+    .avatar-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 15px auto;
+        cursor: pointer;
+    }
+
+    .nest-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #A7C4BC;
+        /* 清新薄荷绿 */
+        box-shadow: 0 6px 16px rgba(167, 196, 188, 0.25);
+        transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .avatar-wrapper:hover .nest-avatar {
+        transform: scale(1.05);
+        border-color: #FF9F89;
+        /* 悬浮时变成灵魂核心肉垫粉 */
+    }
+
+    .avatar-overlay {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: #FF9F89;
+        color: #ffffff;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        line-height: 32px;
+        text-align: center;
+        font-size: 14px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .username-title {
+        color: #4A4E69;
+        /* 柔和深灰蓝 */
+        font-weight: bold;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+
+    .join-badge {
+        background-color: rgba(167, 196, 188, 0.2);
+        color: #4A4E69;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    /* 快捷功能按钮群 */
+    .action-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 35px;
+    }
+
+    .btn-nest-action {
+        background-color: #A7C4BC;
+        color: #ffffff;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 12px rgba(167, 196, 188, 0.3);
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn-nest-action:hover {
+        background-color: #FF9F89;
+        /* 悬浮切换暖橘肉垫粉 */
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 159, 137, 0.4);
+    }
+
+    /* 治愈系手账标签页 */
+    .nest-tabs {
+        border-bottom: 2px solid #EBF3F0;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
+        gap: 20px;
+    }
+
+    .nest-tab-item {
+        padding: 10px 20px;
+        color: #7F8C8D;
+        /* 猫爪浅灰 */
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        transition: all 0.2s ease;
+    }
+
+    .nest-tab-item.active {
+        color: #A7C4BC;
+        border-bottom-color: #A7C4BC;
+    }
+
+    .nest-tab-item:hover {
+        color: #FF9F89;
+    }
+
+    /* 静态模拟列表占位框 */
+    .empty-placeholder {
+        text-align: center;
+        padding: 50px 20px;
+        color: #7F8C8D;
+        background: #FDFBF7;
+        /* 奶油米白纸张质感 */
+        border-radius: 16px;
+        border: 2px dashed rgba(167, 196, 188, 0.3);
+    }
+
+    .empty-placeholder i {
+        font-size: 44px;
+        color: rgba(167, 196, 188, 0.5);
+        margin-bottom: 15px;
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container nest-container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+
+            <div class="nest-card">
+
+                <div class="profile-section">
+                    <!-- 改动点：移除行内onclick，改用data属性 + 底部JS绑定，消除编辑器报错 -->
+                    <div class="avatar-wrapper" data-target-url="{% url 'change_avatar' %}" title="点击更换喵头像">
+                        {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" class="nest-avatar" alt="用户头像">
+                        {% else %}
+                        <img src="{% static 'img/default_cat_avatar.jpg' %}" class="nest-avatar" alt="默认头像">
+                        {% endif %}
+                        <div class="avatar-overlay">
+                            <i class="fa-solid fa-pen"></i>
+                        </div>
+                    </div>
+                    <h3 class="username-title">🐾 铲屎官：{{ user.username }} 🐾</h3>
+                    <span class="join-badge">基地入驻时间：{{ user.date_joined|date:"Y-m-d" }}</span>
+                </div>
+
+                <div class="action-group">
+                    <a href="#" class="btn-nest-action">
+                        <i class="fa-solid fa-feather-pointed"></i> 发布全新游记
+                    </a>
+                    <a href="{% url 'change_avatar' %}" class="btn-nest-action"
+                        style="background-color: #ffffff; color: #4A4E69; border: 1px solid rgba(167,196,188,0.6); box-shadow: none;">
+                        <i class="fa-solid fa-gear"></i> 账号设置
+                    </a>
+                </div>
+
+                <div class="nest-tabs">
+                    <div class="nest-tab-item active" onclick="switchTab(event, 'likes')"><i
+                            class="fa-solid fa-heart"></i> 我的点赞</div>
+                    <div class="nest-tab-item" onclick="switchTab(event, 'favorites')"><i class="fa-solid fa-star"></i>
+                        我的收藏</div>
+                </div>
+
+                <div id="tabContent">
+                    <div class="empty-placeholder">
+                        <i class="fa-solid fa-fish"></i>
+                        <p style="font-weight: 500; font-size: 16px;">目前这里还没有小鱼干（点赞记录）哦~</p>
+                        <p style="font-size: 13px; margin-top: 8px; color: #7F8C8D;">快去“猫窝首页”和“漫步地图”逛逛吧！🐾</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // 头像点击跳转（新增，完全替代原来行内onclick，功能不变）
+    document.querySelector('.avatar-wrapper').addEventListener('click', function () {
+        window.location.href = this.dataset.targetUrl;
+    });
+
+    function switchTab(event, type) {
+        const items = document.querySelectorAll('.nest-tab-item');
+        items.forEach(el => el.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        const content = document.getElementById('tabContent');
+        if (type === 'likes') {
+            content.innerHTML = `
+            <div class="empty-placeholder">
+                <i class="fa-solid fa-fish"></i>
+                <p style="font-weight: 500; font-size: 16px;">目前这里还没有小鱼干（点赞记录）哦~</p>
+                <p style="font-size: 13px; margin-top: 8px; color: #7F8C8D;">快去“猫窝首页”和“漫步地图”逛逛吧！🐾</p>
+            </div>`;
+        } else if (type === 'favorites') {
+            content.innerHTML = `
+            <div class="empty-placeholder">
+                <i class="fa-solid fa-star"></i>
+                <p style="font-weight: 500; font-size: 16px;">你的百宝袋里还没有任何收藏哦~</p>
+                <p style="font-size: 13px; margin-top: 8px; color: #7F8C8D;">看到喜欢的游记或者漫步攻略，别忘了给它点个星星！🌟</p>
+            </div>`;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,304 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap');
+
+/* ==========================================================================
+   1. 全局基础重置
+   ========================================================================== */
+body, html, #content {
+    background-color: #FDFBF7 !important; 
+    color: #4A4E69 !important; 
+    font-family: 'Noto Sans SC', "Microsoft YaHei", sans-serif !important;
+}
+
+a:link, a:visited { color: #A7C4BC !important; } 
+a:hover { color: #7CA99E !important; }
+
+/* ==========================================================================
+   2. 管理员登录页面
+   ========================================================================== */
+body.login {
+    background: #FDFBF7 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body.login #container {
+    background: transparent !important;
+    border: none !important;
+    width: 100% !important;
+    max-width: 400px !important;
+    margin: 0 auto !important;
+    box-shadow: none !important;
+}
+
+body.login #header {
+    background: #A7C4BC !important; 
+    padding: 22px 20px !important;
+    border-radius: 24px 24px 0 0 !important; 
+    overflow: hidden !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+}
+
+body.login #branding h1 {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+}
+
+body.login #content-main {
+    background: #ffffff !important;
+    padding: 30px 30px 35px 30px !important;
+    border-radius: 0 0 24px 24px !important; 
+    border: 2px solid rgba(167, 196, 188, 0.2) !important;
+    border-top: none !important;
+    box-shadow: 0 12px 32px rgba(167, 196, 188, 0.12) !important; 
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.login .form-row {
+    padding: 0 !important;
+    margin-bottom: 20px !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.login .form-row label {
+    display: block !important;
+    padding-bottom: 8px !important;
+    color: #4A4E69 !important; 
+    font-weight: 500 !important;
+    float: none !important; 
+    width: auto !important;
+    text-align: left !important;
+}
+
+.login .form-row input[type=text], 
+.login .form-row input[type=password] {
+    border: 1.5px solid #EAEAEA !important;
+    border-radius: 16px !important; 
+    padding: 12px 16px !important;
+    width: 100% !important;
+    clear: both !important;
+    box-sizing: border-box !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+.login .form-row input:focus {
+    border-color: #A7C4BC !important;
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.15) !important; 
+    outline: none !important;
+}
+
+.login .submit-row {
+    padding: 10px 0 0 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    text-align: center !important;
+    float: none !important;
+    clear: both !important;
+}
+
+.login .submit-row input[type=submit] {
+    background: #7CA99E !important; 
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    padding: 12px 0 !important;
+    width: 100% !important; 
+    height: auto !important;
+    border-radius: 24px !important; 
+    border: none !important;
+    box-shadow: 0 6px 20px rgba(124, 169, 158, 0.25) !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    float: none !important;
+}
+
+.login .submit-row input[type=submit]:hover {
+    background: #6B988D !important; 
+    box-shadow: 0 6px 20px rgba(107, 152, 141, 0.35) !important;
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   3. 内部管理主页样式
+   ========================================================================== */
+#header {
+    background: #A7C4BC !important; 
+    border-bottom: 4px solid #7CA99E !important; 
+    padding: 15px 20px !important;
+}
+#header a { color: white !important; font-weight: 500; }
+#branding h1 { font-weight: 700 !important; color: white !important; }
+
+div.breadcrumbs {
+    background: rgba(167, 196, 188, 0.06) !important;
+    border-bottom: 1px solid rgba(167, 196, 188, 0.12) !important;
+    color: #4A4E69 !important; 
+    padding: 10px 20px !important;
+}
+
+.module {
+    background: #ffffff !important;
+    border: 1px solid rgba(167, 196, 188, 0.15) !important;
+    border-radius: 20px !important; 
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.06) !important; 
+    margin-bottom: 30px !important;
+    overflow: hidden !important;
+}
+
+.module h2, .module caption, .inline-group h2 {
+    background: #7CA99E !important; 
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    padding: 12px 20px !important;
+    letter-spacing: 0.5px;
+}
+
+table { width: 100% !important; background: transparent !important; }
+th, td { padding: 12px 15px !important; border-bottom: 1px solid #F7F7F7 !important; }
+thead th {
+    background: rgba(167, 196, 188, 0.05) !important; 
+    color: #4A4E69 !important; 
+    font-weight: 600 !important;
+}
+tr.row1 { background-color: #ffffff !important; }
+tr.row2 { background-color: #FCFDFD !important; } 
+
+/* ==========================================================================
+   4. 过滤器区域
+   ========================================================================== */
+#changelist-filter {
+    background: #ffffff !important;
+    border: 1px solid rgba(167, 196, 188, 0.15) !important;
+    border-radius: 20px !important; 
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.06) !important; 
+    margin-left: 20px !important;
+}
+#changelist-filter h2 {
+    background: #A7C4BC !important; 
+    color: white !important;
+    border-radius: 19px 19px 0 0 !important;
+}
+#changelist-filter h3 + ul h1, 
+#changelist-filter ul + h3 + ul,
+#changelist-filter a {
+    color: #555555 !important; 
+    font-weight: 500 !important;
+}
+#changelist-filter a:hover {
+    color: #7CA99E !important;
+    text-decoration: underline !important;
+}
+
+/* ==========================================================================
+   5. 表单控件美化（🎯 完美解决下拉框字被截断的问题）
+   ========================================================================== */
+input[type=text], input[type=password], input[type=email], textarea {
+    border: 1.5px solid #EAEAEA !important;
+    border-radius: 14px !important; 
+    padding: 8px 12px !important;
+    color: #4A4E69 !important; 
+}
+
+/* 针对 select 下拉框进行高精度撑开，防中文字体截断 */
+select {
+    border: 1.5px solid #EAEAEA !important;
+    border-radius: 14px !important; 
+    padding: 0 35px 0 15px !important; /* 给右边留出箭头空间 */
+    height: 42px !important; /* 强制固定足够的高度 */
+    line-height: 40px !important; /* 确保文字完美垂直居中 */
+    color: #4A4E69 !important;
+    background-color: #ffffff !important;
+    box-sizing: border-box !important;
+    font-size: 14px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #A7C4BC !important; 
+    box-shadow: 0 6px 16px rgba(167, 196, 188, 0.12) !important;
+    outline: none !important;
+}
+
+/* 顶部操作链接按钮 */
+.object-tools a {
+    border-radius: 20px !important; 
+    padding: 8px 20px !important;
+    font-weight: 500 !important;
+    background: #A7C4BC !important; 
+    color: white !important; 
+    transition: all 0.3s ease;
+}
+.object-tools a:hover {
+    background: #7CA99E !important; 
+    transform: translateY(-1px);
+}
+
+/* 底部操作通栏 */
+.submit-row {
+    background: rgba(253, 251, 247, 0.9) !important;
+    border: 1px solid rgba(167, 196, 188, 0.12) !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* 表单底部右侧的所有正常按钮 */
+.submit-row input[type=submit] {
+    border-radius: 20px !important; 
+    padding: 10px 25px !important;
+    font-weight: bold !important;
+    background: #A7C4BC !important; 
+    color: white !important;
+    border: none !important;
+    margin-left: 10px !important;
+    cursor: pointer;
+}
+.submit-row input[type=submit].default {
+    background: #7CA99E !important; 
+    box-shadow: 0 4px 12px rgba(124, 169, 158, 0.2) !important;
+}
+.submit-row input[type=submit]:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   6. 暖橘肉垫粉删除按钮设计
+   ========================================================================== */
+.submit-row a.deletelink {
+    background: #FF9F89 !important; /* 蜕变为精美的暖橘肉垫粉！ */
+    color: white !important; /* 改为高对比度的白字，超级清晰 */
+    border: none !important;
+    border-radius: 20px !important;
+    padding: 10px 24px !important;
+    font-weight: bold !important;
+    display: inline-block !important;
+    margin-right: auto !important; /* 依旧保持优雅左浮动 */
+    box-shadow: 0 4px 14px rgba(255, 159, 137, 0.3) !important; /* 专属暖橘弥散阴影 */
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+}
+
+.submit-row a.deletelink:hover {
+    background: #E88B75 !important; /* 悬浮时切换为更有质感的深橘肉垫色 */
+    box-shadow: 0 6px 18px rgba(232, 139, 117, 0.45) !important;
+    transform: translateY(-1px);
+}

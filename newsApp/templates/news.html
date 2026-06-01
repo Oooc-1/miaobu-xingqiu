@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}今日鱼干 | 喵眼世界{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .news-wrapper { padding-top: 30px; padding-bottom: 60px; }
+    
+    /* 顶部 Banner：情报局风格 */
+    .news-banner {
+        background: linear-gradient(135deg, #A7C4BC 0%, #DCEBE6 100%) !important;
+        border-radius: 24px !important; padding: 40px !important; margin-bottom: 40px !important;
+        position: relative; overflow: hidden;
+    }
+    .news-banner::after {
+        content: "NEWS"; position: absolute; right: -20px; bottom: -20px;
+        font-size: 100px; color: rgba(255,255,255,0.2); font-weight: bold;
+    }
+
+    /* 模块：手帐便签风格 */
+    .fish-memo {
+        background: #FFFFFF !important; border-radius: 20px !important;
+        padding: 30px !important; margin-bottom: 30px; position: relative;
+        box-shadow: 0 8px 24px rgba(167, 196, 188, 0.15) !important;
+        border-top: 8px solid #FF9F89 !important; /* 像贴了彩色胶带 */
+    }
+
+    /* 鱼干列表图标 */
+    .fish-list { list-style: none; padding-left: 0; }
+    .fish-list li {
+        position: relative; padding-left: 35px; margin-bottom: 20px;
+        line-height: 1.6; color: #4A4E69; font-size: 15px;
+    }
+    .fish-list li::before {
+        content: "🐟"; position: absolute; left: 0; top: 0; font-size: 18px;
+    }
+    
+    .news-tag {
+        display: inline-block; background: rgba(167, 196, 188, 0.2);
+        color: #A7C4BC; padding: 2px 10px; border-radius: 8px;
+        font-size: 12px; font-weight: bold; margin-bottom: 8px;
+    }
+
+    .hot-label {
+        background: #FF9F89; color: white; padding: 2px 6px;
+        border-radius: 4px; font-size: 10px; margin-left: 5px; vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container news-wrapper">
+    <div class="news-banner">
+        <span style="background:#FFFFFF; color:#A7C4BC; border-radius:10px; padding:6px 14px; font-size:12px; font-weight:bold;">
+            <i class="fa-solid fa-bullhorn"></i> 喵界情报站
+        </span>
+        <h1 style="color: #FFFFFF; font-weight: bold; margin-top: 15px; font-size: 28px;">今日新鲜出炉的“鱼干”资讯 🐾</h1>
+        <p style="color: #FDFBF7; font-size: 15px; margin-top: 10px;">世界那么大，看看今天有哪些值得关注的旅行碎片？</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="fish-memo">
+                <div class="news-tag"># 签证与准入</div>
+                <h3 style="font-weight:bold; color:#4A4E69; margin-top:5px; margin-bottom:20px;">2026免签鱼干系列列表</h3>
+                <ul class="fish-list">
+                    <li>新增泰国30天永久免签，带上猫粮说走就走！<span class="hot-label">HOT</span></li>
+                    <li>暑期高峰预警：九寨沟每日限流3万人，记得提前预约踩点。</li>
+                    <li>马来西亚入境流程简化，电子卡填报只需3分钟。</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="fish-memo" style="border-top-color: #A7C4BC !important;">
+                <div class="news-tag" style="background:rgba(255,159,137,0.15); color:#FF9F89;"># 交通情报</div>
+                <h3 style="font-weight:bold; color:#4A4E69; margin-top:5px; margin-bottom:20px;">新机场与航线动态</h3>
+                <ul class="fish-list">
+                    <li>成都天府国际机场新增5条国际直飞航线，航线图已更新。</li>
+                    <li>故宫博物院周一闭馆通知：想看红墙小猫的猫友避开周一。</li>
+                    <li>西藏林芝“桃花专列”开通，窗外就是粉色的云朵。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,988 @@
+/* --- 全局基础设置 --- */
+body {
+    background-color: #FDFBF7;
+    /* 奶油米白背景 */
+    color: #4A4E69;
+    /* 深灰蓝正文 */
+    font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+}
+
+/* --- 头部布局 --- */
+.top-section {
+    padding: 20px 0;
+    margin-top: 10px;
+}
+
+.logo-box {
+    display: flex;
+    align-items: center;
+}
+
+.main-logo {
+    max-height: 70px;
+    /* 根据实际Logo大小微调 */
+    transition: transform 0.3s ease;
+}
+
+.main-logo:hover {
+    transform: scale(1.05);
+    /* 悬浮时轻微放大，增加灵动感 */
+}
+
+/* --- 联系方式样式 --- */
+.contact-info {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 70px;
+    /* 与Logo高度对齐 */
+}
+
+.contact-item {
+    margin-left: 25px;
+    background: #ffffff;
+    /* 卡片可以用纯白，或者改为 #FDFBF7 */
+    padding: 8px 16px;
+    border-radius: 20px;
+    /* 超级大圆角 */
+    /* 弥散阴影：使用薄荷绿调性的透明阴影 */
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.15);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.contact-item:hover {
+    /* 悬浮时阴影变深，且背景变肉垫粉 */
+    box-shadow: 0 10px 28px rgba(255, 159, 137, 0.2);
+    transform: translateY(-2px);
+}
+
+.contact-icon {
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    margin-right: 8px;
+
+    /* 核心修改：去掉白色背景 */
+    mix-blend-mode: multiply;
+
+    /* 核心修改：强制给图片本身加圆角 */
+    border-radius: 50%;
+    background-color: transparent;
+    /* 确保背景透明 */
+
+    /* 可选：如果你觉得图标边缘生硬，可以加一个微小的过渡 */
+    transition: all 0.3s ease;
+}
+
+
+/* 文字颜色微调 */
+.text-label {
+    color: #7F8C8D;
+    /* 猫爪浅灰，弱化标签 */
+    font-size: 14px;
+}
+
+.text-value {
+    color: #4A4E69;
+    /* 深灰蓝，突出核心内容 */
+    font-weight: 600;
+}
+
+/* 取消下划线并增加高亮色切换 */
+.ant {
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+}
+
+.ant:hover .text-value {
+    color: #FF9F89;
+    /* 悬浮时文字变暖橘肉垫粉 */
+}
+
+/* --- 导航栏深度定制 --- */
+
+/* 1. 导航条主体：使用薄荷绿，增加大圆角和弥散阴影 */
+.navbar-default {
+    background-color: #A7C4BC;
+    /* 主交互色：清新薄荷绿 */
+    border: none;
+    border-radius: 24px;
+    /* 超级大圆角 */
+    margin-bottom: 30px;
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.15);
+    /* 弥散阴影 */
+}
+
+/* 2. 导航链接文字：使用白色，增加间距 */
+.navbar-default .navbar-nav>li>a {
+    color: #ffffff !important;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 15px 25px;
+    transition: all 0.3s ease;
+}
+
+/* 3. 悬浮与激活状态：背景变为暖橘肉垫粉 */
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus,
+.navbar-default .navbar-nav>li>a:hover {
+    background-color: #FF9F89 !important;
+    /* 点缀色：暖橘肉垫粉 */
+    color: #ffffff !important;
+    border-radius: 20px;
+    /* 内部链接也保持圆润 */
+    margin: 5px;
+    /* 给背景留出一点边距，显得更精致 */
+    padding: 10px 20px;
+}
+
+/* 4. 下拉菜单定制：奶油米白背景 + 阴影 */
+.dropdown-menu {
+    background-color: #FDFBF7;
+    /* 奶油米白底色 */
+    border: none;
+    border-radius: 16px;
+    /* 下拉框也要圆润 */
+    box-shadow: 0 10px 30px rgba(74, 78, 105, 0.1);
+    padding: 10px;
+    margin-top: 5px;
+}
+
+.dropdown-menu>li>a {
+    color: #4A4E69 !important;
+    /* 深灰蓝文字 */
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+
+.dropdown-menu>li>a:hover {
+    background-color: #A7C4BC !important;
+    /* 悬浮时变薄荷绿 */
+    color: #ffffff !important;
+}
+
+/* 5. 适配移动端：折叠按钮圆润化 */
+.navbar-default .navbar-toggle {
+    border: none;
+    background-color: #FF9F89 !important;
+    border-radius: 12px;
+}
+
+.navbar-default .navbar-toggle span {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* 6. 导航栏容器微调 */
+.navbar-nav {
+    display: flex;
+    justify-content: space-around;
+    /* 让菜单项均匀分布 */
+    float: none !important;
+}
+
+/* --- 修复父级菜单选中变灰的问题 --- */
+
+/* 1. 当下拉菜单打开时，保持父级菜单的背景色不变成灰色 */
+.navbar-default .navbar-nav > .open > a, 
+.navbar-default .navbar-nav > .open > a:hover, 
+.navbar-default .navbar-nav > .open > a:focus {
+    background-color: #FF9F89 !important; /* 变为肉垫粉，表示当前正在操作这一项 */
+    color: #ffffff !important;
+    border-radius: 20px;
+}
+
+/* 2. 确保父级菜单在点击（focus）时也不会出现默认的黑色或灰色边框/背景 */
+.navbar-default .navbar-nav > li > a:focus {
+    background-color: transparent; /* 或者设为 #A7C4BC */
+    color: #ffffff;
+}
+
+/* 3. 如果你希望鼠标在子菜单滑动时，父级菜单始终高亮为肉垫粉 */
+.navbar-default .navbar-nav > li.dropdown:hover > a {
+    background-color: #FF9F89 !important;
+    border-radius: 20px;
+}
+
+/* 4. 移除 Bootstrap 默认的阴影（有时候变灰是因为自带了内阴影） */
+.navbar-default .navbar-nav > .open > a {
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
+
+/* ==========================================================================
+   喵步星球：猫窝首页专用排版与治愈系视觉体系
+   ========================================================================== */
+
+/* 1. 全局网页背景：奶油米白（有纸张质感） */
+.home-paper-bg {
+    background-color: #FDFBF7 !important;
+    min-height: 100vh;
+    font-family: 'Noto Sans SC', "Helvetica Neue", Arial, sans-serif;
+    color: #4A4E69; /* 深灰蓝主色 */
+}
+
+/* 模块间的大面积舒适留白 */
+.section-gap {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* 标题区排版 */
+.mb-section-header {
+    margin-bottom: 25px;
+    padding-left: 10px;
+}
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4A4E69;
+}
+.section-subtitle {
+    font-size: 14px;
+    color: #7F8C8D; /* 猫爪浅灰 */
+    margin-top: 5px;
+}
+
+
+/* ==========================================================================
+   A 动态轮播区样式（最高规格 24px 超大圆角）- 优化整合版
+   ========================================================================== */
+.mb-carousel {
+    border-radius: 24px !important;
+    overflow: hidden; /* 切割子元素溢出，保护大圆角 */
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.15) !important; /* 薄荷绿轻量弥散阴影 */
+}
+
+.carousel-img-filter {
+    width: 100%;
+    height: 480px !important;
+    object-fit: cover;
+    filter: brightness(0.92) contrast(0.98); /* 柔光滤镜 */
+}
+
+/* 奶油米白大圆角文字小卡片蒙层 */
+.mb-caption {
+    background: rgba(253, 251, 247, 0.88) !important;
+    border-radius: 20px !important;
+    padding: 20px 25px !important;
+    left: 8% !important;
+    bottom: 40px !important;
+    right: auto !important;
+    text-align: left !important;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(74, 78, 105, 0.12) !important;
+    text-shadow: none !important; /* 祛除Bootstrap古老的文字投影 */
+}
+.caption-title {
+    color: #4A4E69 !important;
+    font-size: 18px !important;
+    font-weight: bold !important;
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+}
+.caption-text {
+    color: #7F8C8D !important;
+    font-size: 13px !important;
+    margin-bottom: 0 !important;
+    line-height: 1.5;
+}
+
+/* 底部指示器：暖橘肉垫粉拉长小胶囊切换 */
+.mb-indicators li {
+    background-color: #A7C4BC !important; /* 清新薄荷绿 */
+    border: none !important;
+    width: 10px !important;
+    height: 10px !important;
+    border-radius: 50% !important;
+    transition: all 0.3s ease;
+    margin: 0 5px !important;
+}
+.mb-indicators .active {
+    background-color: #FF9F89 !important; /* 激活态变成暖橘肉垫粉 */
+    width: 24px !important; /* 拉长成胶囊状 */
+    border-radius: 10px !important;
+}
+
+/* --- 彻底拔除 Bootstrap 默认的左右两边黑渐变阴影背景 --- */
+.carousel-control.left, 
+.carousel-control.right {
+    background-image: none !important;
+    filter: none !important;
+}
+
+/* 重新定义左、右控制器的定位基础 */
+.mb-control-btn-left,
+.mb-control-btn-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 8% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    opacity: 0 !important; /* 平时隐藏 */
+    transition: all 0.3s ease;
+    z-index: 10; /* 确保浮在图片上方 */
+}
+
+/* 左、右按钮各自靠边 */
+.mb-control-btn-left { left: 10px; }
+.mb-control-btn-right { right: 10px; }
+
+/* 鼠标滑过整个轮播区域时，优雅显现左/右小爪按钮 */
+.mb-carousel:hover .mb-control-btn-left,
+.mb-carousel:hover .mb-control-btn-right {
+    opacity: 1 !important;
+}
+
+/* 猫爪形状切换控制键内置圆圈容器 */
+.mb-arrow-icon {
+    font-size: 22px; /* 稍微缩小一点，更精致 */
+    color: #A7C4BC; /* 默认使用清新薄荷绿 */
+    background: #FDFBF7; /* 奶油米白底色 */
+    width: 44px;
+    height: 44px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(167, 196, 188, 0.2);
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    line-height: 1;
+}
+
+/* 悬浮到左/右控制按钮上时的“按压肉垫”式回弹反馈 */
+.mb-control-btn-left:hover .mb-arrow-icon,
+.mb-control-btn-right:hover .mb-arrow-icon {
+    color: #FFFFFF !important;
+    background: #FF9F89 !important; /* 触碰变为灵魂肉垫粉 */
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(255, 159, 137, 0.4);
+}
+
+
+/* ==========================================================================
+   B 热门目的地入口样式（支持手机端横向流畅滑动的5列矩阵）- 治愈体验优化版
+   ========================================================================== */
+.mb-scroll-container {
+    position: relative;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.destination-scroll-wrapper {
+    display: flex;
+    gap: 20px; /* 稍微拉开一点间距，手账感更强 */
+    overflow-x: auto; /* 溢出时自动提供横向滚动轴 */
+    padding: 15px 5px 30px 5px; /* 顶部留足阴影弹跳空间 */
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch; /* iOS丝滑回弹 */
+}
+
+/* --- 优雅的自定义横向滚动条（仅在需要滑动的屏幕下显现，保持手账风情） --- */
+.destination-scroll-wrapper::-webkit-scrollbar {
+    height: 6px; /* 极细的小胶囊轨道 */
+}
+.destination-scroll-wrapper::-webkit-scrollbar-track {
+    background: rgba(167, 196, 188, 0.08); /* 极浅薄荷绿轨道 */
+    border-radius: 10px;
+}
+.destination-scroll-wrapper::-webkit-scrollbar-thumb {
+    background: rgba(167, 196, 188, 0.3); /* 薄荷绿半透滑块 */
+    border-radius: 10px;
+}
+.destination-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #FF9F89; /* 鼠标拽它时变肉垫粉 */
+}
+
+.destination-card-item {
+    flex: 0 0 calc(20% - 16px); /* 大屏PC端等宽分割5列 */
+    min-width: 200px; /* 适当提高最小宽度，确保在小屏幕上小卡片不被压扁 */
+}
+
+.dest-card-link {
+    text-decoration: none !important;
+    display: block;
+}
+
+.dest-img-box {
+    position: relative;
+    width: 100%;
+    height: 240px; /* 稍微增高一点，黄金比例更好看 */
+    border-radius: 16px; /* 满足 16px 触觉规则 */
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(167, 196, 188, 0.15);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.dest-img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease;
+}
+
+/* 运营看板数据展现小胶囊标签 */
+.badge-hot-paw {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: #FF9F89; /* 灵魂肉垫粉 */
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(255, 159, 137, 0.35);
+    z-index: 2;
+}
+
+/* 薄荷绿专属遮罩渐变优化，提高文字识别度 */
+.dest-name-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 40px 15px 15px 15px;
+    background: linear-gradient(to top, rgba(167, 196, 188, 0.9) 0%, rgba(167, 196, 188, 0.4) 50%, rgba(167, 196, 188, 0) 100%);
+    z-index: 1;
+}
+.dest-name-overlay h4 {
+    color: #FFFFFF;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    text-shadow: 0 1px 4px rgba(74, 78, 105, 0.25);
+}
+
+/* 热门目的地核心触觉动效 —— “按压肉垫”式回弹反馈 */
+.dest-img-box:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(255, 159, 137, 0.35) !important; /* 悬浮变为肉垫粉弥散阴影 */
+}
+.dest-img-box:hover img {
+    transform: scale(1.06); /* 图片轻微舒缓放大 */
+}
+
+
+/* ==========================================================================
+   C 精选游记手账卡片区样式 - 高度对齐与移动端适配优化版
+   ========================================================================== */
+.note-card-col {
+    margin-bottom: 30px;
+    display: flex; /* 让父列成为 Flex 容器，使内部的 journal-card 高度天然等高 */
+}
+
+.journal-card {
+    background-color: #FFFFFF !important; /* 纯白卡片高亮浮现在奶油底色上 */
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.1);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    width: 100%; /* 充满父级列宽 */
+    display: flex;
+    flex-direction: column; /* 纵向弹性，确保 footer 始终被推到底部 */
+}
+
+/* 核心优化的封面框：死守 210px 高度，不允许形变 */
+.journal-cover-box {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+    background-color: #FDFBF7; /* 未加载出来时的奶油色防白底 */
+}
+
+/* 强制图片裁剪居中，完美对齐 */
+.journal-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* 可视化编辑器专属映射标签 */
+.media-paw-tag {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(74, 78, 105, 0.75);
+    color: #FFFFFF;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    z-index: 2;
+}
+.video-tag {
+    background: rgba(167, 196, 188, 0.9);
+}
+
+/* 游记核心信息区 */
+.journal-body {
+    padding: 22px;
+    flex-grow: 1; /* 自动霸占卡片中间所有剩余的空白，将页脚精准顶到最下面 */
+    display: flex;
+    flex-direction: column;
+}
+
+.badge-topic {
+    align-self: flex-start; /* 标签有多宽就多宽，不要通栏 */
+    font-size: 11px;
+    color: #A7C4BC; /* 清新薄荷绿字 */
+    background-color: rgba(167, 196, 188, 0.12); /* 浅薄荷绿背景 */
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.journal-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+.journal-title a {
+    color: #4A4E69 !important; /* 深灰蓝 */
+    text-decoration: none !important;
+    transition: color 0.2s ease;
+}
+.journal-title a:hover {
+    color: #FF9F89 !important; /* 标题悬浮变粉 */
+}
+
+.journal-summary {
+    font-size: 13px;
+    color: #7F8C8D; /* 猫爪浅灰 */
+    line-height: 1.6;
+    /* 精准限制三行，超出部分优雅裁剪变省略号 */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 游记卡片底部博主/数据区 */
+.journal-footer {
+    padding: 15px 22px;
+    border-top: 1px dashed rgba(167, 196, 188, 0.25); /* 撕开线虚线效果 */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #FCFAF6; /* 淡淡的手账底色 */
+}
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.author-avatar {
+    width: 26px;
+    height: 26px;
+    max-width: 26px;
+    max-height: 26px;
+    flex-shrink: 0; /* 绝对禁止在 Flex 压缩下变形 */
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid #A7C4BC;
+}
+.author-name {
+    font-size: 12px;
+    color: #4A4E69;
+    font-weight: bold;
+}
+.journal-stats {
+    font-size: 12px;
+    color: #7F8C8D;
+}
+.stat-item {
+    margin-left: 10px;
+}
+
+/* 全局交互悬浮 —— 肉垫式轻微悬浮回弹 */
+.journal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 28px rgba(167, 196, 188, 0.18);
+}
+.journal-card:hover .journal-cover {
+    transform: scale(1.04); /* 鼠标移上卡片时，图片温柔缩放 */
+}
+
+/* ==========================================================================
+   D 移动端极端环境呼吸感适配（屏幕宽度小于 768px）
+   ========================================================================== */
+@media (max-width: 767px) {
+    /* 调整游记列间距，避免手机端左右紧贴屏幕 */
+    .journal-row {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .note-card-col {
+        margin-bottom: 25px; /* 卡片与卡片之间拉开舒适的间距 */
+    }
+    .journal-cover-box {
+        height: 180px; /* 手机上封面稍微矮一点，留出更多空间给文字 */
+    }
+}
+
+
+
+/* ==========================================================================
+   「城市探险」页面专属治愈系样式
+   ========================================================================== */
+
+/* 1. 顶部城市条幅（马卡龙轻量底色与大圆角） */
+.city-badge-banner {
+    background-color: rgba(167, 196, 188, 0.12); /* 清新薄荷绿的柔光半透明 */
+    border-radius: 24px;
+    padding: 35px 40px;
+    border-left: 6px solid #A7C4BC; /* 左侧薄荷绿萌系猫抓条 */
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.08);
+}
+.location-tag {
+    display: inline-block;
+    background-color: #FF9F89; /* 灵魂肉垫粉 */
+    color: #ffffff;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+.city-main-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #4A4E69; /* 深灰蓝主色 */
+    margin: 0 0 10px 0;
+}
+.city-desc {
+    font-size: 14px;
+    color: #7F8C8D; /* 猫爪浅灰 */
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* 2. 猫咪心情筛选器 */
+.filter-box-card {
+    background: #ffffff;
+    padding: 15px 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.1);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.filter-label {
+    font-weight: bold;
+    color: #4A4E69;
+    font-size: 14px;
+}
+.filter-tags-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.paw-filter-item {
+    text-decoration: none !important;
+    font-size: 13px;
+    color: #4A4E69;
+    background-color: #FDFBF7; /* 默认奶油米白 */
+    padding: 6px 16px;
+    border-radius: 16px;
+    transition: all 0.25s ease;
+    border: 1px solid rgba(167, 196, 188, 0.3);
+}
+.paw-filter-item:hover {
+    color: #FF9F89;
+    background-color: rgba(255, 159, 137, 0.08);
+    transform: scale(1.03);
+}
+.paw-filter-item.active {
+    background-color: #A7C4BC !important; /* 激活态薄荷绿 */
+    color: #ffffff !important;
+    border-color: #A7C4BC;
+    box-shadow: 0 4px 12px rgba(167, 196, 188, 0.3);
+}
+
+/* 3. 景点卡片深度定制 */
+.spot-grid-row {
+    margin-top: 15px;
+}
+.spot-card-col {
+    margin-bottom: 30px;
+}
+.spot-card {
+    background-color: #ffffff;
+    border-radius: 24px; /* 贯彻肉垫触感大圆角 */
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.12); /* 规范中的薄荷绿弥散阴影 */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.spot-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(255, 159, 137, 0.18); /* 悬浮时转化为暖橘肉垫粉阴影 */
+}
+.spot-img-container {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+}
+.spot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.spot-card:hover .spot-img {
+    transform: scale(1.06); /* 悬浮时图片微放大 */
+}
+.spot-badge-price {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(74, 78, 105, 0.85); /* 柔和深灰蓝蒙层 */
+    color: #FDFBF7;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+.spot-card-body {
+    padding: 20px;
+    flex-grow: 1;
+}
+.spot-mood-tag {
+    font-size: 12px;
+    color: #FF9F89; /* 强调色 */
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+}
+.spot-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #4A4E69;
+    margin: 0 0 10px 0;
+    line-height: 1.4;
+}
+.spot-intro {
+    font-size: 13px;
+    color: #7F8C8D; /* 辅助弱化文字 */
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+.spot-card-footer {
+    padding: 0 20px 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border-top: none;
+}
+.spot-meta {
+    font-size: 12px;
+    color: #7F8C8D;
+}
+.btn-meow-go {
+    text-decoration: none !important;
+    background-color: #A7C4BC; /* 主交互薄荷绿 */
+    color: #ffffff !important;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 16px;
+    transition: all 0.2s ease;
+}
+.btn-meow-go:hover {
+    background-color: #FF9F89; /* 悬浮变为灵魂肉垫粉 */
+    box-shadow: 0 4px 12px rgba(255, 159, 137, 0.3);
+}
+
+
+
+/* ==========================================================================
+   「城市探险」页面专属治愈系样式
+   ========================================================================== */
+
+/* 1. 顶部城市条幅（马卡龙轻量底色与大圆角） */
+.city-badge-banner {
+    background-color: rgba(167, 196, 188, 0.12); /* 清新薄荷绿的柔光半透明 */
+    border-radius: 24px;
+    padding: 35px 40px;
+    border-left: 6px solid #A7C4BC; /* 左侧薄荷绿萌系猫抓条 */
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.08);
+}
+.location-tag {
+    display: inline-block;
+    background-color: #FF9F89; /* 灵魂肉垫粉 */
+    color: #ffffff;
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+.city-main-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #4A4E69; /* 深灰蓝主色 */
+    margin: 0 0 10px 0;
+}
+.city-desc {
+    font-size: 14px;
+    color: #7F8C8D; /* 猫爪浅灰 */
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+/* 2. 猫咪心情筛选器 */
+.filter-box-card {
+    background: #ffffff;
+    padding: 15px 25px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.1);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.filter-label {
+    font-weight: bold;
+    color: #4A4E69;
+    font-size: 14px;
+}
+.filter-tags-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.paw-filter-item {
+    text-decoration: none !important;
+    font-size: 13px;
+    color: #4A4E69;
+    background-color: #FDFBF7; /* 默认奶油米白 */
+    padding: 6px 16px;
+    border-radius: 16px;
+    transition: all 0.25s ease;
+    border: 1px solid rgba(167, 196, 188, 0.3);
+}
+.paw-filter-item:hover {
+    color: #FF9F89;
+    background-color: rgba(255, 159, 137, 0.08);
+    transform: scale(1.03);
+}
+.paw-filter-item.active {
+    background-color: #A7C4BC !important; /* 激活态薄荷绿 */
+    color: #ffffff !important;
+    border-color: #A7C4BC;
+    box-shadow: 0 4px 12px rgba(167, 196, 188, 0.3);
+}
+
+/* 3. 景点卡片深度定制 */
+.spot-grid-row {
+    margin-top: 15px;
+}
+.spot-card-col {
+    margin-bottom: 30px;
+}
+.spot-card {
+    background-color: #ffffff;
+    border-radius: 24px; /* 贯彻肉垫触感大圆角 */
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(167, 196, 188, 0.12); /* 规范中的薄荷绿弥散阴影 */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.spot-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(255, 159, 137, 0.18); /* 悬浮时转化为暖橘肉垫粉阴影 */
+}
+.spot-img-container {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+}
+.spot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.spot-card:hover .spot-img {
+    transform: scale(1.06); /* 悬浮时图片微放大 */
+}
+.spot-badge-price {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(74, 78, 105, 0.85); /* 柔和深灰蓝蒙层 */
+    color: #FDFBF7;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+.spot-card-body {
+    padding: 20px;
+    flex-grow: 1;
+}
+.spot-mood-tag {
+    font-size: 12px;
+    color: #FF9F89; /* 强调色 */
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+}
+.spot-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #4A4E69;
+    margin: 0 0 10px 0;
+    line-height: 1.4;
+}
+.spot-intro {
+    font-size: 13px;
+    color: #7F8C8D; /* 辅助弱化文字 */
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+.spot-card-footer {
+    padding: 0 20px 20px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    border-top: none;
+}
+.spot-meta {
+    font-size: 12px;
+    color: #7F8C8D;
+}
+.btn-meow-go {
+    text-decoration: none !important;
+    background-color: #A7C4BC; /* 主交互薄荷绿 */
+    color: #ffffff !important;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 6px 14px;
+    border-radius: 16px;
+    transition: all 0.2s ease;
+}
+.btn-meow-go:hover {
+    background-color: #FF9F89; /* 悬浮变为灵魂肉垫粉 */
+    box-shadow: 0 4px 12px rgba(255, 159, 137, 0.3);
+}

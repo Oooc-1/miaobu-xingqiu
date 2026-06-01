@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}追光日记 | 喵眼世界{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    body { background-color: #FDFBF7 !important; } /* 确保奶油米白底色一致 */
+    .diary-wrapper { padding-top: 30px; padding-bottom: 60px; }
+    
+    /* 拍立得卡片风格：融入超级大圆角与弥散阴影 */
+    .polaroid-card {
+        background: #FFFFFF !important; 
+        padding: 16px 16px 65px 16px !important;
+        border-radius: 24px !important; /* 改为治愈系经典大圆角 */
+        box-shadow: 0 10px 30px rgba(74, 78, 105, 0.08) !important;
+        transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1); 
+        position: relative; 
+        margin-bottom: 40px;
+        cursor: pointer;
+    }
+    
+    /* 模拟自然错落感 */
+    .diary-item:nth-child(even) .polaroid-card { transform: rotate(1.5deg); }
+    .diary-item:nth-child(odd) .polaroid-card { transform: rotate(-1.5deg); }
+    
+    .polaroid-card:hover {
+        transform: rotate(0deg) scale(1.03) translateY(-8px) !important;
+        z-index: 10; 
+        box-shadow: 0 16px 35px rgba(255, 159, 137, 0.18) !important;
+    }
+
+    /* 照片容器：顶部做圆角裁剪，呼应无棱角主题 */
+    .photo-box {
+        width: 100%; 
+        height: 260px; 
+        overflow: hidden;
+        background: #E2ECE9; 
+        border: 1px solid rgba(167, 196, 188, 0.15);
+        border-radius: 16px; 
+    }
+    .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* ✨ 重新修正的拍立得底部标题样式（弃用楷体，改用现代圆润粗体） */
+    .photo-caption {
+        position: absolute; 
+        bottom: 20px; 
+        left: 24px;
+        /* 优先使用圆体、苹方等更干净可爱的现代字体，绝无生硬线条 */
+        font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "华文细黑", sans-serif;
+        color: #4A4E69; 
+        font-size: 16px; 
+        font-weight: bold;
+        letter-spacing: 0.5px; /* 微调字间距增加呼吸感 */
+    }
+
+    /* EXIF 参数悬浮窗：微调圆角 */
+    .exif-overlay {
+        position: absolute; 
+        top: 25px; 
+        right: 25px;
+        background: rgba(74, 78, 105, 0.9); 
+        color: #FDFBF7;
+        padding: 10px 14px; 
+        border-radius: 14px; 
+        font-size: 11px;
+        opacity: 0; 
+        transition: opacity 0.3s ease; 
+        pointer-events: none;
+        font-family: sans-serif;
+    }
+    .polaroid-card:hover .exif-overlay { opacity: 1; }
+    .exif-item { margin-bottom: 4px; padding-bottom: 2px; border-bottom: 1px dashed rgba(255,255,255,0.15); }
+    .exif-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container diary-wrapper">
+    <div class="row" style="margin-bottom: 40px;">
+        <div class="col-md-12 text-center">
+            <h2 style="color: #4A4E69; font-weight: bold; letter-spacing: 1px;">
+                <i class="fa-solid fa-camera-retro" style="color:#A7C4BC; margin-right: 6px;"></i> 追光日记
+            </h2>
+            <p style="color: #7F8C8D; font-size: 14px; margin-top: 5px;">定格那些转瞬即逝的温柔光影 🐾</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 col-sm-6 diary-item">
+            <div class="polaroid-card">
+                <div class="photo-box">
+                    <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=800" alt="莫干山">
+                </div>
+                <div class="photo-caption"><i class="fa-solid fa-quote-left" style="color: #FF9F89; font-size: 12px; margin-right: 4px;"></i> 莫干山 · 竹海深处</div>
+                
+                <div class="exif-overlay">
+                    <div class="exif-item"><i class="fa-solid fa-location-dot" style="color: #FF9F89;"></i> 30.60°N 119.86°E</div>
+                    <div class="exif-item"><i class="fa-solid fa-stopwatch"></i> 1/125s</div>
+                    <div class="exif-item"><i class="fa-solid fa-circle-dot"></i> f/2.8</div>
+                    <div class="exif-item">ISO 100</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 diary-item">
+            <div class="polaroid-card">
+                <div class="photo-box">
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800" alt="亚龙湾">
+                </div>
+                <div class="photo-caption"><i class="fa-solid fa-quote-left" style="color: #FF9F89; font-size: 12px; margin-right: 4px;"></i> 亚龙湾 · 粉色落日</div>
+                <div class="exif-overlay">
+                    <div class="exif-item"><i class="fa-solid fa-location-dot" style="color: #FF9F89;"></i> 18.25°N 109.51°E</div>
+                    <div class="exif-item"><i class="fa-solid fa-stopwatch"></i> 1/500s</div>
+                    <div class="exif-item"><i class="fa-solid fa-circle-dot"></i> f/8.0</div>
+                    <div class="exif-item">ISO 200</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6 diary-item">
+            <div class="polaroid-card">
+                <div class="photo-box">
+                    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=800" alt="神农架">
+                </div>
+                <div class="photo-caption"><i class="fa-solid fa-quote-left" style="color: #FF9F89; font-size: 12px; margin-right: 4px;"></i> 神农架 · 晨曦漫步</div>
+                <div class="exif-overlay">
+                    <div class="exif-item"><i class="fa-solid fa-location-dot" style="color: #FF9F89;"></i> 31.45°N 110.02°E</div>
+                    <div class="exif-item"><i class="fa-solid fa-stopwatch"></i> 1/200s</div>
+                    <div class="exif-item"><i class="fa-solid fa-circle-dot"></i> f/4.0</div>
+                    <div class="exif-item">ISO 400</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

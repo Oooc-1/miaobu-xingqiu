@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}喵喵信箱{% endblock %}
+{% block content %}
+<style>
+    /* 模拟信封容器 */
+    .envelope-container {
+        max-width: 800px;
+        margin: 50px auto;
+        background: #ffffff;
+        padding: 50px 50px;
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(167, 196, 188, 0.12);
+        position: relative;
+        border: 1px solid rgba(167, 196, 188, 0.2);
+    }
+
+    /* 装饰性胶带 */
+    .envelope-container .tape {
+        position: absolute;
+        width: 120px;
+        height: 35px;
+        background: rgba(167, 196, 188, 0.25);
+        transform: rotate(-15deg);
+        top: 20px;
+        left: -30px;
+        z-index: 10;
+    }
+
+    /* 右上角猫咪邮票 */
+    .cat-stamp {
+        position: absolute;
+        top: 30px;
+        right: 40px;
+        width: 70px;
+        height: 85px;
+        border: 3px dashed #FF9F89;
+        /* 肉垫粉虚线锯齿边 */
+        background: #FFF5F2;
+        padding: 5px;
+        text-align: center;
+        transform: rotate(8deg);
+        box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* 让图片在邮票格子内完美撑满并居中 */
+    .stamp-inner {
+        font-size: 28px;
+        line-height: 45px;
+        width: 100%;
+        height: 52px;
+        /* 给图片容器一个固定高度 */
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 确保你自己的图片不会拉伸，自适应大小 */
+    .stamp-img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        /* 保持图片比例 */
+        border-radius: 4px;
+        /* 让图片带一点点微微的圆角，更温和 */
+    }
+
+    .stamp-text {
+        font-size: 10px;
+        color: #FF9F89;
+        font-weight: bold;
+        display: block;
+        margin-top: 2px;
+    }
+
+    /* 标题样式 */
+    .feedback-header {
+        margin-bottom: 40px;
+    }
+
+    .feedback-header h2 {
+        font-weight: bold;
+        color: #444;
+        margin-bottom: 10px;
+    }
+
+    .feedback-header .subtitle {
+        color: #888;
+        font-size: 15px;
+    }
+
+    /* 表单控件 */
+    .miaobu-form .form-group {
+        margin-bottom: 25px;
+    }
+
+    .miaobu-form label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 8px;
+        font-size: 15px;
+    }
+
+    /* 扁平化圆角输入框 */
+    .custom-input {
+        border: 2px solid #EFEFEF;
+        border-radius: 12px;
+        padding: 12px 16px;
+        height: auto;
+        font-size: 14px;
+        color: #555;
+        box-shadow: none;
+        transition: all 0.3s ease;
+    }
+
+    .custom-input:hover {
+        border-color: #D2E4E0;
+    }
+
+    .custom-input:focus {
+        border-color: #A7C4BC;
+        box-shadow: 0 0 10px rgba(167, 196, 188, 0.25) !important;
+        outline: none;
+    }
+
+    /* 大圆角药丸状提交按钮 */
+    .btn-submit {
+        background-color: #FF9F89;
+        /* 默认肉垫粉 */
+        color: white !important;
+        border-radius: 30px;
+        padding: 12px 50px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        box-shadow: 0 5px 15px rgba(255, 159, 137, 0.3);
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    /* 悬浮动效：背景变薄荷绿 + 轻微放大 */
+    .btn-submit:hover {
+        background-color: #A7C4BC;
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(167, 196, 188, 0.4);
+    }
+
+    .btn-submit:active {
+        transform: scale(0.98);
+    }
+
+    /* 处理流程提示 */
+    .process-tip {
+        margin-top: 20px;
+        color: #999;
+        letter-spacing: 0.5px;
+    }
+</style>
+
+<div class="container">
+    <div class="envelope-container">
+        <div class="tape"></div>
+
+        <div class="cat-stamp hidden-xs">
+            <div class="stamp-inner">
+                <img src="{% static 'img/stamp.png' %}" alt="邮票头像" class="img-responsive stamp-img">
+            </div>
+            <span class="stamp-text">MIAOBU</span>
+        </div>
+
+        <div class="feedback-header">
+            <h2>📬 喵喵信箱</h2>
+            <p class="subtitle">无论是发现了奇妙的小角落，还是迷了路，都写信告诉我们吧！</p>
+        </div>
+
+        {% if success_msg %}
+        <div class="alert text-center"
+            style="background-color: rgba(167, 196, 188, 0.15); color: #4A4E69; border: 1px solid #A7C4BC; border-radius: 16px; margin-bottom: 25px; padding: 15px;">
+            {{ success_msg }}
+        </div>
+        {% endif %}
+
+        <form action="" method="POST" class="miaobu-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="feedback_type">你想反馈的是...？</label>
+                <select class="form-control custom-input" id="feedback_type" name="feedback_type">
+                    <option value="bug">BUG反馈（抓个虫）</option>
+                    <option value="suggest">功能建议（添块砖）</option>
+                    <option value="error">路线纠错（迷路啦）</option>
+                    <option value="other">其他想说的话</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="nickname">怎么称呼你（昵称）</label>
+                <input type="text" class="form-control custom-input" id="nickname" name="nickname" required
+                    placeholder="例如：流浪的小猫">
+            </div>
+
+            <div class="form-group">
+                <label for="email">喵喵回信邮箱</label>
+                <input type="email" class="form-control custom-input" id="email" name="email" required
+                    placeholder="留下邮箱，方便喵喵给你回信">
+            </div>
+
+            <div class="form-group">
+                <label for="content">信件内容</label>
+                <textarea class="form-control custom-input" id="content" name="content" rows="6" required
+                    placeholder="在这里留下你的爪印吧，喵喵们会认真阅读每一封信的……"></textarea>
+            </div>
+
+            <div class="text-center" style="margin-top: 40px;">
+                <button type="submit" class="btn btn-submit">投递信件</button>
+                <p class="process-tip">
+                    <small>📬 提交后处理流程：喵喵们将在 72 小时内通过邮件向您回复。</small>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

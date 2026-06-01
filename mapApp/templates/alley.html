@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}巷弄巡逻{% endblock %}
+
+{% block content %}
+<div class="home-paper-bg">
+
+    <div class="container section-gap">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alley-banner">
+                    <div class="banner-content">
+                        <span class="location-tag">🏮 巡逻范围：古城深处</span>
+                        <h1 class="city-main-title">巷弄巡逻：转角遇到喵 🐾</h1>
+                        <p class="city-desc">避开主干道的喧嚣，钻进那些连导航都头疼的小巷子。那里藏着奶奶家的炸串、午后的蝉鸣，和守着地盘的“街坊猫”。</p>
+                    </div>
+                    <div class="banner-icon-box hidden-xs">
+                        <span style="font-size: 80px;">🚲</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="margin-bottom: 30px;">
+        <div class="filter-box-card">
+            <span class="filter-label">🐾 巡逻路线：</span>
+            <div class="filter-tags-group">
+                <a href="#" class="paw-filter-item active">全城巡逻</a>
+                <a href="#" class="paw-filter-item"># 寻味烟火 (美食)</a>
+                <a href="#" class="paw-filter-item"># 旧书/旧物 (文化)</a>
+                <a href="#" class="paw-filter-item"># 极佳撸猫点 (遇见)</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="padding-bottom: 80px;">
+        <div class="row alley-grid">
+            
+            <div class="col-md-4 col-sm-6 col-xs-12 alley-col">
+                <div class="alley-card">
+                    <div class="alley-img-box">
+                        <img src="{% static 'img/note_xian.jpg' %}" alt="西安巷弄">
+                        <div class="meow-meter">
+                            🐾 猫咪出没率：95%
+                        </div>
+                    </div>
+                    <div class="alley-card-body">
+                        <div class="tag-row">
+                            <span class="alley-tag tag-orange"># 烟火气</span>
+                            <span class="alley-tag tag-mint"># 这里的橘猫胖</span>
+                        </div>
+                        <h3 class="alley-title">西安 · 回民街大皮院</h3>
+                        <p class="alley-info">别在主街停留，钻进大皮院。下午三点的青砖墙下，你会发现这巷弄真正的主人——几只正在舔毛的“大当家”。</p>
+                        <div class="alley-footer">
+                            <span class="fish-price">🐟 巡逻耗时: 2h</span>
+                            <a href="#" class="btn-patrol">开启巡逻</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12 alley-col">
+                <div class="alley-card">
+                    <div class="alley-img-box">
+                        <img src="{% static 'img/dest_beijing.jpg' %}" alt="北京胡同">
+                        <div class="meow-meter">
+                            🐾 猫咪出没率：80%
+                        </div>
+                    </div>
+                    <div class="alley-card-body">
+                        <div class="tag-row">
+                            <span class="alley-tag tag-orange"># 慢生活</span>
+                            <span class="alley-tag tag-mint"># 柿子树下</span>
+                        </div>
+                        <h3 class="alley-title">北京 · 东四五条胡同</h3>
+                        <p class="alley-info">避开南锣鼓巷。这里的胡同有红漆大门和灰砖墙。秋天抬头能看到红彤彤的柿子，低头能踩到慵懒的猫影。</p>
+                        <div class="alley-footer">
+                            <span class="fish-price">🐟 巡逻耗时: 1.5h</span>
+                            <a href="#" class="btn-patrol">开启巡逻</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12 alley-col">
+                <div class="alley-card">
+                    <div class="alley-img-box">
+                        <img src="{% static 'img/dest_chengdu.jpg' %}" alt="成都巷子">
+                        <div class="meow-meter">
+                            🐾 猫咪出没率：88%
+                        </div>
+                    </div>
+                    <div class="alley-card-body">
+                        <div class="tag-row">
+                            <span class="alley-tag tag-orange"># 盖碗茶</span>
+                            <span class="alley-tag tag-mint"># 龙门阵</span>
+                        </div>
+                        <h3 class="alley-title">成都 · 望福街</h3>
+                        <p class="alley-info">这条街充满了咖啡香和老社区的安逸感。点一杯盖碗咖啡，和路边躺平的黑白花猫一起晒个暖烘烘的太阳。</p>
+                        <div class="alley-footer">
+                            <span class="fish-price">🐟 巡逻耗时: 3h</span>
+                            <a href="#" class="btn-patrol">开启巡逻</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    /* 巷弄页面专属深度定制样式（可放入 style.css 或保留在此） */
+    .alley-banner {
+        background-color: #F4EEE8; /* 更加温暖的木质/青砖浅色调 */
+        border-radius: 24px;
+        padding: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 8px 24px rgba(74, 78, 105, 0.05);
+        border-bottom: 4px solid #A7C4BC;
+    }
+    
+    .alley-card {
+        background: #FFFFFF;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 8px 20px rgba(167, 196, 188, 0.12);
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+    }
+    
+    .alley-card:hover {
+        transform: rotate(-1deg) translateY(-5px); /* 增加一点手账贴纸的不规则晃动感 */
+        box-shadow: 0 12px 30px rgba(255, 159, 137, 0.2);
+    }
+
+    .alley-img-box {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
+    }
+    .alley-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .meow-meter {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        background: rgba(255, 159, 137, 0.9); /* 肉垫粉半透 */
+        color: white;
+        padding: 4px 10px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    .alley-card-body {
+        padding: 20px;
+    }
+
+    .tag-row {
+        margin-bottom: 10px;
+    }
+    .alley-tag {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 8px;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+    .tag-orange { background: rgba(255, 159, 137, 0.15); color: #FF9F89; }
+    .tag-mint { background: rgba(167, 196, 188, 0.15); color: #A7C4BC; }
+
+    .alley-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: #4A4E69;
+        margin: 0 0 10px 0;
+    }
+
+    .alley-info {
+        font-size: 13px;
+        color: #7F8C8D;
+        line-height: 1.6;
+        height: 63px;
+        overflow: hidden;
+    }
+
+    .alley-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        border-top: 1px dashed #E2ECE9;
+        padding-top: 15px;
+    }
+
+    .fish-price {
+        font-size: 12px;
+        color: #4A4E69;
+        font-weight: bold;
+    }
+
+    .btn-patrol {
+        background-color: #A7C4BC;
+        color: white !important;
+        padding: 5px 15px;
+        border-radius: 12px;
+        font-size: 12px;
+        text-decoration: none !important;
+        transition: 0.3s;
+    }
+    .btn-patrol:hover {
+        background-color: #FF9F89;
+        box-shadow: 0 4px 12px rgba(255, 159, 137, 0.3);
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.paw-filter-item').on('click', function(e) {
+            e.preventDefault();
+            $('.paw-filter-item').removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+</script>
+{% endblock %}

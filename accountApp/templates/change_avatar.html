@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}更换头像 🐾{% endblock %}
+
+{% block extra_css %}
+<style>
+    .avatar-card {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(74, 78, 105, 0.08);
+        border: 1px solid rgba(167, 196, 188, 0.2);
+        padding: 40px;
+        margin-top: 100px;
+        margin-bottom: 60px;
+        text-align: center;
+    }
+    .avatar-title {
+        color: #4A4E69;
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+    .avatar-preview-box {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 25px auto;
+    }
+    .avatar-preview-img {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #A7C4BC;
+        background-color: #FDFBF7;
+        box-shadow: 0 6px 16px rgba(167, 196, 188, 0.25);
+    }
+    #avatarInput {
+        display: none;
+    }
+    .btn-choose-avatar {
+        background-color: #ffffff;
+        color: #4A4E69;
+        border: 2px dashed #A7C4BC;
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.25s ease-in-out;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+    .btn-choose-avatar:hover {
+        background-color: #FFF5F2;
+        border-color: #FF9F89;
+        color: #FF9F89;
+        transform: translateY(-2px);
+    }
+    .btn-save-avatar {
+        background-color: #A7C4BC;
+        color: #ffffff;
+        border: none;
+        padding: 12px 40px;
+        border-radius: 30px;
+        font-weight: bold;
+        transition: all 0.25s ease-in-out;
+        margin-top: 15px;
+        box-shadow: 0 4px 12px rgba(167, 196, 188, 0.3);
+    }
+    .btn-save-avatar:hover {
+        background-color: #FF9F89;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 159, 137, 0.3);
+    }
+    .tip-text {
+        color: rgba(74, 78, 105, 0.6);
+        font-size: 13px;
+    }
+    .btn-back-nest {
+        display: inline-block;
+        margin-top: 20px;
+        color: #7F8C8D;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .btn-back-nest:hover {
+        color: #A7C4BC;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+            
+            <div class="avatar-card">
+                <h3 class="avatar-title"><i class="fa-solid fa-camera-retro" style="color: #A7C4BC; margin-right: 8px;"></i> 帮小猫换张新面孔</h3>
+                
+                {% if success %}
+                    <div class="alert alert-success" style="border-radius: 12px; font-weight: bold; background-color: #EBF3F0; color: #A7C4BC; border: none;">{{ success }}</div>
+                {% endif %}
+                {% if error %}
+                    <div class="alert alert-danger" style="border-radius: 12px; font-weight: bold;">{{ error }}</div>
+                {% endif %}
+
+                <form action="{% url 'change_avatar' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="avatar-preview-box">
+                        {% if user.avatar %}
+                            <img id="avatarPreview" src="{{ user.avatar.url }}" class="avatar-preview-img" alt="当前头像">
+                        {% else %}
+                            <img id="avatarPreview" src="{% static 'img/default_cat_avatar.jpg' %}" class="avatar-preview-img" alt="默认头像">
+                        {% endif %}
+                    </div>
+
+                    <input type="file" name="avatar_file" id="avatarInput" accept="image/*">
+                    
+                    <label for="avatarInput" class="btn-choose-avatar">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> 挑选一张精美猫片
+                    </label>
+                    
+                    <p class="tip-text">支持 JPG, PNG, GIF 格式，推荐正方形图片 🐾</p>
+                    
+                    <div>
+                        <button type="submit" class="btn-save-avatar">
+                            <i class="fa-solid fa-circle-check"></i> 确认保存新头像
+                        </button>
+                    </div>
+                </form>
+
+                <a href="{% url 'my_nest' %}" class="btn-back-nest"><i class="fa-solid fa-chevron-left"></i> 返回我的猫巢基地</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById('avatarInput').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('avatarPreview').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %}

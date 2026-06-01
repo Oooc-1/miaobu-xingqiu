@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}藏宝阁周边 | 肉垫体验{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    body { background-color: #FDFBF7 !important; }
+    .store-wrapper { padding-top: 30px; padding-bottom: 60px; }
+    
+    /* 藏宝阁专属古典薄荷绿 Banner */
+    .store-banner {
+        background: linear-gradient(135deg, #E2ECE9 0%, #F5EDE0 100%) !important;
+        border-radius: 24px !important; padding: 40px !important; margin-bottom: 40px !important;
+        box-shadow: 0 8px 24px rgba(167, 196, 188, 0.06);
+    }
+
+    /* 📦 独家设计：双列格子收纳柜格子卡片 */
+    .goods-card {
+        background: #FFFFFF !important; border: none !important;
+        border-radius: 22px !important; padding: 16px !important; margin-bottom: 30px;
+        box-shadow: 0 6px 20px rgba(74, 78, 105, 0.05) !important;
+        transition: all 0.3s ease;
+    }
+    .goods-card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 14px 30px rgba(255, 159, 137, 0.15) !important;
+    }
+
+    /* 商品精致大图 */
+    .goods-img-box {
+        width: 100%; height: 210px; border-radius: 16px; overflow: hidden;
+        background: #FDFBF7; margin-bottom: 15px; position: relative;
+    }
+    .goods-img-box img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .goods-price { color: #FF9F89; font-size: 20px; font-weight: 900; font-family: sans-serif; }
+    
+    /* 分类虚线分割小标题 */
+    .shelf-title {
+        color: #4A4E69; font-weight: bold; font-size: 18px;
+        border-bottom: 2px dashed rgba(167,196,188,0.4);
+        padding-bottom: 8px; margin-bottom: 25px; margin-top: 20px;
+        font-family: "PingFang SC", sans-serif;
+    }
+
+    .btn-buy {
+        background: #FFF5F2; color: #FF9F89 !important; padding: 5px 14px;
+        border-radius: 10px; font-size: 12px; font-weight: bold; text-decoration: none !important;
+        transition: all 0.2s;
+    }
+    .goods-card:hover .btn-buy {
+        background: #FF9F89; color: white !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container store-wrapper">
+    <div class="store-banner">
+        <span style="background:#A7C4BC; color:white; border-radius:10px; padding:5px 12px; font-size:11px; font-weight:bold;">
+            <i class="fa-solid fa-box-open"></i> 喵步杂货铺
+        </span>
+        <h1 style="color: #4A4E69; font-weight: bold; margin-top: 15px; font-size: 26px;">把旅行的温柔记忆，统统打包带回家 🎁</h1>
+        <p style="color: #7F8C8D; font-size: 14px; margin-top: 8px;">这里有严选的手账文创周边，还有探路官为你挑选的产地直发美味特产。</p>
+    </div>
+
+    <div class="shelf-title"><i class="fa-solid fa-pen-nib" style="color:#FF9F89;"></i> 第一层：喵步原创精选文创</div>
+    <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <div class="goods-card">
+                <div class="goods-img-box">
+                    <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&q=80&w=600" alt="笔记本">
+                </div>
+                <h4 style="color:#4A4E69; font-weight:bold; font-size:15px; margin-bottom:5px; height:20px; overflow:hidden;">定制旅行防水笔记本（旅行行程记录页）</h4>
+                <p style="color:#7F8C8D; font-size:12px; margin-bottom:12px;">采用高级防泼水外壳，内含独家设计的猫足迹插画日程表。</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="goods-price">¥ 39.00</span>
+                    <a href="#" class="btn-buy">抱走它 🐾</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-6">
+            <div class="goods-card">
+                <div class="goods-img-box">
+                    <img src="https://images.unsplash.com/photo-1579202673506-ca3ce28943ef?auto=format&fit=crop&q=80&w=600" alt="明信片">
+                </div>
+                <h4 style="color:#4A4E69; font-weight:bold; font-size:15px; margin-bottom:5px; height:20px; overflow:hidden;">故宫主题明信片套装（含12张手绘景点）</h4>
+                <p style="color:#7F8C8D; font-size:12px; margin-bottom:12px;">特邀插画师手绘故宫红墙御猫，特种纸质感极其细腻温润。</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="goods-price">¥ 24.50</span>
+                    <a href="#" class="btn-buy">抱走它 🐾</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="shelf-title" style="border-bottom-color: #FF9F89;"><i class="fa-solid fa-cookie-bite" style="color:#A7C4BC;"></i> 第二层：产地直发美味特产</div>
+    <div class="row">
+        <div class="col-md-4 col-sm-6">
+            <div class="goods-card">
+                <div class="goods-img-box">
+                    <img src="https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?auto=format&fit=crop&q=80&w=600" alt="点心">
+                </div>
+                <h4 style="color:#4A4E69; font-weight:bold; font-size:15px; margin-bottom:5px; height:20px; overflow:hidden;">北京稻香村传统糕点礼盒（牛舌饼香酥保质期短）</h4>
+                <p style="color:#7F8C8D; font-size:12px; margin-bottom:12px;">老字号经典酥皮，纯正咸甜交织风味，北京门店当日发货。</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="goods-price">¥ 68.00</span>
+                    <a href="#" class="btn-buy">抱走它 🐾</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

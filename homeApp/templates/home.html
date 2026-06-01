@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}猫窝首页{% endblock %}
+
+{% block content %}
+<div class="home-paper-bg">
+
+    <div class="container section-gap">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1 col-sm-12">
+                <div id="miaobu-carousel" class="carousel slide mb-carousel" data-ride="carousel" data-interval="3000">
+                    <ol class="carousel-indicators mb-indicators">
+                        <li data-target="#miaobu-carousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#miaobu-carousel" data-slide-to="1"></li>
+                        <li data-target="#miaobu-carousel" data-slide-to="2"></li>
+                    </ol>
+
+                    <div class="carousel-inner" role="listbox">
+                        <div class="item active">
+                            <img src="{% static 'img/slide_sanya.jpg' %}" alt="三亚海滨漫步" class="carousel-img-filter">
+                            <div class="carousel-caption mb-caption">
+                                <h3 class="caption-title">在三亚，踩着浪花像猫咪一样伸个懒腰</h3>
+                                <p class="caption-text">椰风微醺的海滩，藏着最治愈的午后日光...</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="{% static 'img/slide_lijiang.jpg' %}" alt="丽江巷弄 patrol"
+                                class="carousel-img-filter">
+                            <div class="carousel-caption mb-caption">
+                                <h3 class="caption-title">丽江古镇的午后，石板路上的猫步巡逻</h3>
+                                <p class="caption-text">穿过开满鲜花的青石巷，探寻屋瓦缝隙里的旧时光...</p>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <img src="{% static 'img/slide_xian.jpg' %}" alt="西安古城探索" class="carousel-img-filter">
+                            <div class="carousel-caption mb-caption">
+                                <h3 class="caption-title">城墙根下的低语：古城西安的暮色探险</h3>
+                                <p class="caption-text">砖瓦之间，倾听千年古都厚重又温柔的历史回音...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a class="left carousel-control mb-control-btn-left" href="#miaobu-carousel" role="button"
+                        data-slide="prev">
+                        <span class="mb-arrow-icon" aria-hidden="true">🐾</span>
+                        <span class="sr-only">上一只</span>
+                    </a>
+                    <a class="right carousel-control mb-control-btn-right" href="#miaobu-carousel" role="button"
+                        data-slide="next">
+                        <span class="mb-arrow-icon" aria-hidden="true">🐾</span>
+                        <span class="sr-only">下一只</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container section-gap">
+        <div class="row mb-section-header">
+            <div class="col-xs-12">
+                <h2 class="section-title">🐾 喵迹追踪 · 热门目的地</h2>
+                <p class="section-subtitle">跟着小猫爪，测一测你最想去哪一个治愈角落？</p>
+            </div>
+        </div>
+
+        <div class="mb-scroll-container">
+            <div class="destination-scroll-wrapper">
+                <div class="destination-card-item" data-destination="lijiang">
+                    <a href="{% url 'mapApp:city' %}?dest=lijiang" class="dest-card-link">
+                        <div class="dest-img-box">
+                            <img src="{% static 'img/dest_lijiang.jpg' %}" alt="丽江">
+                            <span class="badge-hot-paw">🔥 4.2w 喵友</span>
+                            <div class="dest-name-overlay">
+                                <h4>丽江</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="destination-card-item" data-destination="sanya">
+                    <a href="{% url 'mapApp:city' %}?dest=sanya" class="dest-card-link">
+                        <div class="dest-img-box">
+                            <img src="{% static 'img/dest_sanya.jpg' %}" alt="三亚">
+                            <span class="badge-hot-paw">98% 热度</span>
+                            <div class="dest-name-overlay">
+                                <h4>三亚</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="destination-card-item" data-destination="xizang">
+                    <a href="{% url 'mapApp:city' %}?dest=xizang" class="dest-card-link">
+                        <div class="dest-img-box">
+                            <img src="{% static 'img/dest_xizang.jpg' %}" alt="西藏">
+                            <span class="badge-hot-paw">🐾 2.8w 踩点</span>
+                            <div class="dest-name-overlay">
+                                <h4>西藏</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="destination-card-item" data-destination="beijing">
+                    <a href="{% url 'mapApp:city' %}?dest=beijing" class="dest-card-link">
+                        <div class="dest-img-box">
+                            <img src="{% static 'img/dest_beijing.jpg' %}" alt="北京">
+                            <span class="badge-hot-paw">🔥 3.5w 喵友</span>
+                            <div class="dest-name-overlay">
+                                <h4>北京</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="destination-card-item" data-destination="chengdu">
+                    <a href="{% url 'mapApp:city' %}?dest=chengdu" class="dest-card-link">
+                        <div class="dest-img-box">
+                            <img src="{% static 'img/dest_chengdu.jpg' %}" alt="成都">
+                            <span class="badge-hot-paw">95% 好评</span>
+                            <div class="dest-name-overlay">
+                                <h4>成都</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="destination-card-item-ghost" style="flex: 0 0 20px; width: 20px;"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container section-gap" style="padding-bottom: 50px;">
+        <div class="row mb-section-header">
+            <div class="col-xs-12">
+                <h2 class="section-title">📝 精选喵步记 · 推荐游记</h2>
+                <p class="section-subtitle">手账本里翻出来的旅行碎碎念，总有一段能戳中你</p>
+            </div>
+        </div>
+
+        <div class="row journal-row">
+            {% for note in featured_notes %}
+            <div class="col-md-4 col-sm-6 col-xs-12 note-card-col">
+                <div class="journal-card">
+                    <div class="journal-cover-box">
+                        {% if note.cover_image %}
+                        <img src="{{ note.cover_image.url }}" class="journal-cover" alt="游记封面">
+                        {% else %}
+                        <img src="{% static 'img/default_note.jpg' %}" class="journal-cover" alt="默认封面">
+                        {% endif %}
+                    </div>
+                    <div class="journal-body">
+                        <span class="badge-topic"># {{ note.get_category_display }}</span>
+                        <h3 class="journal-title"><a href="#">{{ note.title }}</a></h3>
+                        <p class="journal-summary">{{ note.summary|truncatechars:60 }}</p>
+                    </div>
+                    <div class="journal-footer">
+                        <div class="author-info">
+                            {% if note.author.avatar %}
+                            <img src="{{ note.author.avatar.url }}" class="author-avatar" alt="博主头像">
+                            {% else %}
+                            <img src="{% static 'img/default_cat_avatar.png' %}" class="author-avatar" alt="默认头像">
+                            {% endif %}
+                            <span class="author-name">{{ note.author.username }}</span>
+                        </div>
+                        <div class="journal-stats">
+                            <span class="stat-item">🐟 {{ note.like_count }}</span>
+                            <span class="stat-item">🐾 {{ note.collect_count }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-xs-12">
+                <p style="text-align:center;">暂无精选游记，快去后台添加第一篇喵步记吧！</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // 当点击任何热门目的地卡片时，触发无感拦截，在控制台模拟 Click Log 数据的上传
+        $('.destination-card-item').on('click', function () {
+            var destId = $(this).data('destination');
+            var timestamp = new Date().toLocaleString();
+            console.log("📊 [运营看板埋点成功] 时间: " + timestamp + " | 用户点击了目的地: " + destId + " | 动作: CLICK_DEST");
+            // 提示：后续开发第三阶段时，可在此处编写 $.ajax({url: '/track/click/', data: {...}}) 将数据喂给 Django 数据库
+        });
+    });
+</script>
+{% endblock %}
