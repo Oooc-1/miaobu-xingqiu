@@ -61,29 +61,29 @@
     </div>
 
     <div class="row">
+        {% for category in categories %}
         <div class="col-md-6">
+            <div class="fish-memo" style="{% if forloop.counter|divisibleby:2 %}border-top-color: #A7C4BC !important;{% endif %}">
+                <div class="news-tag" style="{% if forloop.counter|divisibleby:2 %}background:rgba(167,196,188,0.2); color:#A7C4BC;{% else %}background:rgba(255,159,137,0.15); color:#FF9F89;{% endif %}"># {{ category.tag }}</div>
+                <h3 style="font-weight:bold; color:#4A4E69; margin-top:5px; margin-bottom:20px;">{{ category.title }}</h3>
+                <ul class="fish-list">
+                    {% for item in category.items.all %}
+                    <li>{{ item.content }}{% if item.is_hot %}<span class="hot-label">HOT</span>{% endif %}</li>
+                    {% empty %}
+                    <li class="text-muted">暂无资讯内容，前往后台编辑此板块。</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-md-12">
             <div class="fish-memo">
-                <div class="news-tag"># 签证与准入</div>
-                <h3 style="font-weight:bold; color:#4A4E69; margin-top:5px; margin-bottom:20px;">2026免签鱼干系列列表</h3>
-                <ul class="fish-list">
-                    <li>新增泰国30天永久免签，带上猫粮说走就走！<span class="hot-label">HOT</span></li>
-                    <li>暑期高峰预警：九寨沟每日限流3万人，记得提前预约踩点。</li>
-                    <li>马来西亚入境流程简化，电子卡填报只需3分钟。</li>
-                </ul>
+                <div class="news-tag"># 暂无数据</div>
+                <h3 style="font-weight:bold; color:#4A4E69; margin-top:5px; margin-bottom:20px;">请在后台添加新闻板块</h3>
+                <p class="text-muted">当前暂无“今日鱼干”资讯，您可以通过管理员页面创建 `NewsCategory` 和 `NewsItem`。</p>
             </div>
         </div>
-
-        <div class="col-md-6">
-            <div class="fish-memo" style="border-top-color: #A7C4BC !important;">
-                <div class="news-tag" style="background:rgba(255,159,137,0.15); color:#FF9F89;"># 交通情报</div>
-                <h3 style="font-weight:bold; color:#4A4E69; margin-top:5px; margin-bottom:20px;">新机场与航线动态</h3>
-                <ul class="fish-list">
-                    <li>成都天府国际机场新增5条国际直飞航线，航线图已更新。</li>
-                    <li>故宫博物院周一闭馆通知：想看红墙小猫的猫友避开周一。</li>
-                    <li>西藏林芝“桃花专列”开通，窗外就是粉色的云朵。</li>
-                </ul>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

@@ -88,51 +88,43 @@
     </div>
 
     <div class="row">
+        {% for photo in photos %}
         <div class="col-md-4 col-sm-6 diary-item">
             <div class="polaroid-card">
                 <div class="photo-box">
-                    <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&q=80&w=800" alt="莫干山">
+                    {% if photo.image %}
+                    <img src="{{ photo.image.url }}" alt="{{ photo.title }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/400x260?text=No+Image" alt="暂无图片">
+                    {% endif %}
                 </div>
-                <div class="photo-caption"><i class="fa-solid fa-quote-left" style="color: #FF9F89; font-size: 12px; margin-right: 4px;"></i> 莫干山 · 竹海深处</div>
-                
+                <div class="photo-caption"><i class="fa-solid fa-quote-left" style="color: #FF9F89; font-size: 12px; margin-right: 4px;"></i> {{ photo.title|default:'无标题照片' }}</div>
                 <div class="exif-overlay">
-                    <div class="exif-item"><i class="fa-solid fa-location-dot" style="color: #FF9F89;"></i> 30.60°N 119.86°E</div>
-                    <div class="exif-item"><i class="fa-solid fa-stopwatch"></i> 1/125s</div>
-                    <div class="exif-item"><i class="fa-solid fa-circle-dot"></i> f/2.8</div>
-                    <div class="exif-item">ISO 100</div>
+                    {% if photo.latitude and photo.longitude %}
+                    <div class="exif-item"><i class="fa-solid fa-location-dot" style="color: #FF9F89;"></i> {{ photo.latitude }} {{ photo.longitude }}</div>
+                    {% endif %}
+                    {% if photo.shutter_speed %}
+                    <div class="exif-item"><i class="fa-solid fa-stopwatch"></i> {{ photo.shutter_speed }}</div>
+                    {% endif %}
+                    {% if photo.aperture %}
+                    <div class="exif-item"><i class="fa-solid fa-circle-dot"></i> {{ photo.aperture }}</div>
+                    {% endif %}
+                    {% if photo.iso %}
+                    <div class="exif-item">ISO {{ photo.iso }}</div>
+                    {% endif %}
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4 col-sm-6 diary-item">
-            <div class="polaroid-card">
-                <div class="photo-box">
-                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=800" alt="亚龙湾">
+        {% empty %}
+        <div class="col-md-12">
+            <div class="polaroid-card" style="text-align:center; padding-bottom:40px;">
+                <div class="photo-box" style="display:flex;align-items:center;justify-content:center;">
+                    <span style="color:#A7C4BC; font-size:24px;">暂无日记照片</span>
                 </div>
-                <div class="photo-caption"><i class="fa-solid fa-quote-left" style="color: #FF9F89; font-size: 12px; margin-right: 4px;"></i> 亚龙湾 · 粉色落日</div>
-                <div class="exif-overlay">
-                    <div class="exif-item"><i class="fa-solid fa-location-dot" style="color: #FF9F89;"></i> 18.25°N 109.51°E</div>
-                    <div class="exif-item"><i class="fa-solid fa-stopwatch"></i> 1/500s</div>
-                    <div class="exif-item"><i class="fa-solid fa-circle-dot"></i> f/8.0</div>
-                    <div class="exif-item">ISO 200</div>
-                </div>
+                <div class="photo-caption">请前往管理员后台上传日记照片</div>
             </div>
         </div>
-
-        <div class="col-md-4 col-sm-6 diary-item">
-            <div class="polaroid-card">
-                <div class="photo-box">
-                    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=800" alt="神农架">
-                </div>
-                <div class="photo-caption"><i class="fa-solid fa-quote-left" style="color: #FF9F89; font-size: 12px; margin-right: 4px;"></i> 神农架 · 晨曦漫步</div>
-                <div class="exif-overlay">
-                    <div class="exif-item"><i class="fa-solid fa-location-dot" style="color: #FF9F89;"></i> 31.45°N 110.02°E</div>
-                    <div class="exif-item"><i class="fa-solid fa-stopwatch"></i> 1/200s</div>
-                    <div class="exif-item"><i class="fa-solid fa-circle-dot"></i> f/4.0</div>
-                    <div class="exif-item">ISO 400</div>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}
