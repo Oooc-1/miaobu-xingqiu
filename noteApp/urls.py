@@ -1,10 +1,14 @@
 from django.urls import path
 from . import views
 
-app_name='noteApp'
+app_name = 'noteApp'
 
-urlpatterns=[
-    path('guide/', views.guide, name='guide'),       # 踩点指南
-    path('food/', views.food, name='food'),          # 干粮补给
-    path('stay/', views.stay, name='stay'),          # 躲雨小窝
+urlpatterns = [
+    path('guide/', views.guide, name='guide'),
+    path('food/', views.food, name='food'),
+    path('stay/', views.stay, name='stay'),
+    path('<int:note_id>/', views.note_detail, name='detail'),
+    # 新增交互接口
+    path('like/<int:note_id>/', views.like_note, name='like_note'),
+    path('comment/<int:note_id>/', views.add_comment, name='add_comment'),
 ]

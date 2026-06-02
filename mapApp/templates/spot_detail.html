@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ spot.name }} - 目的地详情{% endblock %}
+
+{% block content %}
+<div class="container" style="padding:40px 0;">
+    <div class="row">
+        <div class="col-md-8">
+            {% if spot.image %}
+            <img src="{{ spot.image.url }}" alt="{{ spot.name }}" style="width:100%; border-radius:12px; object-fit:cover; max-height:420px;">
+            {% endif %}
+            <h1 style="margin-top:18px;">{{ spot.name }}</h1>
+            <p style="color:#7F8C8D;">{{ spot.description }}</p>
+            <div style="margin-top:18px;">
+                <span style="margin-right:12px;">📍 地址：{{ spot.address }}</span>
+                <span style="margin-right:12px;">⏱ 建议耗时：{{ spot.time_required }}</span>
+                <span>💸 费用：{{ spot.cost_desc }}</span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="padding:20px; border-radius:12px;">
+                <h4>访问信息</h4>
+                <p>喵咪出没率：{{ spot.meow_rate }}%</p>
+                <p>标签：{{ spot.mood_tag }}</p>
+                <p>分类：{{ spot.get_category_display }}</p>
+                {% if spot.category == 'city' %}
+                <a href="{% url 'mapApp:city' %}" class="btn btn-return" style="margin-top:12px; background:#FF9F89; border:none; color:#fff; border-radius:28px; padding:10px 20px;">返回地图</a>
+                {% elif spot.category == 'forest' %}
+                <a href="{% url 'mapApp:forest' %}" class="btn btn-return" style="margin-top:12px; background:#FF9F89; border:none; color:#fff; border-radius:28px; padding:10px 20px;">返回地图</a>
+                {% elif spot.category == 'alley' %}
+                <a href="{% url 'mapApp:alley' %}" class="btn btn-return" style="margin-top:12px; background:#FF9F89; border:none; color:#fff; border-radius:28px; padding:10px 20px;">返回地图</a>
+                {% else %}
+                <a href="{% url 'mapApp:city' %}" class="btn btn-return" style="margin-top:12px; background:#FF9F89; border:none; color:#fff; border-radius:28px; padding:10px 20px;">返回地图</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

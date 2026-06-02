@@ -67,61 +67,31 @@
 
         <div class="mb-scroll-container">
             <div class="destination-scroll-wrapper">
-                <div class="destination-card-item" data-destination="lijiang">
-                    <a href="{% url 'mapApp:city' %}?dest=lijiang" class="dest-card-link">
+                {% for spot in featured_spots %}
+                <div class="destination-card-item" data-destination="{{ spot.slug }}">
+                    <a href="{% url 'mapApp:spot_detail' spot.slug %}" class="dest-card-link">
                         <div class="dest-img-box">
-                            <img src="{% static 'img/dest_lijiang.jpg' %}" alt="丽江">
-                            <span class="badge-hot-paw">🔥 4.2w 喵友</span>
+                            {% if spot.image %}
+                            <img src="{{ spot.image.url }}" alt="{{ spot.name }}">
+                            {% else %}
+                            <img src="{% static 'img/dest_lijiang.jpg' %}" alt="{{ spot.name }}">
+                            {% endif %}
+                            <span class="badge-hot-paw">{% if spot.meow_rate %}🔥 {{ spot.meow_rate }}% 喵友{% else %}热门{% endif %}</span>
                             <div class="dest-name-overlay">
-                                <h4>丽江</h4>
+                                <h4>{{ spot.name }}</h4>
                             </div>
                         </div>
                     </a>
                 </div>
-                <div class="destination-card-item" data-destination="sanya">
-                    <a href="{% url 'mapApp:city' %}?dest=sanya" class="dest-card-link">
-                        <div class="dest-img-box">
-                            <img src="{% static 'img/dest_sanya.jpg' %}" alt="三亚">
-                            <span class="badge-hot-paw">98% 热度</span>
-                            <div class="dest-name-overlay">
-                                <h4>三亚</h4>
-                            </div>
-                        </div>
-                    </a>
+                {% empty %}
+                <div class="destination-card-item">
+                    <div class="dest-img-box">
+                        <img src="{% static 'img/dest_lijiang.jpg' %}" alt="默认">
+                        <span class="badge-hot-paw">暂无数据</span>
+                        <div class="dest-name-overlay"><h4>暂无</h4></div>
+                    </div>
                 </div>
-                <div class="destination-card-item" data-destination="xizang">
-                    <a href="{% url 'mapApp:city' %}?dest=xizang" class="dest-card-link">
-                        <div class="dest-img-box">
-                            <img src="{% static 'img/dest_xizang.jpg' %}" alt="西藏">
-                            <span class="badge-hot-paw">🐾 2.8w 踩点</span>
-                            <div class="dest-name-overlay">
-                                <h4>西藏</h4>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="destination-card-item" data-destination="beijing">
-                    <a href="{% url 'mapApp:city' %}?dest=beijing" class="dest-card-link">
-                        <div class="dest-img-box">
-                            <img src="{% static 'img/dest_beijing.jpg' %}" alt="北京">
-                            <span class="badge-hot-paw">🔥 3.5w 喵友</span>
-                            <div class="dest-name-overlay">
-                                <h4>北京</h4>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="destination-card-item" data-destination="chengdu">
-                    <a href="{% url 'mapApp:city' %}?dest=chengdu" class="dest-card-link">
-                        <div class="dest-img-box">
-                            <img src="{% static 'img/dest_chengdu.jpg' %}" alt="成都">
-                            <span class="badge-hot-paw">95% 好评</span>
-                            <div class="dest-name-overlay">
-                                <h4>成都</h4>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                {% endfor %}
                 <div class="destination-card-item-ghost" style="flex: 0 0 20px; width: 20px;"></div>
             </div>
         </div>
@@ -149,7 +119,7 @@
                     </div>
                     <div class="journal-body">
                         <span class="badge-topic"># {{ note.get_category_display }}</span>
-                        <h3 class="journal-title"><a href="#">{{ note.title }}</a></h3>
+                        <h3 class="journal-title"><a href="{% url 'noteApp:detail' note.id %}">{{ note.title }}</a></h3>
                         <p class="journal-summary">{{ note.summary|truncatechars:60 }}</p>
                     </div>
                     <div class="journal-footer">

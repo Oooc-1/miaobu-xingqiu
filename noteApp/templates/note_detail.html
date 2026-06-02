@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ note.title }} - 喵步星球{% endblock %}
+
+{% block content %}
+<style>
+    /* 核心包装器：打造手账质感 */
+    .note-detail-wrapper {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 40px;
+        background-color: #fbfaf8;
+        border-radius: 30px;
+        box-shadow: 0 15px 45px rgba(0,0,0,0.05);
+    }
+
+    .note-detail-img { width: 100%; height: auto; border-radius: 20px; margin-bottom: 30px; }
+    .note-detail-title { font-size: 2.2em; font-weight: 800; color: #2c3e50; text-align: center; margin-bottom: 20px; }
+    .note-content { font-size: 17px; line-height: 1.9; color: #4a4a4a; margin: 30px 0; }
+
+    /* 评论与交互区样式 */
+    .comment-item { padding: 15px; margin-bottom: 10px; background: rgba(255,255,255,0.6); border-radius: 15px; }
+    .reply-item { margin-left: 40px; padding: 10px; border-left: 3px solid #ff9f43; background: rgba(255,255,255,0.3); border-radius: 0 10px 10px 0; }
+    
+    /* 按钮样式 */
+    .btn-cute { 
+        background: #ff9f43; 
+        color: white; 
+        border: none; 
+        padding: 10px 25px; 
+        border-radius: 25px; 
+        transition: 0.3s; 
+        cursor: pointer;
+    }
+    .btn-cute:hover { background: #ff7f00; transform: translateY(-2px); }
+    textarea { width: 100%; border: 2px solid #eee; border-radius: 20px; padding: 15px; resize: none; background: #fff; }
+</style>
+
+<div class="container">
+    <div class="note-detail-wrapper">
+        <img src="{% if note.cover_image %}{{ note.cover_image.url }}{% else %}{% static 'img/bagcat.jpg' %}{% endif %}" class="note-detail-img">
+
+        <h1 class="note-detail-title">{{ note.title }}</h1>
+        <p class="text-center text-muted">🐾 作者: {{ note.author.username }} | 发布: {{ note.created_at|date:"Y-m-d" }}</p>
+
+        <div class="note-content">{{ note.content|linebreaks }}</div>
+
+        <hr>
+
+        <div class="text-center my-4">
+            <!-- 关键：把所有变量都放到HTML的data属性里，JS里完全不用写模板标签 -->
+            <button 
+                id="like-btn" 
+                class="btn-cute"
+                data-note-id="{{ note.id }}"
+                data-like-url="{% url 'noteApp:like_note' note.id %}"
+                data-csrf-token="{{ csrf_token }}"
+                data-is-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+            >
+                🐟 点赞 (<span id="like-count">{{ note.like_count }}</span>)
+            </button>
+        </div>
+
+        <div class="comments-section mt-5">
+            <h3>💬 喵友评论 ({{ comments.count }})</h3>
+            {% for comment in comments %}
+                <div class="comment-item">
+                    <strong>{{ comment.user.username }}</strong>: {{ comment.content }}
+                    <small class="text-muted">({{ comment.created_at|date:"m-d H:i" }})</small>
+                    {% for reply in comment.replies.all %}
+                        <div class="reply-item">
+                            <small>↳ {{ reply.user.username }} 回复: {{ reply.content }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="comment-form mt-4">
+            <form method="POST" action="{% url 'noteApp:add_comment' note.id %}">
+                {% csrf_token %}
+                <textarea name="content" required placeholder="留下一句暖心的碎碎念吧..."></textarea>
+                <button type="submit" class="btn-cute mt-2">提交评论</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('like-btn').addEventListener('click', function() {
+    // 从按钮的data属性里取所有需要的值
+    const noteId = this.dataset.noteId;
+    const likeUrl = this.dataset.likeUrl;
+    const csrfToken = this.dataset.csrfToken;
+    const isAuthenticated = this.dataset.isAuthenticated === 'true';
+
+    if (!isAuthenticated) {
+        alert("登录后才能给游记点赞哦！");
+        return;
+    }
+
+    fetch(likeUrl, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+        }
+    })
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('请求失败');
+        }
+        return res.json();
+    })
+    .then(data => {
+        document.getElementById('like-count').innerText = data.count;
+        this.style.opacity = '0.7'; 
+        setTimeout(() => this.style.opacity = '1', 200);
+    })
+    .catch(err => {
+        console.error('点赞出错:', err);
+        alert('点赞失败，请稍后再试~');
+    });
+});
+</script>
+{% endblock %}

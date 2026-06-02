@@ -62,3 +62,13 @@ class NoteCollection(models.Model):
         unique_together = ('note', 'user')  # 关键点：防止重复收藏
         verbose_name = "游记收藏"
         verbose_name_plural = "游记收藏"
+        
+# 5.新增评论点赞表
+class CommentLike(models.Model):
+    comment = models.ForeignKey(NoteComment, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('comment', 'user') # 防止对同一条评论多次点赞
+        verbose_name = "评论点赞"

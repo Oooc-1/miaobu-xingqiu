@@ -1,10 +1,68 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Note, NoteComment, NoteLike
 
+# 辅助函数：定义分类映射，确保前端点击能正确显示对应分类
+# 假设你的 NOTE_CATEGORIES 是 (1, '旅行踩点指南'), (2, '出行干粮补给'), (3, '躲雨小窝推荐')
 def guide(request):
-    return render(request, 'guide.html', {'active_menu': 'note', 'sub_menu': 'guide'} )
+    notes = Note.objects.filter(category=1).order_by('-created_at')
+    return render(request, 'guide.html', {
+        'notes': notes, 
+        'active_menu': 'note', 
+        'sub_menu': 'guide'
+    })
 
 def food(request):
-    return render(request, 'food.html', {'active_menu': 'note', 'sub_menu': 'food'} )
+    notes = Note.objects.filter(category=2).order_by('-created_at')
+    return render(request, 'food.html', {
+        'notes': notes, 
+        'active_menu': 'note', 
+        'sub_menu': 'food'
+    })
 
 def stay(request):
-    return render(request, 'stay.html', {'active_menu': 'note', 'sub_menu': 'stay'} )
+    notes = Note.objects.filter(category=3).order_by('-created_at')
+    return render(request, 'stay.html', {
+        'notes': notes, 
+        'active_menu': 'note', 
+        'sub_menu': 'stay'
+    })
+
+# 下面这些保持不变
+def note_detail(request, note_id):
+    note = get_object_or_404(Note, id=note_id)
+    comments = note.comments.filter(parent__isnull=True)
+    return render(request, 'note_detail.html', {
+        'note': note,
+        'comments': comments
+    })
+
+@login_required
+def like_note(request, note_id):
+    note = get_object_or_404(Note, id=note_id)
+    like, created = NoteLike.objects.get_or_create(note=note, user=request.user)
+    if created:
+        note.like_count += 1
+        note.save()
+        status = 'liked'
+    else:
+        like.delete()
+        note.like_count -= 1
+        note.save()
+        status = 'unliked'
+    return JsonResponse({'status': status, 'count': note.like_count})
+
+@login_required
+def add_comment(request, note_id):
+    if request.method == 'POST':
+        note = get_object_or_404(Note, id=note_id)
+        content = request.POST.get('content')
+        parent_id = request.POST.get('parent_id')
+        parent_comment = None
+        if parent_id:
+            parent_comment = get_object_or_404(NoteComment, id=parent_id)
+        NoteComment.objects.create(
+            note=note, user=request.user, content=content, parent=parent_comment
+        )
+    return redirect('noteApp:detail', note_id=note_id)

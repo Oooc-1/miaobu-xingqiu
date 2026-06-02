@@ -56,39 +56,30 @@
     </ul>
 
     <div class="row">
+        {% for note in notes %}
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="card meow-card">
                 <div class="img-wrap">
-                    <span class="badge-food"><i class="fa-solid fa-bowl-food"></i> 特色名吃</span>
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=600" alt="特色小吃">
+                    <span class="badge-food"><i class="fa-solid fa-bowl-food"></i> {{ note.get_category_display }}</span>
+                    {% if note.cover_image %}
+                    <img src="{{ note.cover_image.url }}" alt="{{ note.title }}">
+                    {% else %}
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&q=80&w=600" alt="{{ note.title }}">
+                    {% endif %}
                 </div>
                 <div class="card-body" style="padding: 20px;">
-                    <h4 style="color:#4A4E69; font-weight:bold; margin-top:0; margin-bottom:10px; font-size:16px;">漳州手作香炸五香卷：满嘴爆汁的肉香肉垫补给</h4>
-                    <p style="color:#7F8C8D; font-size:13px; line-height:1.6; height:60px; overflow:hidden; margin-bottom:15px;">酥脆的豆皮包裹着大块纯瘦肉和马蹄，蘸一点秘制甜辣酱，咬下去发出的清脆声响，连隔壁小猫都会馋得凑过来！</p>
+                    <h4 style="color:#4A4E69; font-weight:bold; margin-top:0; margin-bottom:10px; font-size:16px;">{{ note.title }}</h4>
+                    <p style="color:#7F8C8D; font-size:13px; line-height:1.6; height:60px; overflow:hidden; margin-bottom:15px;">{{ note.summary|default:note.content|truncatechars:100 }}</p>
                     <div style="border-top:1px dashed rgba(255,159,137,0.25); padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="color:#FF9F89; font-size:12px; font-weight:bold;"><i class="fa-solid fa-bone"></i> 饱腹感：⭐⭐⭐⭐⭐</span>
-                        <a href="#" style="color:#A7C4BC; font-weight:bold; font-size:13px; text-decoration:none !important;">去瞅瞅 🐾</a>
+                        <span style="color:#FF9F89; font-size:12px; font-weight:bold;"><i class="fa-solid fa-bone"></i> 阅读量：{{ note.view_count|default:0 }}</span>
+                        <a href="{% url 'noteApp:detail' note.id %}" style="color:#A7C4BC; font-weight:bold; font-size:13px; text-decoration:none !important;">去瞅瞅 🐾</a>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4 col-sm-6 col-xs-12">
-            <div class="card meow-card">
-                <div class="img-wrap">
-                    <span class="badge-food"><i class="fa-solid fa-mug-saucer"></i> 山野午茶</span>
-                    <img src="https://images.unsplash.com/photo-1517142089942-ba376ce32a2e?auto=format&fit=crop&q=80&w=600" alt="冷泡茶">
-                </div>
-                <div class="card-body" style="padding: 20px;">
-                    <h4 style="color:#4A4E69; font-weight:bold; margin-top:0; margin-bottom:10px; font-size:16px;">杭州西湖龙井冷泡茶：清晨茶田里的一缕清流</h4>
-                    <p style="color:#7F8C8D; font-size:13px; line-height:1.6; height:60px; overflow:hidden; margin-bottom:15px;">手工采集清晨带有露水的第一缕嫩芽，用天然山泉水冷泡带在随身水壶中。在茶田里走累了喝一口，一瞬间彻底满血复活。</p>
-                    <div style="border-top:1px dashed rgba(255,159,137,0.25); padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
-                        <span style="color:#FF9F89; font-size:12px; font-weight:bold;"><i class="fa-solid fa-leaf"></i> 清爽度：⭐⭐⭐⭐⭐</span>
-                        <a href="#" style="color:#A7C4BC; font-weight:bold; font-size:13px; text-decoration:none !important;">去瞅瞅 🐾</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% empty %}
+        <div class="col-12"><p class="text-muted">暂无相关文章。</p></div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

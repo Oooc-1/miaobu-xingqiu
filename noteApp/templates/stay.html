@@ -59,27 +59,35 @@
     </ul>
 
     <div class="row">
+        {% for note in notes %}
         <div class="col-sm-12">
             <div class="card meow-card-long">
                 <div class="row" style="margin: 0;">
                     <div class="col-md-5" style="padding: 0;">
                         <div class="img-wrap-long">
-                            <span class="badge-stay"><i class="fa-solid fa-tree"></i> 隐秘树屋</span>
-                            <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=800" alt="树屋小窝">
+                            <span class="badge-stay"><i class="fa-solid fa-tree"></i> {{ note.get_category_display }}</span>
+                            {% if note.cover_image %}
+                            <img src="{{ note.cover_image.url }}" alt="{{ note.title }}">
+                            {% else %}
+                            <img src="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&q=80&w=800" alt="{{ note.title }}">
+                            {% endif %}
                         </div>
                     </div>
                     <div class="col-md-7" style="padding: 30px;">
-                        <div style="font-size:12px; color:#7F8C8D; margin-bottom:8px;"><i class="fa-solid fa-shield-cat" style="color:#FF9F89;"></i> 地暖全开 / 独立悬空隐私 / 隔音极佳</div>
-                        <h3 style="color:#4A4E69; font-weight:bold; margin-top:5px; margin-bottom:15px; font-size:20px;">莫干山松果树屋：拉开天窗，枕着绿浪竹涛入睡</h3>
-                        <p style="color:#7F8C8D; font-size:14px; line-height:1.6; margin-bottom:20px;">全木质的无棱角圆润蛋形外观。雨天蜷缩在软绵绵的羽绒被里，能听到屋顶松果偶尔落下的声音。提供无限制供应的暖心花草茶，像小猫咪踩奶一样满足。</p>
+                        <div style="font-size:12px; color:#7F8C8D; margin-bottom:8px;"><i class="fa-solid fa-shield-cat" style="color:#FF9F89;"></i> 设施信息 / 私密性 / 舒适度</div>
+                        <h3 style="color:#4A4E69; font-weight:bold; margin-top:5px; margin-bottom:15px; font-size:20px;">{{ note.title }}</h3>
+                        <p style="color:#7F8C8D; font-size:14px; line-height:1.6; margin-bottom:20px;">{{ note.summary|default:note.content|truncatechars:160 }}</p>
                         <div style="border-top:1px dashed rgba(74, 78, 105, 0.15); padding-top:15px; display:flex; justify-content:space-between; align-items:center;">
-                            <span style="color:#7F8C8D; font-weight:bold; font-size:13px;"><i class="fa-solid fa-bed" style="color:#FF9F89;"></i> 嗜睡指数：🐾🐾🐾🐾🐾</span>
-                            <a href="#" class="btn-stay">翻开小窝手账</a>
+                            <span style="color:#7F8C8D; font-weight:bold; font-size:13px;"><i class="fa-solid fa-bed" style="color:#FF9F89;"></i> 评论：{{ note.comments.count }}</span>
+                            <a href="{% url 'noteApp:detail' note.id %}" class="btn-stay">翻开小窝手账</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        {% empty %}
+        <div class="col-12"><p class="text-muted">暂无推荐住宿。</p></div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

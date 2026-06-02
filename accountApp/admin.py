@@ -5,6 +5,9 @@ from .models import User
 # 注册你的自定义 User 模型
 @admin.register(User)
 class MyUserAdmin(UserAdmin):
-    # 如果你在 User 模型里增加了自定义字段（比如手机号、头像），可以在这里配置显示
-    # 目前先使用 Django 默认的 UserAdmin 配置
-    pass
+    
+    fieldsets = UserAdmin.fieldsets + (
+        ('个人信息', {'fields': ('avatar',)}),
+    )
+    # 或者在 list_display 中添加，以便在列表页看到
+    list_display = ('username', 'email', 'avatar')

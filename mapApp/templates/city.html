@@ -22,91 +22,47 @@
         <div class="filter-box-card">
             <span class="filter-label">🐾 切换探险心情：</span>
             <div class="filter-tags-group">
-                <a href="#" class="paw-filter-item active">全部脚印</a>
-                <a href="#" class="paw-filter-item"># 瓦片缝晒太阳 (古城)</a>
-                <a href="#" class="paw-filter-item"># 登高抓蝴蝶 (山岳)</a>
-                <a href="#" class="paw-filter-item"># 躲雨发呆小店 (人文)</a>
+                <a href="?mood=all" class="paw-filter-item {% if selected_mood == 'all' %}active{% endif %}">全部脚印</a>
+                <a href="?mood=瓦片缝晒太阳" class="paw-filter-item {% if selected_mood == '瓦片缝晒太阳' %}active{% endif %}"># 瓦片缝晒太阳 (古城)</a>
+                <a href="?mood=登高抓蝴蝶" class="paw-filter-item {% if selected_mood == '登高抓蝴蝶' %}active{% endif %}"># 登高抓蝴蝶 (山岳)</a>
+                <a href="?mood=躲雨发呆小店" class="paw-filter-item {% if selected_mood == '躲雨发呆小店' %}active{% endif %}"># 躲雨发呆小店 (人文)</a>
             </div>
         </div>
     </div>
 
     <div class="container" style="padding-bottom: 60px;">
         <div class="row spot-grid-row">
-            
+            {% for spot in spots %}
             <div class="col-md-4 col-sm-6 col-xs-12 spot-card-col">
                 <div class="spot-card">
                     <div class="spot-img-container">
-                        <img src="{% static 'img/dest_lijiang.jpg' %}" class="spot-img" alt="大研古镇">
-                        <span class="spot-badge-price">🐟 免费踩点</span>
+                        {% if spot.image %}
+                        <img src="{{ spot.image.url }}" class="spot-img" alt="{{ spot.name }}">
+                        {% else %}
+                        <img src="{% static 'img/dest_lijiang.jpg' %}" class="spot-img" alt="{{ spot.name }}">
+                        {% endif %}
+                        <span class="spot-badge-price">{% if spot.cost_desc %}{{ spot.cost_desc }}{% else %}🐟 免费踩点{% endif %}</span>
                     </div>
                     <div class="spot-card-body">
-                        <span class="spot-mood-tag"># 慢吞吞巡逻</span>
-                        <h3 class="spot-title">大研古镇·大石桥瓦片路</h3>
-                        <p class="spot-intro">清晨7点爬上大石桥旁的观景台，你会遇到几只同样刚睡醒的本地土著猫，顺着它们的视线可以看到玉龙雪山。</p>
+                        <span class="spot-mood-tag">{{ spot.mood_tag }}</span>
+                        <h3 class="spot-title">{{ spot.name }}</h3>
+                        <p class="spot-intro">{{ spot.description|truncatechars:120 }}</p>
                     </div>
                     <div class="spot-card-footer">
                         <div class="spot-meta">
-                            <span>🐾 4.2w 喵友打卡</span>
+                            <span>🐾 {{ spot.meow_rate }}% 喵友出没率</span>
                         </div>
-                        <a href="#" class="btn-meow-go">去探险 🐾</a>
+                        <a href="{% url 'mapApp:spot_detail' spot.slug %}" class="btn-meow-go">去探险 🐾</a>
                     </div>
                 </div>
             </div>
-
-            <div class="col-md-4 col-sm-6 col-xs-12 spot-card-col">
-                <div class="spot-card">
-                    <div class="spot-img-container">
-                        <img src="{% static 'img/slide_lijiang.jpg' %}" class="spot-img" alt="束河古镇">
-                        <span class="spot-badge-price">🐟 门票: 0.5小鱼干</span>
-                    </div>
-                    <div class="spot-card-body">
-                        <span class="spot-mood-tag"># 躲雨发呆小店</span>
-                        <h3 class="spot-title">束河古镇·听水发呆咖啡馆</h3>
-                        <p class="spot-intro">后院靠溪流的位置有一张超级软的懒人沙发。店主养了一只叫“大黄”的胖橘，只要你点小鱼干，它就会主动过来陪睡午觉。</p>
-                    </div>
-                    <div class="spot-card-footer">
-                        <div class="spot-meta">
-                            <span>🐾 2.8w 喵友打卡</span>
-                        </div>
-                        <a href="#" class="btn-meow-go">去探险 🐾</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 col-sm-6 col-xs-12 spot-card-col">
-                <div class="spot-card">
-                    <div class="spot-img-container">
-                        <img src="{% static 'img/note_aletai.jpg' %}" class="spot-img" alt="玉龙雪山">
-                        <span class="spot-badge-price">🐟 需提前预约</span>
-                    </div>
-                    <div class="spot-card-body">
-                        <span class="spot-mood-tag"># 登高抓蝴蝶</span>
-                        <h3 class="spot-title">玉龙雪山·牦牛坪高山草甸</h3>
-                        <p class="spot-intro">如果你有一颗勇敢的探险心脏，可以坐索道来到这片高山草甸。这里的松针软绵绵的，像猫咪厚实的肉垫，视野极度治愈。</p>
-                    </div>
-                    <div class="spot-card-footer">
-                        <div class="spot-meta">
-                            <span>🐾 3.5w 喵友打卡</span>
-                        </div>
-                        <a href="#" class="btn-meow-go">去探险 🐾</a>
-                    </div>
-                </div>
-            </div>
+            {% empty %}
+            <div class="col-12"><p class="text-muted">暂无推荐地点</p></div>
+            {% endfor %}
 
         </div>
     </div>
 
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        // 筛选标签点击切换 active 态的动效
-        $('.paw-filter-item').on('click', function(e) {
-            e.preventDefault();
-            $('.paw-filter-item').removeClass('active');
-            $(this).addClass('active');
-            console.log("🐾 [猫咪心情切换] 当前筛选：" + $(this).text());
-        });
-    });
-</script>
 {% endblock %}

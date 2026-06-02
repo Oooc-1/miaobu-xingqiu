@@ -6,13 +6,11 @@
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    /* 移除可能导致布局塌陷的全局背景，让它自然继承 base.html */
     .forest-page-wrapper {
-        padding-top: 30px; /* 稍微加高顶部间距，代替面包屑的位置 */
+        padding-top: 30px;
         padding-bottom: 60px;
     }
 
-    /* 超级大圆角与弥散阴影 */
     .meow-card {
         border: none !important;
         border-radius: 20px !important;
@@ -22,6 +20,7 @@
         overflow: hidden;
         margin-bottom: 30px;
     }
+
     .meow-card:hover {
         transform: translateY(-5px) !important;
         box-shadow: 0 12px 30px rgba(255, 159, 137, 0.25) !important;
@@ -38,6 +37,7 @@
         display: inline-block;
         text-decoration: none !important;
     }
+
     .meow-btn-primary:hover {
         background-color: #92b3aa !important;
         transform: scale(1.02) !important;
@@ -54,23 +54,25 @@
         text-decoration: none !important;
         display: inline-block;
     }
+
     .meow-btn-outline:hover {
         background-color: #A7C4BC !important;
         color: white !important;
     }
 
-    /* 兼容旧版 Bootstrap 的导航标签风格 */
     .forest-tabs {
         border-bottom: 2px solid #E2ECE9 !important;
         margin-bottom: 30px !important;
         padding-left: 0;
         list-style: none;
     }
-    .forest-tabs > li {
+
+    .forest-tabs>li {
         float: left;
         margin-bottom: -2px;
     }
-    .forest-tabs > li > a {
+
+    .forest-tabs>li>a {
         color: #4A4E69 !important;
         border-radius: 16px 16px 0 0 !important;
         margin-right: 8px !important;
@@ -80,19 +82,21 @@
         text-decoration: none !important;
         border: none !important;
     }
-    .forest-tabs > li.active > a, .forest-tabs > li > a:hover {
+
+    .forest-tabs>li.active>a,
+    .forest-tabs>li>a:hover {
         background-color: #FF9F89 !important;
         color: white !important;
         box-shadow: 0 4px 12px rgba(255, 159, 137, 0.3) !important;
     }
 
-    /* 顶部横幅 */
     .forest-banner {
         background: linear-gradient(135deg, #E2ECE9 0%, #C8DAD5 100%) !important;
         border-radius: 24px !important;
         padding: 40px !important;
         margin-bottom: 40px !important;
     }
+
     .forest-banner .banner-badge {
         background-color: #FF9F89 !important;
         color: white !important;
@@ -102,7 +106,6 @@
         display: inline-block;
     }
 
-    /* 装备小图标 */
     .icon-circle {
         width: 60px;
         height: 60px;
@@ -116,7 +119,6 @@
         margin: 0 auto 15px auto;
     }
 
-    /* 强制清除浮动 */
     .clearfix::after {
         content: "";
         clear: both;
@@ -127,208 +129,111 @@
 
 {% block content %}
 <div class="container forest-page-wrapper">
-    
     <div class="forest-banner">
         <span class="banner-badge"><i class="fa-solid fa-tree"></i> 自然治愈系</span>
-        <h1 style="color: #4A4E69; font-weight: bold; margin-top: 15px; margin-bottom: 15px; font-size: 30px;">像猫咪一样，隐入呼吸的森林 🐾</h1>
+        <h1 style="color: #4A4E69; font-weight: bold; margin-top: 15px; margin-bottom: 15px; font-size: 30px;">
+            像猫咪一样，隐入呼吸的森林 🐾</h1>
         <p style="color: #626786; max-width: 600px; font-size: 15px; line-height: 1.6; margin-bottom: 25px;">
-            暂别城市的喧嚣，踩着松软的落叶，踏入被绿意包裹的神秘森林。去寻找发光的青苔、倾听小溪的私语吧！
-        </p>
+            暂别城市的喧嚣，踩着松软的落叶，踏入被绿意包裹的神秘森林。</p>
         <a href="#booking-section" class="meow-btn-primary">立即预约森林向导</a>
     </div>
 
     <ul class="nav forest-tabs clearfix" role="tablist">
-        <li role="presentation" class="active">
-            <a href="#routes" aria-controls="routes" role="tab" data-toggle="tab"><i class="fa-solid fa-compass"></i> 秘境路线</a>
-        </li>
-        <li role="presentation">
-            <a href="#camping" aria-controls="camping" role="tab" data-toggle="tab"><i class="fa-solid fa-tent"></i> 躲猫猫露营地</a>
-        </li>
-        <li role="presentation">
-            <a href="#gear" aria-controls="gear" role="tab" data-toggle="tab"><i class="fa-solid fa-bag-shopping"></i> 装备指南</a>
-        </li>
+        <li role="presentation" class="active"><a href="#routes" data-toggle="tab"><i class="fa-solid fa-compass"></i>
+                秘境路线</a></li>
+        <li role="presentation"><a href="#camping" data-toggle="tab"><i class="fa-solid fa-tent"></i> 躲猫猫露营地</a></li>
+        <li role="presentation"><a href="#gear" data-toggle="tab"><i class="fa-solid fa-bag-shopping"></i> 装备指南</a></li>
     </ul>
 
     <div class="tab-content" style="margin-top: 20px;">
-        
         <div role="tabpanel" class="tab-pane fade in active" id="routes">
             <div class="row">
+                {% for spot in routes %}
                 <div class="col-md-4 col-sm-6">
                     <div class="card meow-card">
-                        <div style="background: #DCEBE6; height: 160px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fa-solid fa-cloud-sun-rain" style="color: #A7C4BC; font-size: 45px;"></i>
+                        <div style="height: 160px; display: flex; align-items: center; justify-content: center;">
+                            {% if spot.image %}<img src="{{ spot.image.url }}"
+                                style="width:100%; height:160px; object-fit:cover;">{% else %}<i
+                                class="fa-solid fa-tree" style="color: #A7C4BC; font-size: 45px;"></i>{% endif %}
                         </div>
                         <div class="card-body" style="padding: 20px;">
-                            <div class="clearfix" style="margin-bottom: 10px;">
-                                <span style="color: #FF9F89; font-size: 13px; font-weight: bold; float: left;"><i class="fa-solid fa-location-dot"></i> 莫干山竹海</span>
-                                <span style="float: right; background: #F4F8F7; color: #7F8C8D; padding: 2px 8px; border-radius: 6px; font-size: 12px;">难度：🐾 易</span>
-                            </div>
-                            <h4 style="color: #4A4E69; font-weight: bold; margin: 10px 0;">翡翠竹海静心漫步线</h4>
-                            <p style="font-size: 13px; color: #7F8C8D; height: 60px; overflow: hidden; line-height: 1.5;">穿梭在万亩竹林中，空气里都是清甜的竹叶香。运气好的话，还能遇见林间奔跑的小松鼠哦！</p>
-                            <div class="clearfix" style="margin-top: 15px; border-top: 1px dashed #E2ECE9; padding-top: 15px;">
-                                <span style="color: #4A4E69; font-weight: bold; font-size: 16px; float: left;">¥ 158 <small style="color: #7F8C8D; font-weight: normal; font-size: 12px;">/人</small></span>
-                                <a href="#" class="meow-btn-outline" style="float: right;">查看详情</a>
+                            <span style="display:inline-block; margin-bottom: 10px; color:#FF9F89; font-size:12px; font-weight:700;">#{{ spot.mood_tag|default:'森林秘境' }}</span>
+                            <h4 style="color: #4A4E69; font-weight: bold;">{{ spot.name }}</h4>
+                            <p style="font-size: 12px; color: #9CA7B4; margin-bottom: 8px;">{{ spot.address|default:'暂无详细地址' }}</p>
+                            <p style="font-size: 13px; color: #7F8C8D; height: 60px; overflow: hidden;">{{ spot.description|truncatechars:120 }}</p>
+                            <div class="clearfix"
+                                style="margin-top: 15px; border-top: 1px dashed #E2ECE9; padding-top: 15px;">
+                                <span style="font-weight: bold;">{{ spot.cost_desc }}</span>
+                                <a href="{% url 'mapApp:spot_detail' spot.slug %}" class="meow-btn-outline"
+                                    style="float: right; display:inline-block;">查看详情</a>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-md-4 col-sm-6">
-                    <div class="card meow-card">
-                        <div style="background: #EAE5DC; height: 160px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fa-solid fa-mountain-sun" style="color: #C0B199; font-size: 45px;"></i>
-                        </div>
-                        <div class="card-body" style="padding: 20px;">
-                            <div class="clearfix" style="margin-bottom: 10px;">
-                                <span style="color: #FF9F89; font-size: 13px; font-weight: bold; float: left;"><i class="fa-solid fa-location-dot"></i> 神农架林区</span>
-                                <span style="float: right; background: #F4F8F7; color: #7F8C8D; padding: 2px 8px; border-radius: 6px; font-size: 12px;">难度：🐾🐾🐾 难</span>
-                            </div>
-                            <h4 style="color: #4A4E69; font-weight: bold; margin: 10px 0;">迷雾森林与远古足迹寻踪</h4>
-                            <p style="font-size: 13px; color: #7F8C8D; height: 60px; overflow: hidden; line-height: 1.5;">针对资深猫友的高级探险。跟随专业护林员，深入高山草甸与原始苔原，开启极客级物种识别。</p>
-                            <div class="clearfix" style="margin-top: 15px; border-top: 1px dashed #E2ECE9; padding-top: 15px;">
-                                <span style="color: #4A4E69; font-weight: bold; font-size: 16px; float: left;">¥ 580 <small style="color: #7F8C8D; font-weight: normal; font-size: 12px;">/人</small></span>
-                                <a href="#" class="meow-btn-outline" style="float: right;">查看详情</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-sm-6">
-                    <div class="card meow-card">
-                        <div style="background: #E2ECE9; height: 160px; display: flex; align-items: center; justify-content: center;">
-                            <i class="fa-solid fa-water" style="color: #A7C4BC; font-size: 45px;"></i>
-                        </div>
-                        <div class="card-body" style="padding: 20px;">
-                            <div class="clearfix" style="margin-bottom: 10px;">
-                                <span style="color: #FF9F89; font-size: 13px; font-weight: bold; float: left;"><i class="fa-solid fa-location-dot"></i> 西双版纳</span>
-                                <span style="float: right; background: #F4F8F7; color: #7F8C8D; padding: 2px 8px; border-radius: 6px; font-size: 12px;">难度：🐾🐾 中</span>
-                            </div>
-                            <h4 style="color: #4A4E69; font-weight: bold; margin: 10px 0;">热带雨林溯溪与树冠漫步</h4>
-                            <p style="font-size: 13px; color: #7F8C8D; height: 60px; overflow: hidden; line-height: 1.5;">踩着清凉的溪水逆流而上，走在高达数十米的悬空树冠走廊上，以鸟儿和猫咪的视角俯瞰热带雨林。</p>
-                            <div class="clearfix" style="margin-top: 15px; border-top: 1px dashed #E2ECE9; padding-top: 15px;">
-                                <span style="color: #4A4E69; font-weight: bold; font-size: 16px; float: left;">¥ 299 <small style="color: #7F8C8D; font-weight: normal; font-size: 12px;">/人</small></span>
-                                <a href="#" class="meow-btn-outline" style="float: right;">查看详情</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% empty %}<div class="col-12">
+                    <p class="text-muted">暂无秘境路线。</p>
+                </div>{% endfor %}
             </div>
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="camping">
             <div class="row">
+                {% for camp in camps %}
                 <div class="col-md-6">
                     <div class="card meow-card" style="padding: 20px;">
                         <div class="row">
-                            <div class="col-sm-4 text-center" style="background-color: #F4F8F7; border-radius: 16px; padding: 25px 10px;">
-                                <i class="fa-solid fa-campground" style="color: #A7C4BC; font-size: 36px;"></i>
-                            </div>
+                            <div class="col-sm-4 text-center"
+                                style="background-color: #F4F8F7; border-radius: 16px; padding: 25px 10px;"><i
+                                    class="fa-solid fa-campground" style="color: #A7C4BC; font-size: 36px;"></i></div>
                             <div class="col-sm-8">
-                                <h4 style="font-weight: bold; color: #4A4E69; margin-top: 0;">松果球野奢星空营地</h4>
-                                <p style="color: #7F8C8D; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star text-warning"></i> 4.9 | 提供全套轻奢帐篷</p>
-                                <p style="color: #626786; font-size: 13px; line-height: 1.5; margin-bottom: 0;">位于红松林腹地，夜间无光污染，营地有常驻“猫警长”（一只暖心的大橘猫）陪同篝火夜话。</p>
+                                <h4 style="font-weight: bold; color: #4A4E69;">{{ camp.name }}</h4>
+                                <p style="color: #7F8C8D; font-size: 13px;">{{ camp.description|truncatechars:100 }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-md-6">
-                    <div class="card meow-card" style="padding: 20px;">
-                        <div class="row">
-                            <div class="col-sm-4 text-center" style="background-color: #FFF5F2; border-radius: 16px; padding: 25px 10px;">
-                                <i class="fa-solid fa-house-chimney-window" style="color: #FF9F89; font-size: 36px;"></i>
-                            </div>
-                            <div class="col-sm-8">
-                                <h4 style="font-weight: bold; color: #4A4E69; margin-top: 0;">溪语精灵树屋部落</h4>
-                                <p style="color: #7F8C8D; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star text-warning"></i> 5.0 | 独立悬空树屋</p>
-                                <p style="color: #626786; font-size: 13px; line-height: 1.5; margin-bottom: 0;">建在百年古栎树上的木质树屋，清晨叫醒你的是清脆的鸟鸣和落在屋顶上的柔软松果。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% empty %}<div class="col-12">
+                    <p class="text-muted">暂无露营地信息。</p>
+                </div>{% endfor %}
             </div>
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="gear">
             <div class="row text-center">
                 <div class="col-md-3 col-sm-6">
-                    <div class="card meow-card" style="padding: 25px 15px;">
+                    <div class="card meow-card" style="padding: 25px;">
                         <div class="icon-circle"><i class="fa-solid fa-boot-heeled"></i></div>
-                        <h4 style="font-weight: bold; font-size: 15px; color: #4A4E69;">防滑徒步鞋</h4>
-                        <p style="color: #7F8C8D; font-size: 12px; margin-bottom: 0; line-height: 1.4;">保护好你的“小猫爪”，山路湿滑，建议高帮防滑款。</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="card meow-card" style="padding: 25px 15px;">
-                        <div class="icon-circle" style="color: #FF9F89;"><i class="fa-solid fa-spray-can-sparkles"></i></div>
-                        <h4 style="font-weight: bold; font-size: 15px; color: #4A4E69;">驱蚊魔力水</h4>
-                        <p style="color: #7F8C8D; font-size: 12px; margin-bottom: 0; line-height: 1.4;">森林蚊虫多，全天然植物精油喷雾是你的隐形护盾。</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="card meow-card" style="padding: 25px 15px;">
-                        <div class="icon-circle"><i class="fa-solid fa-lightbulb"></i></div>
-                        <h4 style="font-weight: bold; font-size: 15px; color: #4A4E69;">营地头灯/手电</h4>
-                        <p style="color: #7F8C8D; font-size: 12px; margin-bottom: 0; line-height: 1.4;">夜间探险或露营的必备“夜视眼”，安全第一。</p>
-                    </div>
-                </div>
-                <div class="col-md-3 col-sm-6">
-                    <div class="card meow-card" style="padding: 25px 15px;">
-                        <div class="icon-circle" style="color: #FF9F89;"><i class="fa-solid fa-bottle-water"></i></div>
-                        <h4 style="font-weight: bold; font-size: 15px; color: #4A4E69;">便携能量水壶</h4>
-                        <p style="color: #7F8C8D; font-size: 12px; margin-bottom: 0; line-height: 1.4;">随时补充森林漫步消耗的水分，环保又好看。</p>
+                        <h4>防滑徒步鞋</h4>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <div id="booking-section" style="margin-top: 40px;">
         <div class="card meow-card" style="padding: 40px;">
-            <div class="text-center" style="margin-bottom: 30px;">
-                <h3 style="font-weight: bold; color: #4A4E69;"><i class="fa-solid fa-leaf" style="color: #A7C4BC;"></i> 预定你的森林足迹</h3>
-                <p style="color: #7F8C8D; font-size: 14px; margin-top: 5px;">提交表单，由专业森林向导为你定制专属于你的“躲猫猫”探险计划</p>
-            </div>
-            
-            <form style="margin: 0;">
+            <h3 class="text-center" style="font-weight: bold; color: #4A4E69;">预定你的森林足迹</h3>
+            <form>
                 <div class="row">
-                    <div class="col-sm-6" style="margin-bottom: 15px;">
-                        <label style="font-size: 13px; font-weight: bold; color: #4A4E69; margin-bottom: 5px; display:block;">喵友昵称</label>
-                        <input type="text" class="form-control" style="border-radius:12px; padding:10px;" placeholder="怎么称呼你呢？">
-                    </div>
-                    <div class="col-sm-6" style="margin-bottom: 15px;">
-                        <label style="font-size: 13px; font-weight: bold; color: #4A4E69; margin-bottom: 5px; display:block;">联系电话 / 微信</label>
-                        <input type="text" class="form-control" style="border-radius:12px; padding:10px;" placeholder="方便向导与你联系">
-                    </div>
+                    <div class="col-sm-6"><label>喵友昵称</label><input type="text" class="form-control"
+                            style="border-radius:12px; padding:10px;"></div>
+                    <div class="col-sm-6"><label>联系电话</label><input type="text" class="form-control"
+                            style="border-radius:12px; padding:10px;"></div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6" style="margin-bottom: 15px;">
-                        <label style="font-size: 13px; font-weight: bold; color: #4A4E69; margin-bottom: 5px; display:block;">想去的秘境</label>
-                        <select class="form-control" style="border-radius:12px; height:42px;">
-                            <option selected>莫干山竹海静心漫步线</option>
-                            <option>神农架林区迷雾寻踪线</option>
-                            <option>西双版纳树冠漫步线</option>
-                            <option>仅租用“躲猫猫营地”帐篷</option>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-sm-12">
+                        <label>选择想要去的秘境/营地</label>
+                        <select class="form-control" style="border-radius:12px;">
+                            {% for spot in routes %}<option>{{ spot.name }}</option>{% endfor %}
+                            {% for camp in camps %}<option>{{ camp.name }} (营地)</option>{% endfor %}
                         </select>
                     </div>
-                    <div class="col-sm-6" style="margin-bottom: 15px;">
-                        <label style="font-size: 13px; font-weight: bold; color: #4A4E69; margin-bottom: 5px; display:block;">出发日期</label>
-                        <input type="date" class="form-control" style="border-radius:12px; padding:10px;">
-                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12" style="margin-bottom: 20px;">
-                        <label style="font-size: 13px; font-weight: bold; color: #4A4E69; margin-bottom: 5px; display:block;">特殊需求喵喵备注（选填）</label>
-                        <textarea class="form-control" rows="3" style="border-radius:12px; padding:10px;" placeholder="例如：有老人或小朋友同行..."></textarea>
-                    </div>
-                </div>
-                <div class="text-center" style="margin-top: 10px;">
-                    <button type="button" class="meow-btn-primary" style="padding: 12px 60px !important;" onclick="alert('这里目前还是静态网页哦！连上 Django 数据库后，你的预定信息就会真的发送给后台啦 🐾')">提交预约申请</button>
+                <div class="text-center" style="margin-top: 20px;">
+                    <button type="button" class="meow-btn-primary">提交预约申请</button>
                 </div>
             </form>
         </div>
     </div>
-
 </div>
 {% endblock %}
