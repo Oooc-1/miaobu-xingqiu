@@ -180,14 +180,23 @@
             <div class="row">
                 {% for camp in camps %}
                 <div class="col-md-6">
-                    <div class="card meow-card" style="padding: 20px;">
-                        <div class="row">
-                            <div class="col-sm-4 text-center"
-                                style="background-color: #F4F8F7; border-radius: 16px; padding: 25px 10px;"><i
-                                    class="fa-solid fa-campground" style="color: #A7C4BC; font-size: 36px;"></i></div>
-                            <div class="col-sm-8">
-                                <h4 style="font-weight: bold; color: #4A4E69;">{{ camp.name }}</h4>
-                                <p style="color: #7F8C8D; font-size: 13px;">{{ camp.description|truncatechars:100 }}</p>
+                    <div class="card meow-card">
+                        <div style="height: 220px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            {% if camp.image %}<img src="{{ camp.image.url }}"
+                                style="width:100%; height:220px; object-fit:cover;">{% else %}<i
+                                class="fa-solid fa-campground" style="color: #A7C4BC; font-size: 45px;"></i>{% endif %}
+                        </div>
+                        <div class="card-body" style="padding: 20px;">
+                            <h4 style="font-weight: bold; color: #4A4E69; margin-bottom: 10px;">{{ camp.name }}</h4>
+                            <p style="color: #7F8C8D; font-size: 13px; line-height: 1.6; margin-bottom: 15px;">{{ camp.description|truncatechars:150 }}</p>
+                            <div style="border-top: 1px dashed #E2ECE9; padding-top: 15px;">
+                                <p style="font-size: 12px; color: #9CA7B4; margin-bottom: 8px;">
+                                    {% if camp.address %}<i class="fa-solid fa-location-dot" style="color:#FF9F89; margin-right: 5px;"></i>{{ camp.address }}{% endif %}
+                                </p>
+                                <p style="font-size: 12px; color: #9CA7B4; margin-bottom: 15px;">
+                                    {% if camp.time_required %}<i class="fa-solid fa-clock" style="color:#A7C4BC; margin-right: 5px;"></i>{{ camp.time_required }}{% endif %}
+                                </p>
+                                <a href="{% url 'mapApp:spot_detail' camp.slug %}" class="meow-btn-outline" style="display:inline-block;">查看详情</a>
                             </div>
                         </div>
                     </div>
