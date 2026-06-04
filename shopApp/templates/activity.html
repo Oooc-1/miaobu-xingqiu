@@ -6,53 +6,136 @@
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-    body { background-color: #FDFBF7 !important; }
-    .activity-wrapper { padding-top: 30px; padding-bottom: 60px; }
-    
+    body {
+        background-color: #FDFBF7 !important;
+    }
+
+    .activity-wrapper {
+        padding-top: 20px;
+        padding-bottom: 40px;
+    }
+
     /* 模块专属元气 Banner */
     .activity-banner {
         background: linear-gradient(135deg, #FFF5F2 0%, #F5EDE0 100%) !important;
-        border-radius: 24px !important; padding: 40px !important; margin-bottom: 40px !important;
+        border-radius: 24px !important;
+        padding: 40px !important;
+        margin-bottom: 40px !important;
         box-shadow: 0 10px 25px rgba(255, 159, 137, 0.08);
     }
 
     /* 🐱 独家设计：猫罐头切片看板卡片 */
     .activity-card {
-        background: #FFFFFF !important; border: none !important;
-        border-radius: 24px !important; /* 经典大圆角 */
+        background: #FFFFFF !important;
+        border: none !important;
+        border-radius: 24px !important;
+        /* 经典大圆角 */
         box-shadow: 0 8px 24px rgba(74, 78, 105, 0.05) !important;
-        margin-bottom: 35px; overflow: hidden;
+        margin-bottom: 24px;
+        overflow: hidden;
         transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     }
+
     .activity-card:hover {
         transform: translateY(-6px);
         box-shadow: 0 16px 35px rgba(167, 196, 188, 0.2) !important;
     }
 
     /* 左侧大图区域 */
-    .activity-img-box { position: relative; height: 100%; min-height: 240px; }
-    .activity-img-box img { width: 100%; height: 100%; object-fit: cover; }
-    
+    .activity-img-box {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        min-height: 280px;
+        max-height: 420px;
+        background: #F8F4EE;
+        overflow: hidden;
+        border-radius: 24px 0 0 24px;
+    }
+
+    .activity-img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        transition: transform 0.5s ease;
+    }
+
+    .activity-card:hover .activity-img-box img {
+        transform: scale(1.05);
+    }
+
+    .activity-card .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .activity-card .col-md-7 {
+        background: #FFFFFF;
+        position: relative;
+        z-index: 1;
+    }
+
+    @media (max-width: 991px) {
+        .activity-card .row {
+            display: block;
+        }
+
+        .activity-card .col-md-5,
+        .activity-card .col-md-7 {
+            width: 100%;
+            float: none;
+        }
+
+        .activity-img-box {
+            min-height: 220px;
+            max-height: 320px;
+            border-radius: 24px 24px 0 0;
+        }
+    }
+
     /* 肉垫小标签 */
     .paw-badge {
-        position: absolute; top: 15px; left: 15px; background: #FF9F89; color: white;
-        padding: 5px 14px; border-radius: 12px; font-size: 11px; font-weight: bold;
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: #FF9F89;
+        color: white;
+        padding: 5px 14px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
     }
 
     /* 预订按钮 */
     .btn-book {
-        background: #A7C4BC; color: white !important; padding: 10px 24px;
-        border-radius: 16px; font-weight: bold; text-decoration: none !important;
-        display: inline-block; transition: all 0.2s; font-size: 14px;
+        background: #A7C4BC;
+        color: white !important;
+        padding: 8px 20px;
+        border-radius: 16px;
+        font-weight: bold;
+        text-decoration: none !important;
+        display: inline-block;
+        transition: all 0.2s;
+        font-size: 13px;
     }
+
     .btn-book:hover {
-        background: #FF9F89; box-shadow: 0 4px 12px rgba(255,159,137,0.3);
+        background: #FF9F89;
+        box-shadow: 0 4px 12px rgba(255, 159, 137, 0.3);
     }
-    
+
     /* 统一清爽现代字体 */
     .act-title {
         font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-        color: #4A4E69; font-weight: bold; font-size: 20px; margin-top: 0;
+        color: #4A4E69;
+        font-weight: bold;
+        font-size: 20px;
+        margin-top: 0;
     }
 </style>
 {% endblock %}
@@ -60,61 +143,51 @@
 {% block content %}
 <div class="container activity-wrapper">
     <div class="activity-banner">
-        <span style="background:#FF9F89; color:white; border-radius:10px; padding:5px 12px; font-size:11px; font-weight:bold;">
+        <span
+            style="background:#FF9F89; color:white; border-radius:10px; padding:5px 12px; font-size:11px; font-weight:bold;">
             <i class="fa-solid fa-wand-sparkles"></i> 深度限定体验
         </span>
         <h1 style="color: #4A4E69; font-weight: bold; margin-top: 15px; font-size: 26px;">挥动“逗猫棒”，解锁好玩的特色项目 🐾</h1>
         <p style="color: #7F8C8D; font-size: 14px; margin-top: 8px;">拒绝走马观花，像好奇的猫咪一样，去刨根问底、去亲自感知当地隐藏的妙趣吧！</p>
     </div>
 
+    {% if categories %}
+    {% for category in categories %}
+    {% for item in category.activities.all %}
     <div class="card activity-card">
         <div class="row" style="margin: 0;">
             <div class="col-md-5" style="padding: 0;">
                 <div class="activity-img-box">
-                    <span class="paw-badge"><i class="fa-solid fa-paw"></i> 春季限定</span>
-                    <img src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&q=80&w=800" alt="龙井茶采摘">
+                    <span class="paw-badge" style="background: #FF9F89;">
+                        <i class="fa-solid fa-paw"></i> {{ item.category.name }}
+                    </span>
+                    <img src="{% if item.cover_image %}{{ item.cover_image.url }}{% else %}https://images.unsplash.com/photo-1544787219-7f4ccb76574?auto=format&fit=crop&q=80&w=800{% endif %}"
+                        alt="{{ item.title }}">
                 </div>
             </div>
-            <div class="col-md-7" style="padding: 30px;">
-                <h3 class="act-title">杭州西湖龙井茶采摘：背上小竹篓的半日小茶农</h3>
+            <div class="col-md-7" style="padding: 20px;">
+                <h3 class="act-title">{{ item.title }}</h3>
                 <div style="font-size: 12px; color: #7F8C8D; margin-bottom: 15px;">
-                    <span style="margin-right: 15px;"><i class="fa-solid fa-clock" style="color:#A7C4BC;"></i> 耗时约 4 小时</span>
-                    <span><i class="fa-solid fa-location-dot" style="color:#FF9F89;"></i> 杭州西湖龙井村制茶工坊</span>
+                    <span style="margin-right: 15px;"><i class="fa-solid fa-clock" style="color:#A7C4BC;"></i> {{ item.duration }}</span>
+                    <span><i class="fa-solid fa-location-dot" style="color:#FF9F89;"></i> {{ item.location }}</span>
                 </div>
-                <p style="color: #7F8C8D; font-size: 14px; line-height: 1.6; margin-bottom: 25px;">
-                    走入云雾缭绕的清晨茶田，跟着当地老茶农亲手采集第一抹清甜的嫩芽。体验手工炒茶的温度，并在竹林掩映的茶室里，亲手泡一杯属于你自己的春日头采龙井。
-                </p>
-                <div style="border-top: 1px dashed rgba(74,78,105,0.1); padding-top: 20px; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 13px; color: #4A4E69; font-weight: bold;">活动包含：老茶农讲解 + 限定制茶体验 + 纪念茶礼</span>
-                    <a href="#" class="btn-book">拨动逗猫棒预订 🐾</a>
+                <p style="color: #7F8C8D; font-size: 14px; line-height: 1.6; margin-bottom: 25px;">{{ item.description }}</p>
+                <div
+                    style="border-top: 1px dashed rgba(74,78,105,0.1); padding-top: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <span style="font-size: 13px; color: #4A4E69; font-weight: bold;">活动包含：{{ item.services }}</span>
+                    <a href="{{ item.booking_link }}" class="btn-book" target="_blank" rel="noopener">拨动逗猫棒预订 🐾</a>
                 </div>
             </div>
         </div>
     </div>
-
+    {% endfor %}
+    {% endfor %}
+    {% else %}
     <div class="card activity-card">
-        <div class="row" style="margin: 0;">
-            <div class="col-md-5" style="padding: 0;">
-                <div class="activity-img-box">
-                    <span class="paw-badge" style="background:#A7C4BC;"><i class="fa-solid fa-mask"></i> 人文考古</span>
-                    <img src="https://images.unsplash.com/photo-1599837565318-67429bde7162?auto=format&fit=crop&q=80&w=800" alt="兵马俑">
-                </div>
-            </div>
-            <div class="col-md-7" style="padding: 30px;">
-                <h3 class="act-title">西安兵马俑神秘考古：在复刻修复泥土里的时空对话</h3>
-                <div style="font-size: 12px; color: #7F8C8D; margin-bottom: 15px;">
-                    <span style="margin-right: 15px;"><i class="fa-solid fa-clock" style="color:#A7C4BC;"></i> 耗时约 3 小时</span>
-                    <span><i class="fa-solid fa-location-dot" style="color:#FF9F89;"></i> 西安秦始皇帝陵模拟特训营</span>
-                </div>
-                <p style="color: #7F8C8D; font-size: 14px; line-height: 1.6; margin-bottom: 25px;">
-                    独家开辟的模拟发掘舱，在知名专家的带领下，亲手执起考古铲、刷扫去泥土。模拟拼凑与修复属于你的“迷你陶俑”，深度探寻大秦地下军团波澜壮阔的历史细节。
-                </p>
-                <div style="border-top: 1px dashed rgba(74,78,105,0.1); padding-top: 20px; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 13px; color: #4A4E69; font-weight: bold;">活动包含：专家全程导览 + 模拟发掘课程 + 专属修复证书</span>
-                    <a href="#" class="btn-book" style="background:#4A4E69;">拨动逗猫棒预订 🐾</a>
-                </div>
-            </div>
+        <div class="card-body">
+            <p>当前暂无活动数据，请前往后台添加活动。</p>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
