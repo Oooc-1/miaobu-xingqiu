@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
-from .models import Note, NoteComment, NoteLike
+from django.db.models import F
+from .models import Note, NoteComment, NoteLike, NoteCollection
 
 # 辅助函数：定义分类映射，确保前端点击能正确显示对应分类
 # 假设你的 NOTE_CATEGORIES 是 (1, '旅行踩点指南'), (2, '出行干粮补给'), (3, '躲雨小窝推荐')
@@ -66,6 +67,9 @@ def create_note(request):
 # 下面这些保持不变
 def note_detail(request, note_id):
     note = get_object_or_404(Note, id=note_id)
+    # 原子自增阅读量，避免并发覆盖
+    Note.objects.filter(id=note_id).update(view_count=F('view_count') + 1)
+    note.refresh_from_db()
     comments = note.comments.filter(parent__isnull=True)
     return render(request, 'note_detail.html', {
         'note': note,
@@ -87,6 +91,23 @@ def like_note(request, note_id):
         note.save()
         status = 'unliked'
     return JsonResponse({'status': status, 'count': note.like_count})
+
+
+@login_required
+def collect_note(request, note_id):
+    note = get_object_or_404(Note, id=note_id)
+    collection, created = NoteCollection.objects.get_or_create(note=note, user=request.user)
+    if created:
+        note.collect_count += 1
+        note.save()
+        status = 'collected'
+    else:
+        collection.delete()
+        note.collect_count -= 1
+        note.save()
+        status = 'uncollected'
+    return JsonResponse({'status': status, 'count': note.collect_count})
+
 
 @login_required
 def add_comment(request, note_id):

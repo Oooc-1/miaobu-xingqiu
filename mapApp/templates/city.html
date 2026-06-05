@@ -3,6 +3,26 @@
 
 {% block title %}城市探险{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    .store-search { display: inline-block; vertical-align: middle; position: relative; }
+    .store-search input {
+        width: 360px; max-width: 56vw; padding: 10px 16px 10px 16px; padding-right: 48px; border-radius: 28px; border: 1px solid rgba(74,78,105,0.08);
+        box-shadow: 0 6px 18px rgba(167,196,188,0.04); outline: none; transition: all 0.18s;
+        background: #FFF; color: #4A4E69; font-weight: 600;
+    }
+    .store-search input:focus { box-shadow: 0 10px 28px rgba(167,196,188,0.12); border-color: #A7C4BC; }
+    .store-search .search-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: rgba(74,78,105,0.35); pointer-events: none; }
+    .store-search button {
+        position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+        background: none; border: none; color: rgba(74,78,105,0.35); cursor: pointer; font-size: 16px;
+        padding: 4px 8px; transition: color 0.18s;
+    }
+    .store-search button:hover { color: #A7C4BC; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="home-paper-bg">
     
@@ -27,13 +47,17 @@
                 <a href="?mood=登高抓蝴蝶" class="paw-filter-item {% if selected_mood == '登高抓蝴蝶' %}active{% endif %}"># 登高抓蝴蝶 (山岳)</a>
                 <a href="?mood=躲雨发呆小店" class="paw-filter-item {% if selected_mood == '躲雨发呆小店' %}active{% endif %}"># 躲雨发呆小店 (人文)</a>
             </div>
+            <div class="store-search" style="margin-top: 15px;">
+                <input type="search" id="spotSearch" placeholder="搜索地点名称或描述…" aria-label="搜索探险地点">
+                <button type="button" id="searchBtn" aria-label="搜索"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
         </div>
     </div>
 
     <div class="container" style="padding-bottom: 60px;">
         <div class="row spot-grid-row">
             {% for spot in spots %}
-            <div class="col-md-4 col-sm-6 col-xs-12 spot-card-col">
+            <div class="col-md-4 col-sm-6 col-xs-12 spot-card-col searchable-item">
                 <div class="spot-card">
                     <div class="spot-img-container">
                         {% if spot.image %}
@@ -64,5 +88,30 @@
     </div>
 
 </div>
+
+<script>
+(function(){
+    var $search = document.getElementById('spotSearch');
+    var $searchBtn = document.getElementById('searchBtn');
+    var $items = document.querySelectorAll('.searchable-item');
+
+    function doSearch(){
+        var q = $search ? $search.value.trim().toLowerCase() : '';
+        $items.forEach(function(item){
+            if(q.length === 0){ item.style.display = ''; return; }
+            var text = (item.textContent || '').toLowerCase();
+            item.style.display = text.indexOf(q) !== -1 ? '' : 'none';
+        });
+    }
+
+    if($searchBtn){ $searchBtn.addEventListener('click', doSearch); }
+    if($search){
+        $search.addEventListener('keypress', function(e){ if(e.key === 'Enter') doSearch(); });
+        $search.addEventListener('input', function(){
+            if(this.value.trim().length === 0){ doSearch(); }
+        });
+    }
+})();
+</script>
 
 {% endblock %}

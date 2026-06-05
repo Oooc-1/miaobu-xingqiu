@@ -23,6 +23,27 @@
     .comment-item { padding: 15px; margin-bottom: 10px; background: rgba(255,255,255,0.6); border-radius: 15px; }
     .reply-item { margin-left: 40px; padding: 10px; border-left: 3px solid #ff9f43; background: rgba(255,255,255,0.3); border-radius: 0 10px 10px 0; }
     
+    /* 返回按钮 — 薄荷绿肉垫风格 */
+    .btn-back-note {
+        display: inline-block;
+        background-color: #A7C4BC;
+        color: #ffffff !important;
+        border: none;
+        padding: 12px 32px;
+        border-radius: 30px;
+        font-weight: bold;
+        font-size: 15px;
+        text-decoration: none !important;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 12px rgba(167, 196, 188, 0.3);
+    }
+    .btn-back-note:hover {
+        background-color: #FF9F89;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 159, 137, 0.4);
+    }
+
     /* 按钮样式 */
     .btn-cute { 
         background: #ff9f43; 
@@ -34,6 +55,16 @@
         cursor: pointer;
     }
     .btn-cute:hover { background: #ff7f00; transform: translateY(-2px); }
+    .btn-collect {
+        background: #A7C4BC;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        transition: 0.3s;
+        cursor: pointer;
+    }
+    .btn-collect:hover { background: #FF9F89; transform: translateY(-2px); }
     textarea { width: 100%; border: 2px solid #eee; border-radius: 20px; padding: 15px; resize: none; background: #fff; }
 </style>
 
@@ -42,7 +73,7 @@
         <img src="{% if note.cover_image %}{{ note.cover_image.url }}{% else %}{% static 'img/bagcat.jpg' %}{% endif %}" class="note-detail-img">
 
         <h1 class="note-detail-title">{{ note.title }}</h1>
-        <p class="text-center text-muted">🐾 作者: {{ note.author.username }} | 发布: {{ note.created_at|date:"Y-m-d" }}</p>
+        <p class="text-center text-muted">🐾 作者: {{ note.author.username }} | 发布: {{ note.created_at|date:"Y-m-d" }} | 👀 阅读: {{ note.view_count }}</p>
 
         <div class="note-content">{{ note.content|linebreaks }}</div>
 
@@ -50,8 +81,8 @@
 
         <div class="text-center my-4">
             <!-- 关键：把所有变量都放到HTML的data属性里，JS里完全不用写模板标签 -->
-            <button 
-                id="like-btn" 
+            <button
+                id="like-btn"
                 class="btn-cute"
                 data-note-id="{{ note.id }}"
                 data-like-url="{% url 'noteApp:like_note' note.id %}"
@@ -59,6 +90,17 @@
                 data-is-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
             >
                 🐟 点赞 (<span id="like-count">{{ note.like_count }}</span>)
+            </button>
+
+            <button
+                id="collect-btn"
+                class="btn-collect"
+                data-note-id="{{ note.id }}"
+                data-collect-url="{% url 'noteApp:collect_note' note.id %}"
+                data-csrf-token="{{ csrf_token }}"
+                data-is-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+            >
+                ⭐ 收藏 (<span id="collect-count">{{ note.collect_count }}</span>)
             </button>
         </div>
 
@@ -83,6 +125,12 @@
                 <textarea name="content" required placeholder="留下一句暖心的碎碎念吧..."></textarea>
                 <button type="submit" class="btn-cute mt-2">提交评论</button>
             </form>
+        </div>
+
+        <div class="text-center" style="margin-top: 40px;">
+            <a href="{% if note.category == 2 %}{% url 'noteApp:food' %}{% elif note.category == 3 %}{% url 'noteApp:stay' %}{% else %}{% url 'noteApp:guide' %}{% endif %}" class="btn-back-note">
+                <i class="fa-solid fa-chevron-left"></i> 返回笔记列表
+            </a>
         </div>
     </div>
 </div>
@@ -120,6 +168,34 @@ document.getElementById('like-btn').addEventListener('click', function() {
     .catch(err => {
         console.error('点赞出错:', err);
         alert('点赞失败，请稍后再试~');
+    });
+});
+
+// 收藏按钮
+document.getElementById('collect-btn').addEventListener('click', function() {
+    const noteId = this.dataset.noteId;
+    const collectUrl = this.dataset.collectUrl;
+    const csrfToken = this.dataset.csrfToken;
+    const isAuthenticated = this.dataset.isAuthenticated === 'true';
+
+    if (!isAuthenticated) {
+        alert("登录后才能收藏游记哦！");
+        return;
+    }
+
+    fetch(collectUrl, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': csrfToken }
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById('collect-count').innerText = data.count;
+        this.style.opacity = '0.7';
+        setTimeout(() => this.style.opacity = '1', 200);
+    })
+    .catch(err => {
+        console.error('收藏出错:', err);
+        alert('收藏失败，请稍后再试~');
     });
 });
 </script>

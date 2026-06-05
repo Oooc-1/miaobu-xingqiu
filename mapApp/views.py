@@ -1,5 +1,8 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Spot
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.db.models import F
+from .models import Spot, SpotCollection
 
 
 def city(request):
@@ -44,5 +47,24 @@ def alley(request):
 
 def spot_detail(request, slug):
     spot = get_object_or_404(Spot, slug=slug)
+    # 原子自增浏览量
+    Spot.objects.filter(id=spot.id).update(view_count=F('view_count') + 1)
+    spot.refresh_from_db()
     return render(request, 'spot_detail.html', {'active_menu': 'map', 'spot': spot})
+
+
+@login_required
+def collect_spot(request, slug):
+    spot = get_object_or_404(Spot, slug=slug)
+    collection, created = SpotCollection.objects.get_or_create(spot=spot, user=request.user)
+    if created:
+        spot.collect_count += 1
+        spot.save()
+        status = 'collected'
+    else:
+        collection.delete()
+        spot.collect_count -= 1
+        spot.save()
+        status = 'uncollected'
+    return JsonResponse({'status': status, 'count': spot.collect_count})
 

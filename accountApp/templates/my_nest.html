@@ -223,6 +223,48 @@
         color: #A7C4BC;
         flex-shrink: 0;
     }
+    .note-mini-views {
+        font-size: 11px;
+        color: #7F8C8D;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    /* 景点迷你卡片 */
+    .spot-mini-card {
+        background: #FFF5F2;
+        border-radius: 16px;
+        padding: 15px 18px;
+        margin-bottom: 12px;
+        border: 1px solid rgba(255, 159, 137, 0.2);
+        transition: all 0.25s ease;
+    }
+    .spot-mini-card:hover {
+        box-shadow: 0 6px 16px rgba(255, 159, 137, 0.15);
+        transform: translateY(-2px);
+    }
+    .spot-mini-card a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none !important;
+        color: #4A4E69;
+    }
+    .spot-mini-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        object-fit: cover;
+        flex-shrink: 0;
+        background-color: #EBF3F0;
+    }
+    .favorites-section-label {
+        color: #A7C4BC;
+        font-size: 13px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        margin-top: 5px;
+    }
 
     /* tab-panel 由 JS 控制显示/隐藏 */
 </style>
@@ -282,6 +324,7 @@
                                     <span class="note-mini-title">{{ like.note.title }}</span>
                                     <span class="note-mini-author">@{{ like.note.author.username }}</span>
                                 </div>
+                                <span class="note-mini-views">👀 {{ like.note.view_count }}</span>
                                 <span class="note-mini-time">❤️ {{ like.created_at|date:"m-d" }}</span>
                             </a>
                         </div>
@@ -297,7 +340,9 @@
 
                 <!-- ====== 收藏列表（服务端渲染） ====== -->
                 <div id="tab-favorites" class="tab-panel" style="display:none;">
-                    {% if collected_notes %}
+                    {% if collected_notes or collected_spots %}
+                        {% if collected_notes %}
+                        <div class="favorites-section-label">📝 游记收藏</div>
                         {% for collection in collected_notes %}
                         <div class="note-mini-card">
                             <a href="{% url 'noteApp:detail' collection.note.id %}">
@@ -306,10 +351,33 @@
                                     <span class="note-mini-title">{{ collection.note.title }}</span>
                                     <span class="note-mini-author">@{{ collection.note.author.username }}</span>
                                 </div>
+                                <span class="note-mini-views">👀 {{ collection.note.view_count }}</span>
                                 <span class="note-mini-time">⭐ {{ collection.created_at|date:"m-d" }}</span>
                             </a>
                         </div>
                         {% endfor %}
+                        {% endif %}
+
+                        {% if collected_spots %}
+                        <div class="favorites-section-label">📍 景点收藏</div>
+                        {% for item in collected_spots %}
+                        <div class="spot-mini-card">
+                            <a href="{% url 'mapApp:spot_detail' item.spot.slug %}">
+                                {% if item.spot.image %}
+                                <img src="{{ item.spot.image.url }}" class="spot-mini-img" alt="{{ item.spot.name }}">
+                                {% else %}
+                                <img src="{% static 'img/dest_lijiang.jpg' %}" class="spot-mini-img" alt="{{ item.spot.name }}">
+                                {% endif %}
+                                <div class="note-mini-info">
+                                    <span class="note-mini-title">{{ item.spot.name }}</span>
+                                    <span class="note-mini-author">{{ item.spot.get_category_display }}</span>
+                                </div>
+                                <span class="note-mini-views">👀 {{ item.spot.view_count }}</span>
+                                <span class="note-mini-time">⭐ {{ item.created_at|date:"m-d" }}</span>
+                            </a>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
                     {% else %}
                     <div class="empty-placeholder">
                         <i class="fa-solid fa-star"></i>

@@ -11,5 +11,6 @@ urlpatterns = [
     path('<int:note_id>/', views.note_detail, name='detail'),
     # 新增交互接口
     path('like/<int:note_id>/', views.like_note, name='like_note'),
+    path('collect/<int:note_id>/', views.collect_note, name='collect_note'),
     path('comment/<int:note_id>/', views.add_comment, name='add_comment'),
 ]

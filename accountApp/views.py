@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import Album, Photo
 from noteApp.models import NoteLike, NoteCollection
+from mapApp.models import SpotCollection
 
 
 # 通用登录与身份自动分流
@@ -49,11 +50,17 @@ def my_nest(request):
         'note', 'note__author'
     ).order_by('-created_at')
 
+    # 获取用户收藏的景点（带景点详情，按收藏时间倒序）
+    collected_spots = SpotCollection.objects.filter(user=request.user).select_related(
+        'spot'
+    ).order_by('-created_at')
+
     return render(request, 'my_nest.html', {
         'user': request.user,
         'active_menu': 'home',
         'liked_notes': liked_notes,
         'collected_notes': collected_notes,
+        'collected_spots': collected_spots,
     })
 
 

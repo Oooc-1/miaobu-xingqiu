@@ -38,6 +38,20 @@
     .img-wrap { height: 180px; overflow: hidden; position: relative; border-top-left-radius: 20px; border-top-right-radius: 20px; }
     .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
     .badge-food { position: absolute; top: 15px; left: 15px; background: #FF9F89; color: white; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+    /* 搜索框样式 */
+    .store-search { display: inline-block; vertical-align: middle; position: relative; }
+    .store-search input {
+        width: 360px; max-width: 56vw; padding: 10px 16px 10px 16px; padding-right: 48px; border-radius: 28px; border: 1px solid rgba(74,78,105,0.08);
+        box-shadow: 0 6px 18px rgba(167,196,188,0.04); outline: none; transition: all 0.18s;
+        background: #FFF; color: #4A4E69; font-weight: 600;
+    }
+    .store-search input:focus { box-shadow: 0 10px 28px rgba(167,196,188,0.12); border-color: #A7C4BC; }
+    .store-search button {
+        position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+        background: none; border: none; color: rgba(74,78,105,0.35); cursor: pointer; font-size: 16px;
+        padding: 4px 8px; transition: color 0.18s;
+    }
+    .store-search button:hover { color: #A7C4BC; }
 </style>
 {% endblock %}
 
@@ -49,15 +63,21 @@
         <p style="color: #7F8C8D; font-size: 14px; margin-bottom: 0; line-height: 1.5;">漫步途中怎么能没有美食充能？探路官胖橘大王亲测的当地绝赞补给，好吃到原地踩奶！</p>
     </div>
 
-    <ul class="note-nav">
-        <li><a href="{% url 'noteApp:guide' %}"><i class="fa-solid fa-map-location-dot"></i> 旅行踩点指南</a></li>
-        <li><a href="{% url 'noteApp:food' %}" class="active-food"><i class="fa-solid fa-fish"></i> 出行干粮补给</a></li>
-        <li><a href="{% url 'noteApp:stay' %}"><i class="fa-solid fa-house-chimney-window"></i> 躲雨小窝推荐</a></li>
-    </ul>
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+        <ul class="note-nav" style="margin-bottom: 0;">
+            <li><a href="{% url 'noteApp:guide' %}"><i class="fa-solid fa-map-location-dot"></i> 旅行踩点指南</a></li>
+            <li><a href="{% url 'noteApp:food' %}" class="active-food"><i class="fa-solid fa-fish"></i> 出行干粮补给</a></li>
+            <li><a href="{% url 'noteApp:stay' %}"><i class="fa-solid fa-house-chimney-window"></i> 躲雨小窝推荐</a></li>
+        </ul>
+        <div class="store-search" style="margin-top: 2px;">
+            <input type="search" id="spotSearch" placeholder="搜索美食笔记标题或内容…" aria-label="搜索干粮补给">
+            <button type="button" id="searchBtn" aria-label="搜索"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+    </div>
 
     <div class="row">
         {% for note in notes %}
-        <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="col-md-4 col-sm-6 col-xs-12 searchable-item">
             <div class="card meow-card">
                 <div class="img-wrap">
                     <span class="badge-food"><i class="fa-solid fa-bowl-food"></i> {{ note.get_category_display }}</span>
@@ -82,4 +102,29 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+(function(){
+    var $search = document.getElementById('spotSearch');
+    var $searchBtn = document.getElementById('searchBtn');
+    var $items = document.querySelectorAll('.searchable-item');
+
+    function doSearch(){
+        var q = $search ? $search.value.trim().toLowerCase() : '';
+        $items.forEach(function(item){
+            if(q.length === 0){ item.style.display = ''; return; }
+            var text = (item.textContent || '').toLowerCase();
+            item.style.display = text.indexOf(q) !== -1 ? '' : 'none';
+        });
+    }
+
+    if($searchBtn){ $searchBtn.addEventListener('click', doSearch); }
+    if($search){
+        $search.addEventListener('keypress', function(e){ if(e.key === 'Enter') doSearch(); });
+        $search.addEventListener('input', function(){
+            if(this.value.trim().length === 0){ doSearch(); }
+        });
+    }
+})();
+</script>
 {% endblock %}
