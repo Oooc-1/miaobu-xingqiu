@@ -8,26 +8,60 @@ from .models import Note, NoteComment, NoteLike
 def guide(request):
     notes = Note.objects.filter(category=1).order_by('-created_at')
     return render(request, 'guide.html', {
-        'notes': notes, 
-        'active_menu': 'note', 
+        'notes': notes,
+        'active_menu': 'notes',
         'sub_menu': 'guide'
     })
 
 def food(request):
     notes = Note.objects.filter(category=2).order_by('-created_at')
     return render(request, 'food.html', {
-        'notes': notes, 
-        'active_menu': 'note', 
+        'notes': notes,
+        'active_menu': 'notes',
         'sub_menu': 'food'
     })
 
 def stay(request):
     notes = Note.objects.filter(category=3).order_by('-created_at')
     return render(request, 'stay.html', {
-        'notes': notes, 
-        'active_menu': 'note', 
+        'notes': notes,
+        'active_menu': 'notes',
         'sub_menu': 'stay'
     })
+
+
+@login_required(login_url='login')
+def create_note(request):
+    """普通用户发布全新游记"""
+    if request.method == "POST":
+        title = request.POST.get('title')
+        summary = request.POST.get('summary')
+        content = request.POST.get('content')
+        category = request.POST.get('category')
+        cover_image = request.FILES.get('cover_image')
+
+        if title and summary and content and category:
+            note = Note.objects.create(
+                author=request.user,
+                title=title,
+                summary=summary,
+                content=content,
+                category=int(category),
+                cover_image=cover_image if cover_image else None
+            )
+            return redirect('noteApp:detail', note_id=note.id)
+        else:
+            return render(request, 'create_note.html', {
+                'error': '喵呜，标题、摘要、正文和分类都是必填项哦！🐾',
+                'active_menu': 'notes',
+                'sub_menu': 'guide'
+            })
+
+    return render(request, 'create_note.html', {
+        'active_menu': 'notes',
+        'sub_menu': 'guide'
+    })
+
 
 # 下面这些保持不变
 def note_detail(request, note_id):
@@ -35,7 +69,8 @@ def note_detail(request, note_id):
     comments = note.comments.filter(parent__isnull=True)
     return render(request, 'note_detail.html', {
         'note': note,
-        'comments': comments
+        'comments': comments,
+        'active_menu': 'notes'
     })
 
 @login_required

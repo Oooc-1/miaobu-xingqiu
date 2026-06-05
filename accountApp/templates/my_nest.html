@@ -96,6 +96,7 @@
         justify-content: center;
         gap: 15px;
         margin-bottom: 35px;
+        flex-wrap: wrap;
     }
 
     .btn-nest-action {
@@ -165,6 +166,65 @@
         margin-bottom: 15px;
         display: block;
     }
+
+    /* ====== 动态迷你笔记卡片（点赞/收藏列表） ====== */
+    .note-mini-card {
+        background: #FDFBF7;
+        border-radius: 16px;
+        padding: 15px 18px;
+        margin-bottom: 12px;
+        border: 1px solid rgba(167, 196, 188, 0.2);
+        transition: all 0.25s ease;
+    }
+
+    .note-mini-card:hover {
+        box-shadow: 0 6px 16px rgba(167, 196, 188, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .note-mini-card a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none !important;
+        color: #4A4E69;
+    }
+
+    .note-mini-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        object-fit: cover;
+        flex-shrink: 0;
+        background-color: #EBF3F0;
+    }
+
+    .note-mini-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .note-mini-title {
+        font-weight: bold;
+        font-size: 15px;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .note-mini-author {
+        font-size: 12px;
+        color: #7F8C8D;
+    }
+
+    .note-mini-time {
+        font-size: 12px;
+        color: #A7C4BC;
+        flex-shrink: 0;
+    }
+
+    /* tab-panel 由 JS 控制显示/隐藏 */
 </style>
 {% endblock %}
 
@@ -192,8 +252,11 @@
                 </div>
 
                 <div class="action-group">
-                    <a href="#" class="btn-nest-action">
+                    <a href="{% url 'noteApp:create_note' %}" class="btn-nest-action">
                         <i class="fa-solid fa-feather-pointed"></i> 发布全新游记
+                    </a>
+                    <a href="{% url 'my_albums' %}" class="btn-nest-action">
+                        <i class="fa-solid fa-images"></i> 我的相册
                     </a>
                     <a href="{% url 'change_avatar' %}" class="btn-nest-action"
                         style="background-color: #ffffff; color: #4A4E69; border: 1px solid rgba(167,196,188,0.6); box-shadow: none;">
@@ -208,12 +271,52 @@
                         我的收藏</div>
                 </div>
 
-                <div id="tabContent">
+                <!-- ====== 点赞列表（服务端渲染） ====== -->
+                <div id="tab-likes" class="tab-panel">
+                    {% if liked_notes %}
+                        {% for like in liked_notes %}
+                        <div class="note-mini-card">
+                            <a href="{% url 'noteApp:detail' like.note.id %}">
+                                <img src="{% if like.note.cover_image %}{{ like.note.cover_image.url }}{% else %}{% static 'img/bagcat.jpg' %}{% endif %}" class="note-mini-img" alt="{{ like.note.title }}">
+                                <div class="note-mini-info">
+                                    <span class="note-mini-title">{{ like.note.title }}</span>
+                                    <span class="note-mini-author">@{{ like.note.author.username }}</span>
+                                </div>
+                                <span class="note-mini-time">❤️ {{ like.created_at|date:"m-d" }}</span>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
                     <div class="empty-placeholder">
                         <i class="fa-solid fa-fish"></i>
                         <p style="font-weight: 500; font-size: 16px;">目前这里还没有小鱼干（点赞记录）哦~</p>
-                        <p style="font-size: 13px; margin-top: 8px; color: #7F8C8D;">快去“猫窝首页”和“漫步地图”逛逛吧！🐾</p>
+                        <p style="font-size: 13px; margin-top: 8px; color: #7F8C8D;">快去"猫窝首页"和"漫步地图"逛逛吧！🐾</p>
                     </div>
+                    {% endif %}
+                </div>
+
+                <!-- ====== 收藏列表（服务端渲染） ====== -->
+                <div id="tab-favorites" class="tab-panel" style="display:none;">
+                    {% if collected_notes %}
+                        {% for collection in collected_notes %}
+                        <div class="note-mini-card">
+                            <a href="{% url 'noteApp:detail' collection.note.id %}">
+                                <img src="{% if collection.note.cover_image %}{{ collection.note.cover_image.url }}{% else %}{% static 'img/bagcat.jpg' %}{% endif %}" class="note-mini-img" alt="{{ collection.note.title }}">
+                                <div class="note-mini-info">
+                                    <span class="note-mini-title">{{ collection.note.title }}</span>
+                                    <span class="note-mini-author">@{{ collection.note.author.username }}</span>
+                                </div>
+                                <span class="note-mini-time">⭐ {{ collection.created_at|date:"m-d" }}</span>
+                            </a>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="empty-placeholder">
+                        <i class="fa-solid fa-star"></i>
+                        <p style="font-weight: 500; font-size: 16px;">你的百宝袋里还没有任何收藏哦~</p>
+                        <p style="font-size: 13px; margin-top: 8px; color: #7F8C8D;">看到喜欢的游记或者漫步攻略，别忘了给它点个星星！🌟</p>
+                    </div>
+                    {% endif %}
                 </div>
 
             </div>
@@ -222,32 +325,19 @@
 </div>
 
 <script type="text/javascript">
-    // 头像点击跳转（新增，完全替代原来行内onclick，功能不变）
+    // 头像点击跳转
     document.querySelector('.avatar-wrapper').addEventListener('click', function () {
         window.location.href = this.dataset.targetUrl;
     });
 
+    // 标签页切换
     function switchTab(event, type) {
         const items = document.querySelectorAll('.nest-tab-item');
         items.forEach(el => el.classList.remove('active'));
         event.currentTarget.classList.add('active');
 
-        const content = document.getElementById('tabContent');
-        if (type === 'likes') {
-            content.innerHTML = `
-            <div class="empty-placeholder">
-                <i class="fa-solid fa-fish"></i>
-                <p style="font-weight: 500; font-size: 16px;">目前这里还没有小鱼干（点赞记录）哦~</p>
-                <p style="font-size: 13px; margin-top: 8px; color: #7F8C8D;">快去“猫窝首页”和“漫步地图”逛逛吧！🐾</p>
-            </div>`;
-        } else if (type === 'favorites') {
-            content.innerHTML = `
-            <div class="empty-placeholder">
-                <i class="fa-solid fa-star"></i>
-                <p style="font-weight: 500; font-size: 16px;">你的百宝袋里还没有任何收藏哦~</p>
-                <p style="font-size: 13px; margin-top: 8px; color: #7F8C8D;">看到喜欢的游记或者漫步攻略，别忘了给它点个星星！🌟</p>
-            </div>`;
-        }
+        document.getElementById('tab-likes').style.display = (type === 'likes') ? 'block' : 'none';
+        document.getElementById('tab-favorites').style.display = (type === 'favorites') ? 'block' : 'none';
     }
 </script>
 {% endblock %}

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ album.title }} - 相册详情 📸{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-container {
+        margin-top: 100px;
+        margin-bottom: 60px;
+    }
+    .album-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 6px 20px rgba(167, 196, 188, 0.12);
+        border: 1px solid rgba(167, 196, 188, 0.2);
+    }
+    .album-header-title {
+        color: #4A4E69;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .album-header-desc {
+        color: #7F8C8D;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+    .album-header-meta {
+        color: #A7C4BC;
+        font-size: 13px;
+    }
+    .btn-upload {
+        background-color: #A7C4BC;
+        color: #ffffff !important;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 30px;
+        font-weight: bold;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 12px rgba(167, 196, 188, 0.3);
+        text-decoration: none !important;
+        display: inline-block;
+        margin-bottom: 30px;
+    }
+    .btn-upload:hover {
+        background-color: #FF9F89;
+        color: #ffffff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 159, 137, 0.4);
+        text-decoration: none !important;
+    }
+    .photo-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(167, 196, 188, 0.1);
+        border: 1px solid rgba(167, 196, 188, 0.2);
+        overflow: hidden;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+    .photo-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(167, 196, 188, 0.2);
+    }
+    .photo-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        cursor: pointer;
+        background-color: #FDFBF7;
+    }
+    .photo-body {
+        padding: 15px;
+    }
+    .photo-title {
+        color: #4A4E69;
+        font-weight: bold;
+        font-size: 14px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .photo-date {
+        color: #A7C4BC;
+        font-size: 11px;
+        text-align: center;
+        margin-top: 4px;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #7F8C8D;
+        background: #FDFBF7;
+        border-radius: 20px;
+        border: 2px dashed rgba(167, 196, 188, 0.3);
+    }
+    .empty-state i {
+        font-size: 48px;
+        color: rgba(167, 196, 188, 0.5);
+        margin-bottom: 15px;
+        display: block;
+    }
+    .btn-back {
+        display: inline-block;
+        margin-top: 25px;
+        color: #7F8C8D;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .btn-back:hover {
+        color: #A7C4BC;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container detail-container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="album-header">
+                <h3 class="album-header-title"><i class="fa-solid fa-folder-open" style="color: #A7C4BC; margin-right: 8px;"></i> {{ album.title }}</h3>
+                {% if album.description %}
+                    <p class="album-header-desc">{{ album.description }}</p>
+                {% endif %}
+                <p class="album-header-meta">📅 创建于 {{ album.created_at|date:"Y-m-d" }} ｜ 📸 {{ photos.count }} 张照片</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="{% url 'upload_photo' album.id %}" class="btn-upload">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> 上传新照片
+                </a>
+            </div>
+
+            {% if photos %}
+            <div class="row">
+                {% for photo in photos %}
+                <div class="col-md-4 col-sm-6">
+                    <div class="photo-card">
+                        <img src="{{ photo.image.url }}" class="photo-img" alt="{{ photo.title }}" onclick="window.open(this.src)" title="点击查看大图">
+                        <div class="photo-body">
+                            <div class="photo-title">{{ photo.title }}</div>
+                            <div class="photo-date">{{ photo.created_at|date:"Y-m-d H:i" }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fa-solid fa-image"></i>
+                <p style="font-weight: 500; font-size: 16px;">这个相册还是空的哦~</p>
+                <p style="font-size: 13px; color: #7F8C8D;">点击上方按钮，上传你的第一张照片吧！🐾</p>
+            </div>
+            {% endif %}
+
+            <div style="text-align: center;">
+                <a href="{% url 'my_albums' %}" class="btn-back"><i class="fa-solid fa-chevron-left"></i> 返回相册列表</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

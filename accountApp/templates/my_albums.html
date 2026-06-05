@@ -1,0 +1,190 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}我的相册小窝 📸{% endblock %}
+
+{% block extra_css %}
+<style>
+    .albums-container {
+        margin-top: 100px;
+        margin-bottom: 60px;
+    }
+    .albums-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+    .albums-title {
+        color: #4A4E69;
+        font-weight: bold;
+    }
+    .btn-create-album {
+        background-color: #A7C4BC;
+        color: #ffffff;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 30px;
+        font-weight: bold;
+        transition: all 0.25s ease;
+        box-shadow: 0 4px 12px rgba(167, 196, 188, 0.3);
+        text-decoration: none !important;
+        display: inline-block;
+        margin-bottom: 30px;
+    }
+    .btn-create-album:hover {
+        background-color: #FF9F89;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 159, 137, 0.4);
+        text-decoration: none !important;
+    }
+    .album-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(167, 196, 188, 0.12);
+        border: 1px solid rgba(167, 196, 188, 0.2);
+        overflow: hidden;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+    .album-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(167, 196, 188, 0.2);
+    }
+    .album-cover {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background-color: #FDFBF7;
+    }
+    .album-cover-placeholder {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #EBF3F0, #FDFBF7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        color: rgba(167, 196, 188, 0.5);
+    }
+    .album-body {
+        padding: 20px;
+    }
+    .album-title {
+        color: #4A4E69;
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+    .album-desc {
+        color: #7F8C8D;
+        font-size: 13px;
+        margin-bottom: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .album-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #A7C4BC;
+    }
+    .btn-view-album {
+        display: inline-block;
+        background: #A7C4BC;
+        color: #ffffff !important;
+        padding: 6px 16px;
+        border-radius: 16px;
+        font-size: 13px;
+        text-decoration: none !important;
+        transition: all 0.25s ease;
+    }
+    .btn-view-album:hover {
+        background: #FF9F89;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #7F8C8D;
+        background: #FDFBF7;
+        border-radius: 20px;
+        border: 2px dashed rgba(167, 196, 188, 0.3);
+    }
+    .empty-state i {
+        font-size: 48px;
+        color: rgba(167, 196, 188, 0.5);
+        margin-bottom: 15px;
+        display: block;
+    }
+    .btn-back {
+        display: inline-block;
+        margin-top: 25px;
+        color: #7F8C8D;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .btn-back:hover {
+        color: #A7C4BC;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container albums-container">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+
+            <div class="albums-header">
+                <h3 class="albums-title"><i class="fa-solid fa-images" style="color: #A7C4BC; margin-right: 8px;"></i> {{ user.username }} 的相册小窝</h3>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="{% url 'create_album' %}" class="btn-create-album">
+                    <i class="fa-solid fa-plus"></i> 创建新相册
+                </a>
+            </div>
+
+            {% if albums %}
+            <div class="row">
+                {% for album in albums %}
+                <div class="col-md-6 col-sm-6">
+                    <div class="album-card">
+                        {% if album.cover_image %}
+                            <img src="{{ album.cover_image.url }}" class="album-cover" alt="{{ album.title }}">
+                        {% else %}
+                            <div class="album-cover-placeholder">
+                                <i class="fa-solid fa-folder-open"></i>
+                            </div>
+                        {% endif %}
+                        <div class="album-body">
+                            <div class="album-title">{{ album.title }}</div>
+                            {% if album.description %}
+                                <div class="album-desc">{{ album.description }}</div>
+                            {% endif %}
+                            <div class="album-meta">
+                                <span>📸 {{ album.photos.count }} 张照片</span>
+                                <span>{{ album.created_at|date:"Y-m-d" }}</span>
+                                <a href="{% url 'album_detail' album.id %}" class="btn-view-album">查看相册</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fa-solid fa-camera-retro"></i>
+                <p style="font-weight: 500; font-size: 16px;">你的相册小窝还是空的哦~</p>
+                <p style="font-size: 13px; color: #7F8C8D;">点击上方按钮，创建你的第一个相册吧！🐾</p>
+            </div>
+            {% endif %}
+
+            <div style="text-align: center;">
+                <a href="{% url 'my_nest' %}" class="btn-back"><i class="fa-solid fa-chevron-left"></i> 返回我的猫巢基地</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

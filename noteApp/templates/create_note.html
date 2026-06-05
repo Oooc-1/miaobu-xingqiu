@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}发布全新游记 ✍️{% endblock %}
+
+{% block extra_css %}
+<style>
+    .create-card {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(74, 78, 105, 0.08);
+        border: 1px solid rgba(167, 196, 188, 0.2);
+        padding: 40px;
+        margin-top: 100px;
+        margin-bottom: 60px;
+    }
+    .create-title {
+        color: #4A4E69;
+        font-weight: bold;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .form-label {
+        color: #4A4E69;
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .form-input, .form-textarea, .form-select {
+        width: 100%;
+        border: 1px solid rgba(167, 196, 188, 0.5);
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 15px;
+        color: #4A4E69;
+        background: #FDFBF7;
+        transition: all 0.25s ease;
+        outline: none;
+        box-sizing: border-box;
+        resize: vertical;
+        margin-bottom: 20px;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+        border-color: #A7C4BC;
+        box-shadow: 0 0 0 3px rgba(167, 196, 188, 0.15);
+        background: #ffffff;
+    }
+    .form-textarea {
+        min-height: 200px;
+    }
+    .cover-preview-box {
+        position: relative;
+        width: 200px;
+        height: 140px;
+        margin: 0 auto 20px auto;
+        background: #FDFBF7;
+        border-radius: 16px;
+        border: 2px dashed rgba(167, 196, 188, 0.4);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cover-preview-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: none;
+    }
+    .cover-placeholder {
+        color: rgba(167, 196, 188, 0.5);
+        font-size: 13px;
+        text-align: center;
+        padding: 10px;
+    }
+    #coverInput {
+        display: none;
+    }
+    .btn-choose-cover {
+        background-color: #ffffff;
+        color: #4A4E69;
+        border: 2px dashed #A7C4BC;
+        padding: 10px 24px;
+        border-radius: 30px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.25s ease-in-out;
+        display: inline-block;
+        margin-bottom: 15px;
+    }
+    .btn-choose-cover:hover {
+        background-color: #FFF5F2;
+        border-color: #FF9F89;
+        color: #FF9F89;
+        transform: translateY(-2px);
+    }
+    .btn-submit {
+        background-color: #A7C4BC;
+        color: #ffffff;
+        border: none;
+        padding: 12px 40px;
+        border-radius: 30px;
+        font-weight: bold;
+        transition: all 0.25s ease-in-out;
+        margin-top: 10px;
+        box-shadow: 0 4px 12px rgba(167, 196, 188, 0.3);
+        cursor: pointer;
+    }
+    .btn-submit:hover {
+        background-color: #FF9F89;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 159, 137, 0.3);
+    }
+    .btn-back {
+        display: inline-block;
+        margin-top: 20px;
+        color: #7F8C8D;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .btn-back:hover {
+        color: #A7C4BC;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2 col-sm-10 col-sm-offset-1">
+
+            <div class="create-card">
+                <h3 class="create-title"><i class="fa-solid fa-feather-pointed" style="color: #A7C4BC; margin-right: 8px;"></i> 书写你的喵星游记</h3>
+
+                {% if error %}
+                    <div class="alert alert-danger" style="border-radius: 12px; font-weight: bold;">{{ error }}</div>
+                {% endif %}
+
+                <form action="{% url 'noteApp:create_note' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <label class="form-label">🐾 游记标题</label>
+                    <input type="text" name="title" class="form-input" placeholder="给你的游记起个可爱的名字吧~" required>
+
+                    <label class="form-label">📂 游记分类</label>
+                    <select name="category" class="form-select" required>
+                        <option value="">-- 请选择分类 --</option>
+                        <option value="1">旅行踩点指南</option>
+                        <option value="2">出行干粮补给</option>
+                        <option value="3">躲雨小窝推荐</option>
+                    </select>
+
+                    <label class="form-label">📝 摘要</label>
+                    <input type="text" name="summary" class="form-input" placeholder="用一句话概括这篇游记吧~" required>
+
+                    <label class="form-label">📖 正文内容</label>
+                    <textarea name="content" class="form-textarea" placeholder="在这里尽情书写你的喵星冒险故事…" required></textarea>
+
+                    <label class="form-label">🖼️ 封面图片（可选）</label>
+                    <div class="cover-preview-box">
+                        <img id="coverPreview" class="cover-preview-img" alt="封面预览">
+                        <span id="coverPlaceholder" class="cover-placeholder">📷<br>封面预览</span>
+                    </div>
+                    <input type="file" name="cover_image" id="coverInput" accept="image/*">
+                    <label for="coverInput" class="btn-choose-cover">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> 选择封面图片
+                    </label>
+
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn-submit">
+                            <i class="fa-solid fa-paper-plane"></i> 发布游记
+                        </button>
+                    </div>
+                </form>
+
+                <div style="text-align: center;">
+                    <a href="{% url 'my_nest' %}" class="btn-back"><i class="fa-solid fa-chevron-left"></i> 返回我的猫巢基地</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById('coverInput').addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+                var preview = document.getElementById('coverPreview');
+                preview.src = event.target.result;
+                preview.style.display = 'block';
+                document.getElementById('coverPlaceholder').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
+{% endblock %}
