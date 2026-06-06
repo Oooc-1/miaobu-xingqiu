@@ -11,8 +11,21 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <script src="{% static 'js/jquery.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     {% block extra_css %}{% endblock %}
+
+    <!-- AI 喵喵助手 Markdown 排版样式 -->
+    <style>
+        #msg-container h3 { margin: 12px 0 6px; font-size: 16px; color: #4A4E69; }
+        #msg-container h4 { margin: 10px 0 4px; font-size: 15px; color: #4A4E69; }
+        #msg-container ul, #msg-container ol { padding-left: 20px; margin: 6px 0; }
+        #msg-container li { margin-bottom: 4px; }
+        #msg-container p { margin: 6px 0; }
+        #msg-container strong { color: #FF9F89; }
+        #msg-container code { background: rgba(167,196,188,0.15); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+        #msg-container pre { background: #FDFBF7; padding: 10px; border-radius: 8px; overflow-x: auto; font-size: 13px; }
+    </style>
 
     <style>
         /* ================= 喵步星球 治愈系薄荷绿页脚样式 ================= */
@@ -468,11 +481,9 @@
         });
 
         // ====== AI 喵喵助手 ======
-        var chatHistory = [];
-        var isDragging = false;
-        var isResizing = false;
-        var dragStartX, dragStartY, startLeft, startTop;
-        var resizeStartW, resizeStartH, resizeStartX, resizeStartY;
+        var dragThreshold = 5;
+        var dragMoving = false;
+        var dragStartX, dragStartY, dragInitLeft, dragInitTop;
 
         function toggleChat() {
             var win = document.getElementById('chat-window');
@@ -481,6 +492,41 @@
             } else {
                 win.style.display = 'none';
             }
+        }
+
+        function handleClick() {
+            if (dragMoving) return; // 拖拽过就不触发点击
+            toggleChat();
+        }
+
+        function startDrag(e) {
+            dragMoving = false;
+            dragStartX = e.clientX;
+            dragStartY = e.clientY;
+            var container = document.getElementById('ai-container');
+            dragInitLeft = container.offsetLeft;
+            dragInitTop = container.offsetTop;
+
+            document.onmousemove = dragMove;
+            document.onmouseup = stopDrag;
+        }
+
+        function dragMove(e) {
+            var dx = e.clientX - dragStartX;
+            var dy = e.clientY - dragStartY;
+            if (Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) {
+                dragMoving = true;
+                var container = document.getElementById('ai-container');
+                container.style.left = (dragInitLeft + dx) + 'px';
+                container.style.top = (dragInitTop + dy) + 'px';
+                container.style.bottom = 'auto';
+                container.style.right = 'auto';
+            }
+        }
+
+        function stopDrag() {
+            document.onmousemove = null;
+            document.onmouseup = null;
         }
 
         function addMessage(role, text) {
@@ -522,7 +568,7 @@
                 .then(function(data) {
                     var th = document.getElementById('thinking-msg');
                     if (th) th.remove();
-                    addMessage('ai', '🐱 <strong>喵喵说：</strong><br>' + data.reply);
+                    addMessage('ai', '<strong>🐱 喵喵说：</strong><br>' + marked.parse(data.reply));
                 })
                 .catch(function() {
                     var th = document.getElementById('thinking-msg');
@@ -531,7 +577,6 @@
                 });
         }
 
-        // ====== 拖拽 ======
         document.addEventListener('DOMContentLoaded', function() {
             var input = document.getElementById('ai-input');
             if (input) {
@@ -539,68 +584,12 @@
                     if (e.key === 'Enter') askAI();
                 });
             }
-
-            // 拖拽事件
-            var header = document.getElementById('chat-header');
-            var container = document.getElementById('ai-container');
-            if (header && container) {
-                header.addEventListener('mousedown', function(e) {
-                    if (e.target === header.querySelector('.close-btn')) return;
-                    isDragging = true;
-                    dragStartX = e.clientX;
-                    dragStartY = e.clientY;
-                    var rect = container.getBoundingClientRect();
-                    startLeft = rect.left;
-                    startTop = rect.top;
-                    container.style.right = 'auto';
-                    container.style.bottom = 'auto';
-                    container.style.left = startLeft + 'px';
-                    container.style.top = startTop + 'px';
-                    e.preventDefault();
-                });
-            }
-
-            document.addEventListener('mousemove', function(e) {
-                if (isDragging) {
-                    var dx = e.clientX - dragStartX;
-                    var dy = e.clientY - dragStartY;
-                    container.style.left = (startLeft + dx) + 'px';
-                    container.style.top = (startTop + dy) + 'px';
-                }
-                if (isResizing) {
-                    var dw = e.clientX - resizeStartX;
-                    var dh = e.clientY - resizeStartY;
-                    var win = document.getElementById('chat-window');
-                    win.style.width = Math.max(280, resizeStartW + dw) + 'px';
-                    win.style.height = Math.max(320, resizeStartH + dh) + 'px';
-                }
-            });
-
-            document.addEventListener('mouseup', function() {
-                isDragging = false;
-                isResizing = false;
-            });
-
-            // 缩放句柄
-            var handle = document.getElementById('resize-handle');
-            if (handle) {
-                handle.addEventListener('mousedown', function(e) {
-                    isResizing = true;
-                    resizeStartX = e.clientX;
-                    resizeStartY = e.clientY;
-                    var win = document.getElementById('chat-window');
-                    resizeStartW = win.offsetWidth;
-                    resizeStartH = win.offsetHeight;
-                    e.preventDefault();
-                    e.stopPropagation();
-                });
-            }
         });
     </script>
 
     <!-- ====== AI 喵喵助手 ====== -->
     <div id="ai-container" style="position:fixed; bottom:24px; right:24px; z-index:9999; font-family:'Helvetica Neue',sans-serif;">
-        <button onclick="toggleChat()" id="ai-toggle-btn" style="
+        <button id="ai-toggle-btn" onclick="handleClick()" onmousedown="startDrag(event)" style="
             width:56px; height:56px; border-radius:50%; border:none;
             background:linear-gradient(135deg,#A7C4BC,#FF9F89);
             color:#fff; font-size:26px; cursor:pointer;
@@ -612,12 +601,13 @@
 
         <div id="chat-window" style="
             display:none; flex-direction:column; position:absolute; bottom:72px; right:0;
-            width:360px; height:480px; background:#fff;
-            border-radius:20px; box-shadow:0 12px 36px rgba(74,78,105,0.15);
-            border:2px solid rgba(167,196,188,0.3); overflow:hidden;
+            width:380px; height:480px; min-width:280px; min-height:320px;
+            background:#fff; border-radius:20px; resize:both; overflow:auto;
+            box-shadow:0 12px 36px rgba(74,78,105,0.15);
+            border:2px solid rgba(167,196,188,0.3);
         ">
             <!-- 可拖拽标题栏 -->
-            <div id="chat-header" style="
+            <div id="chat-header" onmousedown="startDrag(event)" style="
                 background:linear-gradient(135deg,#A7C4BC,#92b3aa);
                 color:#fff; padding:12px 18px; font-weight:bold; font-size:15px;
                 display:flex; align-items:center; justify-content:space-between;
@@ -658,13 +648,6 @@
                 </button>
             </div>
 
-            <!-- 缩放句柄 -->
-            <div id="resize-handle" style="
-                position:absolute; bottom:0; right:0; width:20px; height:20px;
-                cursor:nwse-resize;
-                background:linear-gradient(135deg,transparent 50%,rgba(167,196,188,0.4) 50%);
-                border-radius:0 0 16px 0;
-            "></div>
         </div>
     </div>
 
