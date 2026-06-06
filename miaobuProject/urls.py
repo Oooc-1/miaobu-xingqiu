@@ -19,6 +19,7 @@ from homeApp.views import home
 from django.conf.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,6 +31,7 @@ urlpatterns = [
     path('noteApp/',include('noteApp.urls')),#铲屎官笔记
     path('shopApp/',include('shopApp.urls')),#肉垫体验
     path('accountApp/',include('accountApp.urls')), #账户系统
+    path('api/chat/', views.chat_ai, name='chat_ai'),#AI聊天接口
 
 ]
 

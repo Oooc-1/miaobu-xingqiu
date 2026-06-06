@@ -1,6 +1,7 @@
 from django.shortcuts import render
-from noteApp.models import Note  # 从你的 noteApp 导入模型
+from noteApp.models import Note
 from mapApp.models import Spot
+
 
 def home(request):
     # 获取精选游记（is_featured=True），取最新的 3 篇
@@ -10,6 +11,6 @@ def home(request):
 
     return render(request, 'home.html', {
         'active_menu': 'home',
-        'featured_notes': featured_notes, # 传递给前端
+        'featured_notes': featured_notes,
         'featured_spots': featured_spots,
     })

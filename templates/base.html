@@ -466,7 +466,207 @@
                 $('.user-profile-container').removeClass('open');
             });
         });
+
+        // ====== AI 喵喵助手 ======
+        var chatHistory = [];
+        var isDragging = false;
+        var isResizing = false;
+        var dragStartX, dragStartY, startLeft, startTop;
+        var resizeStartW, resizeStartH, resizeStartX, resizeStartY;
+
+        function toggleChat() {
+            var win = document.getElementById('chat-window');
+            if (win.style.display === 'none' || !win.style.display) {
+                win.style.display = 'flex';
+            } else {
+                win.style.display = 'none';
+            }
+        }
+
+        function addMessage(role, text) {
+            var container = document.getElementById('msg-container');
+            var wrapper = document.createElement('div');
+            wrapper.style.cssText = 'display:flex; margin-bottom:12px; ' +
+                (role === 'user' ? 'justify-content:flex-end;' : 'justify-content:flex-start;');
+
+            var bubble = document.createElement('div');
+            if (role === 'user') {
+                bubble.style.cssText = 'max-width:80%; background:#FF9F89; color:#fff; padding:10px 14px; border-radius:16px 4px 16px 16px; font-size:13px; line-height:1.6; word-break:break-word; box-shadow:0 2px 8px rgba(255,159,137,0.2);';
+                bubble.textContent = text;
+            } else {
+                bubble.style.cssText = 'max-width:80%; background:#fff; color:#4A4E69; padding:10px 14px; border-radius:4px 16px 16px 16px; font-size:13px; line-height:1.7; word-break:break-word; border:1px solid rgba(167,196,188,0.25); box-shadow:0 2px 8px rgba(0,0,0,0.04);';
+                bubble.innerHTML = text;
+            }
+            wrapper.appendChild(bubble);
+            container.appendChild(wrapper);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function askAI() {
+            var input = document.getElementById('ai-input');
+            var msg = input.value.trim();
+            if (!msg) return;
+
+            addMessage('user', msg);
+            input.value = '';
+
+            var thinkingEl = document.createElement('div');
+            thinkingEl.style.cssText = 'display:flex; margin-bottom:12px;';
+            thinkingEl.innerHTML = '<div style="background:#fff; color:#A7C4BC; padding:10px 14px; border-radius:4px 16px 16px 16px; font-size:13px; border:1px solid rgba(167,196,188,0.25);">🐾 喵喵思考中…</div>';
+            thinkingEl.id = 'thinking-msg';
+            document.getElementById('msg-container').appendChild(thinkingEl);
+            document.getElementById('msg-container').scrollTop = document.getElementById('msg-container').scrollHeight;
+
+            fetch('/api/chat/?message=' + encodeURIComponent(msg))
+                .then(function(res) { return res.json(); })
+                .then(function(data) {
+                    var th = document.getElementById('thinking-msg');
+                    if (th) th.remove();
+                    addMessage('ai', '🐱 <strong>喵喵说：</strong><br>' + data.reply);
+                })
+                .catch(function() {
+                    var th = document.getElementById('thinking-msg');
+                    if (th) th.remove();
+                    addMessage('ai', '😿 喵呜，信号不太好，稍后再试试吧~');
+                });
+        }
+
+        // ====== 拖拽 ======
+        document.addEventListener('DOMContentLoaded', function() {
+            var input = document.getElementById('ai-input');
+            if (input) {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') askAI();
+                });
+            }
+
+            // 拖拽事件
+            var header = document.getElementById('chat-header');
+            var container = document.getElementById('ai-container');
+            if (header && container) {
+                header.addEventListener('mousedown', function(e) {
+                    if (e.target === header.querySelector('.close-btn')) return;
+                    isDragging = true;
+                    dragStartX = e.clientX;
+                    dragStartY = e.clientY;
+                    var rect = container.getBoundingClientRect();
+                    startLeft = rect.left;
+                    startTop = rect.top;
+                    container.style.right = 'auto';
+                    container.style.bottom = 'auto';
+                    container.style.left = startLeft + 'px';
+                    container.style.top = startTop + 'px';
+                    e.preventDefault();
+                });
+            }
+
+            document.addEventListener('mousemove', function(e) {
+                if (isDragging) {
+                    var dx = e.clientX - dragStartX;
+                    var dy = e.clientY - dragStartY;
+                    container.style.left = (startLeft + dx) + 'px';
+                    container.style.top = (startTop + dy) + 'px';
+                }
+                if (isResizing) {
+                    var dw = e.clientX - resizeStartX;
+                    var dh = e.clientY - resizeStartY;
+                    var win = document.getElementById('chat-window');
+                    win.style.width = Math.max(280, resizeStartW + dw) + 'px';
+                    win.style.height = Math.max(320, resizeStartH + dh) + 'px';
+                }
+            });
+
+            document.addEventListener('mouseup', function() {
+                isDragging = false;
+                isResizing = false;
+            });
+
+            // 缩放句柄
+            var handle = document.getElementById('resize-handle');
+            if (handle) {
+                handle.addEventListener('mousedown', function(e) {
+                    isResizing = true;
+                    resizeStartX = e.clientX;
+                    resizeStartY = e.clientY;
+                    var win = document.getElementById('chat-window');
+                    resizeStartW = win.offsetWidth;
+                    resizeStartH = win.offsetHeight;
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+            }
+        });
     </script>
+
+    <!-- ====== AI 喵喵助手 ====== -->
+    <div id="ai-container" style="position:fixed; bottom:24px; right:24px; z-index:9999; font-family:'Helvetica Neue',sans-serif;">
+        <button onclick="toggleChat()" id="ai-toggle-btn" style="
+            width:56px; height:56px; border-radius:50%; border:none;
+            background:linear-gradient(135deg,#A7C4BC,#FF9F89);
+            color:#fff; font-size:26px; cursor:pointer;
+            box-shadow:0 6px 20px rgba(167,196,188,0.35);
+            transition:all 0.3s ease;
+        " onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 8px 28px rgba(255,159,137,0.4)';"
+           onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 6px 20px rgba(167,196,188,0.35)';"
+           title="召唤喵喵助手">🐾</button>
+
+        <div id="chat-window" style="
+            display:none; flex-direction:column; position:absolute; bottom:72px; right:0;
+            width:360px; height:480px; background:#fff;
+            border-radius:20px; box-shadow:0 12px 36px rgba(74,78,105,0.15);
+            border:2px solid rgba(167,196,188,0.3); overflow:hidden;
+        ">
+            <!-- 可拖拽标题栏 -->
+            <div id="chat-header" style="
+                background:linear-gradient(135deg,#A7C4BC,#92b3aa);
+                color:#fff; padding:12px 18px; font-weight:bold; font-size:15px;
+                display:flex; align-items:center; justify-content:space-between;
+                cursor:move; user-select:none; flex-shrink:0;
+            ">
+                <span>🐱 喵喵助手</span>
+                <span class="close-btn" onclick="toggleChat()" style="cursor:pointer;font-size:20px;opacity:0.7;line-height:1;">&times;</span>
+            </div>
+
+            <!-- 消息列表 -->
+            <div id="msg-container" style="
+                flex:1; padding:14px 16px; overflow-y:auto;
+                background:#FDFBF7; display:flex; flex-direction:column;
+            ">
+                <div style="display:flex; margin-bottom:12px;">
+                    <div style="background:#fff;color:#4A4E69;padding:10px 14px;border-radius:4px 16px 16px 16px;font-size:13px;line-height:1.7;border:1px solid rgba(167,196,188,0.25);box-shadow:0 2px 8px rgba(0,0,0,0.04);">
+                        🐾 喵~ 有什么可以帮你的？
+                    </div>
+                </div>
+            </div>
+
+            <!-- 输入栏 -->
+            <div style="
+                display:flex; border-top:1px solid rgba(167,196,188,0.2);
+                padding:10px; background:#fff; flex-shrink:0;
+            ">
+                <input type="text" id="ai-input" placeholder="问问喵喵…" style="
+                    flex:1; border:1px solid rgba(167,196,188,0.4); border-radius:16px;
+                    padding:8px 14px; outline:none; font-size:13px; color:#4A4E69;
+                    background:#FDFBF7;
+                ">
+                <button onclick="askAI()" style="
+                    margin-left:8px; background:#A7C4BC; color:#fff; border:none;
+                    border-radius:16px; padding:8px 16px; cursor:pointer;
+                    font-weight:bold; font-size:13px; transition:0.25s;
+                " onmouseover="this.style.background='#FF9F89'" onmouseout="this.style.background='#A7C4BC'">
+                    发送
+                </button>
+            </div>
+
+            <!-- 缩放句柄 -->
+            <div id="resize-handle" style="
+                position:absolute; bottom:0; right:0; width:20px; height:20px;
+                cursor:nwse-resize;
+                background:linear-gradient(135deg,transparent 50%,rgba(167,196,188,0.4) 50%);
+                border-radius:0 0 16px 0;
+            "></div>
+        </div>
+    </div>
 
 </body>
 
