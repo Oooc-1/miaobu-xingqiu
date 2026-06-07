@@ -25,6 +25,22 @@
         #msg-container strong { color: #FF9F89; }
         #msg-container code { background: rgba(167,196,188,0.15); padding: 2px 6px; border-radius: 4px; font-size: 13px; }
         #msg-container pre { background: #FDFBF7; padding: 10px; border-radius: 8px; overflow-x: auto; font-size: 13px; }
+
+        /* 手机端响应式适配 */
+        @media (max-width: 600px) {
+            #chat-window {
+                width: 100vw !important;
+                height: 75vh !important;
+                bottom: 0 !important;
+                right: 0 !important;
+                border-radius: 20px 20px 0 0 !important;
+                position: fixed !important;
+            }
+            #ai-container {
+                bottom: 12px !important;
+                right: 12px !important;
+            }
+        }
     </style>
 
     <style>
@@ -322,8 +338,12 @@
                     <ul class="user-dropdown-menu">
                         <li><a href="{% url 'my_nest' %}"><i class="fa-solid fa-cat"
                                     style="margin-right: 6px; color: #A7C4BC;"></i> 我的猫巢</a></li>
-                        <li><a href="#"><i class="fa-solid fa-gear" style="margin-right: 6px; color: #7F8C8D;"></i>
-                                修改头像</a></li>
+                        <li><a href="{% url 'friend_list' %}"><i class="fa-solid fa-user-group"
+                                    style="margin-right: 6px; color: #A7C4BC;"></i> 我的好友</a></li>
+                        <li><a href="{% url 'notification_list' %}"><i class="fa-solid fa-bell"
+                                    style="margin-right: 6px; color: #FF9F89;"></i> 消息中心 <span id="notif-badge" style="display:none; background:#FF9F89; color:#fff; border-radius:50%; padding:1px 6px; font-size:10px; margin-left:4px;">0</span></a></li>
+                        <li><a href="{% url 'change_avatar' %}"><i class="fa-solid fa-gear"
+                                    style="margin-right: 6px; color: #A7C4BC;"></i> 账号设置</a></li>
                         <div class="user-dropdown-divider"></div>
                         <li><a href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"
                                     style="margin-right: 6px; color: #FF9F89;"></i> 退出登录</a></li>
@@ -529,7 +549,19 @@
             document.onmouseup = null;
         }
 
+        function quickReply(text) {
+            document.getElementById('ai-input').value = text;
+            hideWelcome();
+            askAI();
+        }
+
+        function hideWelcome() {
+            var wb = document.getElementById('welcome-buttons');
+            if (wb) wb.style.display = 'none';
+        }
+
         function addMessage(role, text) {
+            hideWelcome();
             var container = document.getElementById('msg-container');
             var wrapper = document.createElement('div');
             wrapper.style.cssText = 'display:flex; margin-bottom:12px; ' +
@@ -584,6 +616,22 @@
                     if (e.key === 'Enter') askAI();
                 });
             }
+
+            // 全局通知红点轮询
+            function pollUnread() {
+                fetch('/accountApp/unread-count/')
+                    .then(r => r.json())
+                    .then(data => {
+                        var total = (data.notifications || 0) + (data.messages || 0);
+                        var badge = document.getElementById('notif-badge');
+                        if (badge) {
+                            if (total > 0) { badge.style.display = 'inline'; badge.innerText = total; }
+                            else { badge.style.display = 'none'; }
+                        }
+                    });
+            }
+            setInterval(pollUnread, 5000);
+            pollUnread();
         });
     </script>
 
@@ -620,12 +668,43 @@
             <!-- 消息列表 -->
             <div id="msg-container" style="
                 flex:1; padding:14px 16px; overflow-y:auto;
-                background:#FDFBF7; display:flex; flex-direction:column;
+                background:#FDFBF7;
             ">
-                <div style="display:flex; margin-bottom:12px;">
-                    <div style="background:#fff;color:#4A4E69;padding:10px 14px;border-radius:4px 16px 16px 16px;font-size:13px;line-height:1.7;border:1px solid rgba(167,196,188,0.25);box-shadow:0 2px 8px rgba(0,0,0,0.04);">
-                        🐾 喵~ 有什么可以帮你的？
-                    </div>
+                <!-- 快捷引导按钮 -->
+                <div id="welcome-buttons" style="text-align:center; padding:10px 0;">
+                    <p style="color:#7F8C8D; font-size:13px; margin-bottom:12px;">🐾 喵~ 有什么可以帮你的？</p>
+                    <button onclick="quickReply('推荐成都的美食')" style="
+                        margin:4px 6px; padding:8px 16px; border-radius:20px;
+                        border:1px solid rgba(167,196,188,0.4); background:#fff;
+                        color:#4A4E69; font-size:12px; cursor:pointer; transition:0.2s;
+                    " onmouseover="this.style.borderColor='#FF9F89';this.style.color='#FF9F89';"
+                       onmouseout="this.style.borderColor='rgba(167,196,188,0.4)';this.style.color='#4A4E69';">
+                        🍜 推荐成都美食
+                    </button>
+                    <button onclick="quickReply('喵步星球有哪些好玩的地方？')" style="
+                        margin:4px 6px; padding:8px 16px; border-radius:20px;
+                        border:1px solid rgba(167,196,188,0.4); background:#fff;
+                        color:#4A4E69; font-size:12px; cursor:pointer; transition:0.2s;
+                    " onmouseover="this.style.borderColor='#FF9F89';this.style.color='#FF9F89';"
+                       onmouseout="this.style.borderColor='rgba(167,196,188,0.4)';this.style.color='#4A4E69';">
+                        🗺️ 有哪些好玩的？
+                    </button>
+                    <button onclick="quickReply('帮我推荐一条旅行路线')" style="
+                        margin:4px 6px; padding:8px 16px; border-radius:20px;
+                        border:1px solid rgba(167,196,188,0.4); background:#fff;
+                        color:#4A4E69; font-size:12px; cursor:pointer; transition:0.2s;
+                    " onmouseover="this.style.borderColor='#FF9F89';this.style.color='#FF9F89';"
+                       onmouseout="this.style.borderColor='rgba(167,196,188,0.4)';this.style.color='#4A4E69';">
+                        🧭 推荐旅行路线
+                    </button>
+                    <button onclick="quickReply('如何收藏游记和景点？')" style="
+                        margin:4px 6px; padding:8px 16px; border-radius:20px;
+                        border:1px solid rgba(167,196,188,0.4); background:#fff;
+                        color:#4A4E69; font-size:12px; cursor:pointer; transition:0.2s;
+                    " onmouseover="this.style.borderColor='#FF9F89';this.style.color='#FF9F89';"
+                       onmouseout="this.style.borderColor='rgba(167,196,188,0.4)';this.style.color='#4A4E69';">
+                        ⭐ 如何收藏？
+                    </button>
                 </div>
             </div>
 
@@ -650,6 +729,34 @@
 
         </div>
     </div>
+
+    <!-- Toast 提示容器 -->
+    <div id="toast-container" style="position:fixed; top:80px; left:50%; transform:translateX(-50%); z-index:99999; display:flex; flex-direction:column; align-items:center; gap:10px; pointer-events:none;"></div>
+
+    <script>
+        function showToast(msg, type) {
+            type = type || 'info';
+            var colors = {
+                ok: { bg: '#EBF3F0', border: '#A7C4BC', icon: '✅', color: '#4A4E69' },
+                error: { bg: '#FADBD8', border: '#E74C3C', icon: '❌', color: '#78281F' },
+                info: { bg: '#FFF5F2', border: '#FF9F89', icon: '🐾', color: '#4A4E69' }
+            };
+            var c = colors[type] || colors.info;
+            var el = document.createElement('div');
+            el.style.cssText = 'background:' + c.bg + '; border-left:4px solid ' + c.border +
+                '; color:' + c.color + '; padding:12px 20px; border-radius:12px; font-size:14px; font-weight:500;' +
+                'box-shadow:0 6px 20px rgba(0,0,0,0.1); animation:toastIn 0.3s ease; min-width:220px; max-width:360px;';
+            el.innerHTML = c.icon + ' ' + msg;
+            document.getElementById('toast-container').appendChild(el);
+            setTimeout(function() {
+                el.style.opacity = '0'; el.style.transition = 'opacity 0.3s';
+                setTimeout(function() { el.remove(); }, 300);
+            }, 2500);
+        }
+    </script>
+    <style>
+        @keyframes toastIn { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+    </style>
 
 </body>
 

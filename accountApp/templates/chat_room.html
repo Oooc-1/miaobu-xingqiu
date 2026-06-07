@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}与 {{ friend.username }} 聊天 💬{% endblock %}
+
+{% block extra_css %}
+<style>
+    .chat-page { margin-top: 80px; margin-bottom: 40px; }
+    .chat-card {
+        background: #fff; border-radius: 24px; box-shadow: 0 8px 24px rgba(167,196,188,0.12);
+        border: 1px solid rgba(167,196,188,0.2); overflow: hidden; max-width: 700px; margin: 0 auto;
+    }
+    .chat-header {
+        background: linear-gradient(135deg,#A7C4BC,#92b3aa); color: #fff;
+        padding: 14px 20px; display: flex; align-items: center; gap: 12px; font-weight: bold;
+    }
+    .chat-header img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; }
+    .msg-area { padding: 16px 20px; height: 400px; overflow-y: auto; background: #FDFBF7; display: flex; flex-direction: column; gap: 10px; }
+    .msg-row { display: flex; max-width: 80%; }
+    .msg-mine { align-self: flex-end; }
+    .msg-other { align-self: flex-start; }
+    .msg-bubble {
+        padding: 10px 16px; border-radius: 16px; font-size: 14px; line-height: 1.6; word-break: break-word;
+    }
+    .msg-mine .msg-bubble { background: #FF9F89; color: #fff; border-bottom-right-radius: 4px; }
+    .msg-other .msg-bubble { background: #fff; color: #4A4E69; border: 1px solid rgba(167,196,188,0.25); border-bottom-left-radius: 4px; }
+    .msg-time { font-size: 10px; color: #7F8C8D; margin-top: 2px; }
+    .chat-input-row {
+        display: flex; padding: 12px; border-top: 1px solid rgba(167,196,188,0.2); background: #fff;
+    }
+    .chat-input-row input { flex: 1; border: 1px solid rgba(167,196,188,0.4); border-radius: 20px; padding: 10px 16px; outline: none; font-size: 14px; }
+    .chat-input-row button { margin-left: 8px; background: #A7C4BC; color: #fff; border: none; border-radius: 20px; padding: 10px 20px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+    .chat-input-row button:hover { background: #FF9F89; }
+    .btn-back { color: #7F8C8D; text-decoration: none; font-size: 14px; display: block; text-align: center; margin-top: 15px; }
+    .btn-back:hover { color: #A7C4BC; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container chat-page">
+    <span id="chatData" data-last-id="{{ last_id }}" data-friend-id="{{ friend.id }}" style="display:none;"></span>
+    <div class="chat-card">
+        <div class="chat-header">
+            <a href="{% url 'friend_list' %}" style="color:#fff;text-decoration:none;"><i class="fa-solid fa-chevron-left"></i></a>
+            <img src="{% if friend.avatar %}{{ friend.avatar.url }}{% else %}{% static 'img/default_cat_avatar.jpg' %}{% endif %}" alt="">
+            <span>{{ friend.username }}</span>
+        </div>
+        <div id="msgArea" class="msg-area">
+            {% for msg in messages %}
+            <div class="msg-row {% if msg.sender_id == request.user.id %}msg-mine{% else %}msg-other{% endif %}">
+                <div>
+                    <div class="msg-bubble">{{ msg.content }}</div>
+                    <div class="msg-time">{% if msg.sender_id == request.user.id %}我{% else %}{{ msg.sender.username }}{% endif %} · {{ msg.created_at|date:"m-d H:i" }}</div>
+                </div>
+            </div>
+            {% empty %}
+            <div style="text-align:center;color:#7F8C8D;padding:40px;">🐾 打个招呼吧~</div>
+            {% endfor %}
+        </div>
+        <div class="chat-input-row">
+            <input type="text" id="msgInput" placeholder="输入消息…" onkeypress="if(event.key==='Enter')sendMsg()">
+            <button onclick="sendMsg()">发送</button>
+        </div>
+    </div>
+    <a href="{% url 'friend_list' %}" class="btn-back"><i class="fa-solid fa-chevron-left"></i> 返回好友列表</a>
+</div>
+
+<script>
+var lastMsgId = parseInt(document.getElementById('chatData').dataset.lastId || '0');
+var friendId = parseInt(document.getElementById('chatData').dataset.friendId || '0');
+
+function scrollBottom() {
+    var a = document.getElementById('msgArea');
+    a.scrollTop = a.scrollHeight;
+}
+scrollBottom();
+
+function addBubble(content, isMine, senderName, time) {
+    var area = document.getElementById('msgArea');
+    var row = document.createElement('div');
+    row.className = 'msg-row ' + (isMine ? 'msg-mine' : 'msg-other');
+    row.innerHTML = '<div><div class="msg-bubble">' + content + '</div><div class="msg-time">' +
+        (isMine ? '我' : senderName) + ' · ' + time + '</div></div>';
+    area.appendChild(row);
+    area.scrollTop = area.scrollHeight;
+}
+
+function sendMsg() {
+    var input = document.getElementById('msgInput');
+    var content = input.value.trim();
+    if (!content) return;
+    fetch('/accountApp/chat/send/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'friend_id=' + friendId + '&content=' + encodeURIComponent(content)
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.status === 'ok') {
+            addBubble(data.msg.content, true, '', data.msg.time);
+            lastMsgId = data.msg.id;
+            input.value = '';
+        }
+    });
+}
+
+// 轮询新消息
+setInterval(function() {
+    fetch('/accountApp/chat/poll/?friend_id=' + friendId + '&since=' + lastMsgId)
+        .then(r => r.json())
+        .then(data => {
+            data.messages.forEach(function(m) {
+                addBubble(m.content, false, m.sender_name, m.time);
+                lastMsgId = m.id;
+            });
+        });
+}, 3000);
+</script>
+{% endblock %}

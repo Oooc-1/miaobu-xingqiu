@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}消息中心 🔔{% endblock %}
+
+{% block extra_css %}
+<style>
+    .notif-container { margin-top: 100px; margin-bottom: 60px; }
+    .notif-card {
+        background: #fff; border-radius: 24px; padding: 30px;
+        box-shadow: 0 8px 24px rgba(167,196,188,0.12);
+        border: 1px solid rgba(167,196,188,0.2); margin-bottom: 30px;
+        max-width: 700px; margin-left: auto; margin-right: auto;
+    }
+    .notif-title { color: #4A4E69; font-weight: bold; margin-bottom: 20px; font-size: 18px; }
+    .notif-item {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 14px 16px; border-radius: 16px; margin-bottom: 8px;
+        border: 1px solid rgba(167,196,188,0.12);
+        background: {% if not n.is_read %}#FFF5F2{% else %}#FDFBF7{% endif %};
+    }
+    .notif-icon {
+        width: 40px; height: 40px; border-radius: 50%; display: flex;
+        align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;
+        margin-right: 14px;
+    }
+    .notif-content { flex: 1; font-size: 14px; color: #4A4E69; }
+    .notif-time { font-size: 11px; color: #7F8C8D; margin-top: 4px; }
+    .notif-arrow { color: #A7C4BC; font-size: 14px; }
+    .empty-hint { text-align: center; color: #7F8C8D; padding: 40px; font-size: 14px; }
+    .btn-back { color: #7F8C8D; text-decoration: none; font-size: 14px; display: block; text-align: center; }
+    .btn-back:hover { color: #A7C4BC; }
+    .btn-mark-all { background: #A7C4BC; color: #fff; border: none; border-radius: 16px; padding: 6px 16px; font-size: 12px; cursor: pointer; float: right; margin-bottom: 10px; }
+    .btn-mark-all:hover { background: #FF9F89; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container notif-container">
+    <div class="notif-card">
+        <h4 class="notif-title"><i class="fa-solid fa-bell" style="color:#FF9F89;"></i> 消息中心</h4>
+        <button class="btn-mark-all" onclick="markAllRead()">全部已读</button>
+        <div style="clear:both;"></div>
+        {% for n in notifications %}
+        <a href="{{ n.related_url }}" style="text-decoration:none;" onclick="markRead({{ n.id }})">
+            <div class="notif-item">
+                <div class="notif-icon" style="background:
+                    {% if n.ntype == 'friend_request' or n.ntype == 'friend_accepted' %}#FFF5F2;
+                    {% elif n.ntype == 'mention' %}#EBF3F0;
+                    {% elif n.ntype == 'like' %}#FFF5F2;
+                    {% else %}#FDFBF7{% endif %}">
+                    {% if n.ntype == 'friend_request' %}👋
+                    {% elif n.ntype == 'friend_accepted' %}🤝
+                    {% elif n.ntype == 'mention' %}💬
+                    {% elif n.ntype == 'like' %}❤️
+                    {% else %}💬{% endif %}
+                </div>
+                <div class="notif-content">
+                    {{ n.content }}
+                    <div class="notif-time">{{ n.created_at|date:"m-d H:i" }}</div>
+                </div>
+                <span class="notif-arrow"><i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+        </a>
+        {% empty %}
+        <div class="empty-hint">🔔 暂无消息，去逛逛吧~</div>
+        {% endfor %}
+    </div>
+    <a href="{% url 'my_nest' %}" class="btn-back"><i class="fa-solid fa-chevron-left"></i> 返回我的猫巢</a>
+</div>
+
+<script>
+function markRead(nid) {
+    fetch('/accountApp/mark-read/', {method:'POST', headers:{'X-CSRFToken':'{{ csrf_token }}'}, body:'id='+nid});
+}
+function markAllRead() {
+    fetch('/accountApp/mark-read/', {method:'POST', headers:{'X-CSRFToken':'{{ csrf_token }}'}})
+        .then(r => r.json())
+        .then(data => {
+            if (data.status === 'ok') showToast('所有消息已标记为已读', 'ok');
+            setTimeout(() => location.reload(), 500);
+        });
+}
+</script>
+{% endblock %}

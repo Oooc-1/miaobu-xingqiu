@@ -1,8 +1,10 @@
+import re
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
 from .models import Note, NoteComment, NoteLike, NoteCollection
+from accountApp.models import Notification, User
 
 # 辅助函数：定义分类映射，确保前端点击能正确显示对应分类
 # 假设你的 NOTE_CATEGORIES 是 (1, '旅行踩点指南'), (2, '出行干粮补给'), (3, '躲雨小窝推荐')
@@ -85,6 +87,13 @@ def like_note(request, note_id):
         note.like_count += 1
         note.save()
         status = 'liked'
+        if note.author != request.user:
+            Notification.objects.create(
+                user=note.author, sender=request.user,
+                ntype='like',
+                content=f'{request.user.username} 赞了你的游记《{note.title}》',
+                related_url=f'/noteApp/{note.id}/'
+            )
     else:
         like.delete()
         note.like_count -= 1
@@ -101,6 +110,13 @@ def collect_note(request, note_id):
         note.collect_count += 1
         note.save()
         status = 'collected'
+        if note.author != request.user:
+            Notification.objects.create(
+                user=note.author, sender=request.user,
+                ntype='like',
+                content=f'{request.user.username} 收藏了你的游记《{note.title}》',
+                related_url=f'/noteApp/{note.id}/'
+            )
     else:
         collection.delete()
         note.collect_count -= 1
@@ -121,4 +137,29 @@ def add_comment(request, note_id):
         NoteComment.objects.create(
             note=note, user=request.user, content=content, parent=parent_comment
         )
+
+        # 通知笔记作者
+        if note.author != request.user:
+            Notification.objects.create(
+                user=note.author, sender=request.user,
+                ntype='comment',
+                content=f'{request.user.username} 评论了你的游记《{note.title}》',
+                related_url=f'/noteApp/{note.id}/'
+            )
+
+        # 检测 @提及
+        mentions = re.findall(r'@(\w+)', content)
+        for username in mentions:
+            try:
+                mentioned = User.objects.get(username=username)
+                if mentioned != request.user and mentioned != note.author:
+                    Notification.objects.create(
+                        user=mentioned, sender=request.user,
+                        ntype='mention',
+                        content=f'{request.user.username} 在评论中@了你',
+                        related_url=f'/noteApp/{note.id}/'
+                    )
+            except User.DoesNotExist:
+                pass
+
     return redirect('noteApp:detail', note_id=note_id)

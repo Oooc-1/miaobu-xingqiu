@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}我的好友 👥{% endblock %}
+
+{% block extra_css %}
+<style>
+    .friends-container { margin-top: 100px; margin-bottom: 60px; }
+    .friends-card {
+        background: #fff; border-radius: 24px; padding: 30px;
+        box-shadow: 0 8px 24px rgba(167,196,188,0.12);
+        border: 1px solid rgba(167,196,188,0.2); margin-bottom: 30px;
+    }
+    .section-title { color: #4A4E69; font-weight: bold; margin-bottom: 20px; font-size: 18px; }
+    .friend-item {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 12px 16px; background: #FDFBF7; border-radius: 16px;
+        margin-bottom: 10px; border: 1px solid rgba(167,196,188,0.15);
+    }
+    .friend-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #A7C4BC; }
+    .friend-name { color: #4A4E69; font-weight: bold; margin-left: 12px; font-size: 15px; }
+    .btn-friend {
+        padding: 8px 20px; border-radius: 20px; border: none; font-weight: bold;
+        font-size: 13px; cursor: pointer; transition: 0.2s; text-decoration: none !important;
+        display: inline-block;
+    }
+    .btn-accept { background: #A7C4BC; color: #fff; }
+    .btn-accept:hover { background: #92b3aa; }
+    .btn-reject { background: #f0f0f0; color: #7F8C8D; }
+    .btn-reject:hover { background: #e0e0e0; }
+    .btn-chat { background: #FF9F89; color: #fff; }
+    .btn-chat:hover { background: #e88a75; }
+    .search-box {
+        width: 100%; padding: 12px 16px; border-radius: 28px;
+        border: 1px solid rgba(167,196,188,0.4); outline: none;
+        font-size: 14px; color: #4A4E69; background: #FDFBF7; margin-bottom: 15px;
+    }
+    .search-box:focus { border-color: #A7C4BC; box-shadow: 0 0 8px rgba(167,196,188,0.3); }
+    .search-result {
+        background: #fff; border-radius: 12px; padding: 10px; display: flex;
+        align-items: center; justify-content: space-between;
+        border: 1px solid rgba(167,196,188,0.2); margin-bottom: 8px;
+    }
+    .empty-hint { text-align: center; color: #7F8C8D; padding: 30px; font-size: 14px; }
+    .btn-back { color: #7F8C8D; text-decoration: none; font-size: 14px; display: inline-block; margin-top: 20px; }
+    .btn-back:hover { color: #A7C4BC; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container friends-container">
+    <div class="col-md-8 col-md-offset-2">
+
+        <!-- 搜索加好友 -->
+        <div class="friends-card">
+            <h4 class="section-title"><i class="fa-solid fa-magnifying-glass" style="color:#A7C4BC;"></i> 搜索铲屎官</h4>
+            <input type="text" id="userSearch" class="search-box" placeholder="输入对方昵称搜索…" oninput="searchUsers()">
+            <div id="searchResults"></div>
+        </div>
+
+        <!-- 收到的好友申请 -->
+        {% if pending_received %}
+        <div class="friends-card">
+            <h4 class="section-title"><i class="fa-solid fa-bell" style="color:#FF9F89;"></i> 收到的好友申请</h4>
+            {% for req in pending_received %}
+            <div class="friend-item">
+                <div style="display:flex; align-items:center;">
+                    <img src="{% if req.from_user.avatar %}{{ req.from_user.avatar.url }}{% else %}{% static 'img/default_cat_avatar.jpg' %}{% endif %}" class="friend-avatar" alt="">
+                    <span class="friend-name">{{ req.from_user.username }}</span>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-friend btn-accept accept-btn" data-uid="{{ req.from_user.id }}">接受</button>
+                    <button class="btn-friend btn-reject reject-btn" data-uid="{{ req.from_user.id }}">拒绝</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- 我的好友 -->
+        <div class="friends-card">
+            <h4 class="section-title"><i class="fa-solid fa-user-group" style="color:#A7C4BC;"></i> 我的好友</h4>
+            {% for f in friends %}
+                <div class="friend-item">
+                    <div style="display:flex; align-items:center;">
+                        <img src="{% if f.user.avatar %}{{ f.user.avatar.url }}{% else %}{% static 'img/default_cat_avatar.jpg' %}{% endif %}" class="friend-avatar" alt="">
+                        <span class="friend-name">{{ f.user.username }}</span>
+                    </div>
+                    <a href="{% url 'chat_room' f.user.id %}" class="btn-friend btn-chat"><i class="fa-solid fa-comment"></i> 发消息</a>
+                </div>
+            {% empty %}
+            <div class="empty-hint">🐾 还没有好友哦~ 在上方搜索添加吧！</div>
+            {% endfor %}
+        </div>
+
+        <div style="text-align:center;">
+            <a href="{% url 'my_nest' %}" class="btn-back"><i class="fa-solid fa-chevron-left"></i> 返回我的猫巢</a>
+        </div>
+    </div>
+</div>
+
+<script>
+function searchUsers() {
+    var q = document.getElementById('userSearch').value.trim();
+    var div = document.getElementById('searchResults');
+    if (q.length < 2) { div.innerHTML = ''; return; }
+    fetch('/accountApp/search-users/?q=' + encodeURIComponent(q))
+        .then(r => r.json()).then(data => {
+            div.innerHTML = data.users.map(u =>
+                '<div class="search-result">' +
+                '<span style="font-weight:bold;color:#4A4E69;">' + u.username + '</span>' +
+                '<button class="btn-friend btn-accept add-friend-btn" data-uid="' + u.id + '">加好友</button>' +
+                '</div>'
+            ).join('');
+        });
+}
+var csrfToken = '{{ csrf_token }}';
+function sendRequest(uid) {
+    var formData = new FormData();
+    formData.append('user_id', uid);
+    fetch('/accountApp/friend/send/', {method:'POST', headers:{'X-CSRFToken': csrfToken}, body: formData})
+        .then(r => r.json()).then(data => { showToast(data.msg, data.status==='ok'?'ok':'error'); if(data.status==='ok') setTimeout(function(){location.reload()},800); })
+        .catch(() => showToast('请求失败，请检查网络', 'error'));
+}
+function acceptRequest(uid) {
+    var formData = new FormData();
+    formData.append('user_id', uid);
+    fetch('/accountApp/friend/accept/', {method:'POST', headers:{'X-CSRFToken': csrfToken}, body: formData})
+        .then(r => r.json()).then(() => location.reload());
+}
+function rejectRequest(uid) {
+    var formData = new FormData();
+    formData.append('user_id', uid);
+    fetch('/accountApp/friend/reject/', {method:'POST', headers:{'X-CSRFToken': csrfToken}, body: formData})
+        .then(r => r.json()).then(() => location.reload());
+}
+
+// 事件监听替代 onclick 避免模板报错
+document.querySelectorAll('.accept-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { acceptRequest(this.dataset.uid); });
+});
+document.querySelectorAll('.reject-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { rejectRequest(this.dataset.uid); });
+});
+// 动态加好友按钮（搜索结果的）用事件委托
+document.getElementById('searchResults').addEventListener('click', function(e) {
+    var btn = e.target.closest('.add-friend-btn');
+    if (btn) sendRequest(btn.dataset.uid);
+});
+</script>
+{% endblock %}

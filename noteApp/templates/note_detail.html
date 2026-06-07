@@ -122,7 +122,10 @@
         <div class="comment-form mt-4">
             <form method="POST" action="{% url 'noteApp:add_comment' note.id %}">
                 {% csrf_token %}
-                <textarea name="content" required placeholder="留下一句暖心的碎碎念吧..."></textarea>
+                <div style="position:relative;">
+                    <textarea name="content" id="commentInput" required placeholder="留下一句暖心的碎碎念吧…输入 @ 可以@其他喵友" style="width:100%; border:2px solid #eee; border-radius:20px; padding:15px; resize:none; background:#fff; min-height:80px;"></textarea>
+                    <div id="mention-dropdown" style="display:none; position:absolute; bottom:100%; left:0; right:0; background:#fff; border-radius:16px; box-shadow:0 4px 16px rgba(0,0,0,0.1); max-height:160px; overflow-y:auto; z-index:100;"></div>
+                </div>
                 <button type="submit" class="btn-cute mt-2">提交评论</button>
             </form>
         </div>
@@ -198,5 +201,49 @@ document.getElementById('collect-btn').addEventListener('click', function() {
         alert('收藏失败，请稍后再试~');
     });
 });
+
+// @提及自动补全
+(function(){
+    var ta = document.getElementById('commentInput');
+    var dd = document.getElementById('mention-dropdown');
+    if (!ta || !dd) return;
+
+    ta.addEventListener('input', function() {
+        var val = ta.value;
+        var cursorPos = ta.selectionStart;
+        var beforeCursor = val.substring(0, cursorPos);
+        var atIdx = beforeCursor.lastIndexOf('@');
+        if (atIdx === -1 || (atIdx > 0 && beforeCursor[atIdx-1] !== ' ' && beforeCursor[atIdx-1] !== '\n')) {
+            dd.style.display = 'none'; return;
+        }
+        var query = beforeCursor.substring(atIdx + 1);
+        if (query.length < 1) { dd.style.display = 'none'; return; }
+
+        fetch('/accountApp/search-users/?q=' + encodeURIComponent(query))
+            .then(r => r.json())
+            .then(data => {
+                if (!data.users.length) { dd.style.display = 'none'; return; }
+                dd.innerHTML = data.users.map(u =>
+                    '<div style="padding:8px 14px;cursor:pointer;font-size:14px;color:#4A4E69;border-bottom:1px solid rgba(167,196,188,0.1);" onmousedown="event.preventDefault();insertMention(\'' + u.username + '\')">@' + u.username + '</div>'
+                ).join('');
+                dd.style.display = 'block';
+            });
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target !== ta && e.target !== dd) dd.style.display = 'none';
+    });
+})();
+
+function insertMention(name) {
+    var ta = document.getElementById('commentInput');
+    var val = ta.value;
+    var pos = ta.selectionStart;
+    var before = val.substring(0, pos);
+    var atIdx = before.lastIndexOf('@');
+    ta.value = val.substring(0, atIdx) + '@' + name + ' ' + val.substring(pos);
+    ta.focus();
+    document.getElementById('mention-dropdown').style.display = 'none';
+}
 </script>
 {% endblock %}

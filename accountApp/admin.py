@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Album, Photo
+from .models import User, Album, Photo, Friendship, PrivateMessage, Notification
 
 
 # 注册你的自定义 User 模型
@@ -31,3 +31,20 @@ class AlbumAdmin(admin.ModelAdmin):
 class PhotoAdmin(admin.ModelAdmin):
     list_display = ('title', 'album', 'created_at')
     list_filter = ('album',)
+
+
+@admin.register(Friendship)
+class FriendshipAdmin(admin.ModelAdmin):
+    list_display = ('from_user', 'to_user', 'status', 'created_at')
+    list_filter = ('status',)
+
+
+@admin.register(PrivateMessage)
+class PrivateMessageAdmin(admin.ModelAdmin):
+    list_display = ('sender', 'receiver', 'content', 'is_read', 'created_at')
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'sender', 'ntype', 'content', 'is_read', 'created_at')
+    list_filter = ('ntype', 'is_read')

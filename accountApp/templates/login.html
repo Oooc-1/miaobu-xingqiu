@@ -21,6 +21,13 @@
                         <div style="background-color: #FADBD8; color: #78281F; padding: 12px 15px; border-radius: 12px; margin-bottom: 20px; font-size: 13px; border-left: 4px solid #E74C3C;">
                             <i class="fa-solid fa-triangle-exclamation" style="margin-right: 5px;"></i> {{ error }}
                         </div>
+                        {% if suggest_register %}
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <a href="{% url 'register' %}?username={{ last_username|urlencode }}" style="color: #FF9F89; font-weight: bold; text-decoration: none; font-size: 14px;">
+                                🐾 点击这里注册「{{ last_username }}」这个账号 →
+                            </a>
+                        </div>
+                        {% endif %}
                     {% endif %}
 
                     <div class="form-group" style="margin-bottom: 20px;">
@@ -40,6 +47,11 @@
                         开启吸猫之旅 🚀
                     </button>
                 </form>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <span style="color: #7F8C8D; font-size: 13px;">还没有喵星账号？</span>
+                    <a href="{% url 'register' %}" style="color: #FF9F89; font-weight: bold; text-decoration: none; font-size: 13px;">注册成为铲屎官 🐾</a>
+                </div>
 
             </div>
         </div>

@@ -127,7 +127,7 @@
                             {% if note.author.avatar %}
                             <img src="{{ note.author.avatar.url }}" class="author-avatar" alt="博主头像">
                             {% else %}
-                            <img src="{% static 'img/default_cat_avatar.png' %}" class="author-avatar" alt="默认头像">
+                            <img src="{% static 'img/default_cat_avatar.jpg' %}" class="author-avatar" alt="默认头像">
                             {% endif %}
                             <span class="author-name">{{ note.author.username }}</span>
                         </div>

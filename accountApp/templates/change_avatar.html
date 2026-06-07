@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}更换头像 🐾{% endblock %}
+{% block title %}账号设置 🐾{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -13,12 +13,24 @@
         padding: 40px;
         margin-top: 100px;
         margin-bottom: 60px;
-        text-align: center;
     }
     .avatar-title {
         color: #4A4E69;
         font-weight: bold;
-        margin-bottom: 30px;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+    .section-divider {
+        border: none;
+        border-top: 2px dashed rgba(167, 196, 188, 0.3);
+        margin: 35px 0;
+    }
+    .section-label {
+        color: #A7C4BC;
+        font-weight: bold;
+        font-size: 15px;
+        margin-bottom: 20px;
+        text-align: center;
     }
     .avatar-preview-box {
         position: relative;
@@ -35,9 +47,7 @@
         background-color: #FDFBF7;
         box-shadow: 0 6px 16px rgba(167, 196, 188, 0.25);
     }
-    #avatarInput {
-        display: none;
-    }
+    #avatarInput { display: none; }
     .btn-choose-avatar {
         background-color: #ffffff;
         color: #4A4E69;
@@ -56,7 +66,7 @@
         color: #FF9F89;
         transform: translateY(-2px);
     }
-    .btn-save-avatar {
+    .btn-save {
         background-color: #A7C4BC;
         color: #ffffff;
         border: none;
@@ -66,8 +76,9 @@
         transition: all 0.25s ease-in-out;
         margin-top: 15px;
         box-shadow: 0 4px 12px rgba(167, 196, 188, 0.3);
+        cursor: pointer;
     }
-    .btn-save-avatar:hover {
+    .btn-save:hover {
         background-color: #FF9F89;
         color: #ffffff;
         transform: translateY(-2px);
@@ -76,6 +87,30 @@
     .tip-text {
         color: rgba(74, 78, 105, 0.6);
         font-size: 13px;
+        text-align: center;
+    }
+    .nickname-input {
+        width: 100%;
+        max-width: 300px;
+        border: 1px solid rgba(167, 196, 188, 0.5);
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 15px;
+        color: #4A4E69;
+        background: #FDFBF7;
+        outline: none;
+        text-align: center;
+        transition: all 0.25s ease;
+    }
+    .nickname-input:focus {
+        border-color: #A7C4BC;
+        box-shadow: 0 0 8px rgba(167, 196, 188, 0.3);
+    }
+    .current-nickname {
+        color: #7F8C8D;
+        font-size: 13px;
+        margin-bottom: 15px;
+        text-align: center;
     }
     .btn-back-nest {
         display: inline-block;
@@ -84,9 +119,7 @@
         text-decoration: none;
         font-size: 14px;
     }
-    .btn-back-nest:hover {
-        color: #A7C4BC;
-    }
+    .btn-back-nest:hover { color: #A7C4BC; }
 </style>
 {% endblock %}
 
@@ -94,20 +127,24 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-            
+
             <div class="avatar-card">
-                <h3 class="avatar-title"><i class="fa-solid fa-camera-retro" style="color: #A7C4BC; margin-right: 8px;"></i> 帮小猫换张新面孔</h3>
-                
+                <h3 class="avatar-title"><i class="fa-solid fa-gear" style="color: #A7C4BC; margin-right: 8px;"></i> 账号设置</h3>
+
                 {% if success %}
-                    <div class="alert alert-success" style="border-radius: 12px; font-weight: bold; background-color: #EBF3F0; color: #A7C4BC; border: none;">{{ success }}</div>
+                    <div class="alert alert-success" style="border-radius: 12px; font-weight: bold; background-color: #EBF3F0; color: #4A4E69; border: none; text-align: center;">{{ success }}</div>
                 {% endif %}
                 {% if error %}
-                    <div class="alert alert-danger" style="border-radius: 12px; font-weight: bold;">{{ error }}</div>
+                    <div class="alert alert-danger" style="border-radius: 12px; font-weight: bold; text-align: center;">{{ error }}</div>
                 {% endif %}
 
-                <form action="{% url 'change_avatar' %}" method="POST" enctype="multipart/form-data">
+                <!-- ====== 修改头像 ====== -->
+                <div class="section-label"><i class="fa-solid fa-camera-retro" style="margin-right: 6px;"></i> 修改头像</div>
+
+                <form action="{% url 'change_avatar' %}" method="POST" enctype="multipart/form-data" style="text-align: center;">
                     {% csrf_token %}
-                    
+                    <input type="hidden" name="action" value="avatar">
+
                     <div class="avatar-preview-box">
                         {% if user.avatar %}
                             <img id="avatarPreview" src="{{ user.avatar.url }}" class="avatar-preview-img" alt="当前头像">
@@ -117,21 +154,43 @@
                     </div>
 
                     <input type="file" name="avatar_file" id="avatarInput" accept="image/*">
-                    
+
                     <label for="avatarInput" class="btn-choose-avatar">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> 挑选一张精美猫片
+                        <i class="fa-solid fa-cloud-arrow-up"></i> 挑选一张精美图片
                     </label>
-                    
+
                     <p class="tip-text">支持 JPG, PNG, GIF 格式，推荐正方形图片 🐾</p>
-                    
-                    <div>
-                        <button type="submit" class="btn-save-avatar">
-                            <i class="fa-solid fa-circle-check"></i> 确认保存新头像
+
+                    <button type="submit" class="btn-save">
+                        <i class="fa-solid fa-circle-check"></i> 保存头像
+                    </button>
+                </form>
+
+                <hr class="section-divider">
+
+                <!-- ====== 修改昵称 ====== -->
+                <div class="section-label"><i class="fa-solid fa-pen-to-square" style="margin-right: 6px;"></i> 修改昵称</div>
+
+                <p class="current-nickname">当前昵称：<strong style="color:#4A4E69;">{{ user.username }}</strong></p>
+
+                <form action="{% url 'change_avatar' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="nickname">
+
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <input type="text" name="nickname" class="nickname-input" placeholder="输入新昵称…" value="{{ user.username }}" required>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <button type="submit" class="btn-save">
+                            <i class="fa-solid fa-circle-check"></i> 保存昵称
                         </button>
                     </div>
                 </form>
 
-                <a href="{% url 'my_nest' %}" class="btn-back-nest"><i class="fa-solid fa-chevron-left"></i> 返回我的猫巢基地</a>
+                <div style="text-align: center;">
+                    <a href="{% url 'my_nest' %}" class="btn-back-nest"><i class="fa-solid fa-chevron-left"></i> 返回我的猫巢基地</a>
+                </div>
             </div>
 
         </div>
