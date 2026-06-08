@@ -9,4 +9,5 @@ urlpatterns=[
     path('alley/', views.alley, name='alley'),              # 巷弄巡逻
     path('spot/<slug:slug>/', views.spot_detail, name='spot_detail'),
     path('spot/<slug:slug>/collect/', views.collect_spot, name='collect_spot'),
+    path('forest-booking/', views.forest_booking, name='forest_booking'),
 ]

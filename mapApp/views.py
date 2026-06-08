@@ -1,8 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.db.models import F
-from .models import Spot, SpotCollection
+from .models import Spot, SpotCollection, ForestBooking
 
 
 def city(request):
@@ -27,8 +27,9 @@ def forest(request):
     return render(request, 'forest.html', {
         'routes': routes,
         'camps': camps,
-        'active_menu': 'map', 
-        'sub_menu': 'forest'
+        'active_menu': 'map',
+        'sub_menu': 'forest',
+        'booking_success': request.GET.get('booked', ''),
     })
 
 def alley(request):
@@ -67,4 +68,32 @@ def collect_spot(request, slug):
         spot.save()
         status = 'uncollected'
     return JsonResponse({'status': status, 'count': spot.collect_count})
+
+
+def forest_booking(request):
+    """森林探险预约提交"""
+    if request.method == 'POST':
+        nickname = request.POST.get('nickname', '').strip()
+        phone = request.POST.get('phone', '').strip()
+        destination = request.POST.get('destination', '').strip()
+
+        if not nickname or not phone:
+            return render(request, 'forest.html', {
+                'booking_error': '喵呜，昵称和电话不能为空哦！🐾',
+                'routes': Spot.objects.filter(category='forest', sub_category='route'),
+                'camps': Spot.objects.filter(category='forest', sub_category='camping'),
+                'active_menu': 'map', 'sub_menu': 'forest'
+            })
+
+        ForestBooking.objects.create(
+            nickname=nickname, phone=phone, destination=destination
+        )
+        return render(request, 'forest.html', {
+            'booking_success': '喵呜！预约成功！我们会尽快联系你~ 🐾',
+            'routes': Spot.objects.filter(category='forest', sub_category='route'),
+            'camps': Spot.objects.filter(category='forest', sub_category='camping'),
+            'active_menu': 'map', 'sub_menu': 'forest'
+        })
+
+    return redirect('mapApp:forest')
 

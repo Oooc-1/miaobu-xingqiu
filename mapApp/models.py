@@ -64,3 +64,16 @@ class SpotCollection(models.Model):
         unique_together = ('spot', 'user')
         verbose_name = "景点收藏"
         verbose_name_plural = "景点收藏"
+
+
+class ForestBooking(models.Model):
+    """森林探险预约"""
+    nickname = models.CharField(max_length=50, verbose_name="喵友昵称")
+    phone = models.CharField(max_length=20, verbose_name="联系电话")
+    destination = models.CharField(max_length=200, verbose_name="选择目的地")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="提交时间")
+
+    class Meta:
+        verbose_name = "森林预约"
+        verbose_name_plural = "森林预约"
+        ordering = ['-created_at']

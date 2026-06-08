@@ -306,24 +306,37 @@
     <div id="booking-section" style="margin-top: 40px;">
         <div class="card meow-card" style="padding: 40px;">
             <h3 class="text-center" style="font-weight: bold; color: #4A4E69;">预定你的森林足迹</h3>
-            <form>
+
+            {% if booking_success %}
+                <div style="background:#EBF3F0; color:#4A4E69; padding:14px; border-radius:12px; text-align:center; font-weight:bold; margin-bottom:15px; border-left:4px solid #A7C4BC;">
+                    {{ booking_success }}
+                </div>
+            {% endif %}
+            {% if booking_error %}
+                <div style="background:#FADBD8; color:#78281F; padding:14px; border-radius:12px; text-align:center; font-weight:bold; margin-bottom:15px; border-left:4px solid #E74C3C;">
+                    {{ booking_error }}
+                </div>
+            {% endif %}
+
+            <form method="POST" action="{% url 'mapApp:forest_booking' %}">
+                {% csrf_token %}
                 <div class="row">
-                    <div class="col-sm-6"><label>喵友昵称</label><input type="text" class="form-control"
-                            style="border-radius:12px; padding:10px;"></div>
-                    <div class="col-sm-6"><label>联系电话</label><input type="text" class="form-control"
-                            style="border-radius:12px; padding:10px;"></div>
+                    <div class="col-sm-6"><label>喵友昵称</label><input type="text" name="nickname" class="form-control"
+                            style="border-radius:12px; padding:10px;" required></div>
+                    <div class="col-sm-6"><label>联系电话</label><input type="text" name="phone" class="form-control"
+                            style="border-radius:12px; padding:10px;" required></div>
                 </div>
                 <div class="row" style="margin-top: 15px;">
                     <div class="col-sm-12">
                         <label>选择想要去的秘境/营地</label>
-                        <select class="form-control" style="border-radius:12px;">
-                            {% for spot in routes %}<option>{{ spot.name }}</option>{% endfor %}
-                            {% for camp in camps %}<option>{{ camp.name }} (营地)</option>{% endfor %}
+                        <select name="destination" class="form-control" style="border-radius:12px;">
+                            {% for spot in routes %}<option value="{{ spot.name }}">{{ spot.name }}</option>{% endfor %}
+                            {% for camp in camps %}<option value="{{ camp.name }} (营地)">{{ camp.name }} (营地)</option>{% endfor %}
                         </select>
                     </div>
                 </div>
                 <div class="text-center" style="margin-top: 20px;">
-                    <button type="button" class="meow-btn-primary">提交预约申请</button>
+                    <button type="submit" class="meow-btn-primary">提交预约申请</button>
                 </div>
             </form>
         </div>
